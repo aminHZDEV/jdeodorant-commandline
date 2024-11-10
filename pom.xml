@@ -1,0 +1,153 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>ca.concordia.jdeodorant</groupId>
+    <artifactId>jdeodorant-commandline</artifactId>
+    <version>0.1-SNAPSHOT</version>
+    <packaging>pom</packaging> <!-- Change to jar if you're not creating an Eclipse plugin -->
+
+    <name>JDeodorant Commandline</name>
+    <description>JDeodorant Commandline Product Configuration</description>
+    <url>http://www.example.com/</url> <!-- Optional: provide a project URL -->
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <properties>
+        <maven.compiler.source>11</maven.compiler.source>
+        <maven.compiler.target>11</maven.compiler.target>
+        <tycho.version>2.3.0</tycho.version> <!-- Use appropriate Tycho version -->
+    </properties>
+
+    <dependencies>
+        <!-- Dependencies inferred from .classpath -->
+<!--        <dependency>-->
+<!--            <groupId>javax.mail</groupId>-->
+<!--            <artifactId>javax.mail</artifactId>-->
+<!--            <version>1.6.2</version>-->
+<!--        </dependency>-->
+        <dependency>
+            <groupId>org.eclipse.jface</groupId>
+            <artifactId>databinding</artifactId>
+            <version>1.1.0-I20070606-0010</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.jdt</groupId>
+            <artifactId>org.eclipse.jdt.core</artifactId>
+            <version>3.37.0</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.birt.runtime</groupId>
+            <artifactId>org.eclipse.core.resources</artifactId>
+            <version>3.8.101.v20130717-0806</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.core.filebuffers</artifactId>
+            <version>3.8.300</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.ltk.core</groupId>
+            <artifactId>refactoring</artifactId>
+            <version>3.3.0-v20070606-0010</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.core</groupId>
+            <artifactId>resources</artifactId>
+            <version>3.3.0-v20070604</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.core</groupId>
+            <artifactId>runtime</artifactId>
+            <version>3.10.0-v20140318-2214</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ibm.icu</groupId>
+            <artifactId>icu4j</artifactId>
+            <version>76.1</version>
+        </dependency>
+        <dependency>
+            <groupId>net.sourceforge.jexcelapi</groupId>
+            <artifactId>jxl</artifactId>
+            <version>2.6.12</version>
+        </dependency>
+        <dependency>
+            <groupId>commons-cli</groupId>
+            <artifactId>commons-cli</artifactId>
+            <version>1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>1.7.7</version>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-core</artifactId>
+            <version>1.4.14</version>
+        </dependency>
+        <dependency>
+            <groupId>org.eclipse.swt</groupId>
+            <artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
+            <version>4.3</version>
+            <scope>provided</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-maven-plugin</artifactId>
+                <version>4.0.9</version>
+                <configuration>
+                    <artifactRepository>
+                        <repository>
+                            <id>repository</id>
+                        </repository>
+                    </artifactRepository>
+                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.eclipse.tycho</groupId>
+                <artifactId>tycho-surefire-plugin</artifactId>
+                <version>${tycho.version}</version>
+            </plugin>
+        </plugins>
+    </build>
+
+    <repositories>
+        <repository>
+            <id>jabylon</id>
+            <url>https://www.jabylon.org/maven/</url>
+        </repository>
+        <repository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </repository>
+        <repository>
+            <id>jcenter</id>
+            <url>https://jcenter.bintray.com/</url>
+        </repository>
+    </repositories>
+
+    <pluginRepositories>
+        <pluginRepository>
+            <id>central</id>
+            <url>https://repo.maven.apache.org/maven2</url>
+        </pluginRepository>
+        <pluginRepository>
+                <id>jcenter</id>
+                <url>https://jcenter.bintray.com/</url>
+        </pluginRepository>
+    </pluginRepositories>
+</project>
