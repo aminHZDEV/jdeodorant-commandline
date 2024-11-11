@@ -1,8 +1,8 @@
 package java.ast.visualization;
 
-import gr.uom.java.distance.CandidateRefactoring;
-import gr.uom.java.distance.ExtractClassCandidateRefactoring;
-import gr.uom.java.jdeodorant.refactoring.views.GodClass;
+import java.distance.CandidateRefactoring;
+import java.distance.ExtractClassCandidateRefactoring;
+import java.jdeodorant.refactoring.views.GodClass;
 
 import java.util.ArrayList;
 
@@ -72,7 +72,7 @@ implements IInformationControlExtension2 {
 
 				public void mousePressed(MouseEvent me) {
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-					IViewPart viewPart = page.findView("gr.uom.java.jdeodorant.views.GodClass");
+					IViewPart viewPart = page.findView("java.jdeodorant.views.GodClass");
 					if(viewPart != null){
 						GodClass godClass = (GodClass) viewPart;
 						godClass.setSelectedLine(candidateRefactoring);

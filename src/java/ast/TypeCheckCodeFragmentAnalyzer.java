@@ -39,10 +39,10 @@ import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
-import gr.uom.java.ast.util.ExpressionExtractor;
-import gr.uom.java.ast.util.MethodDeclarationUtility;
-import gr.uom.java.ast.util.StatementExtractor;
-import gr.uom.java.jdeodorant.refactoring.manipulators.TypeCheckElimination;
+import java.ast.util.ExpressionExtractor;
+import java.ast.util.MethodDeclarationUtility;
+import java.ast.util.StatementExtractor;
+import java.jdeodorant.refactoring.manipulators.TypeCheckElimination;
 
 public class TypeCheckCodeFragmentAnalyzer {
 	private TypeCheckElimination typeCheckElimination;

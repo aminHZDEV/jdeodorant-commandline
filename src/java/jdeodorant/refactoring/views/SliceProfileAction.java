@@ -1,13 +1,13 @@
 package java.jdeodorant.refactoring.views;
 
-import gr.uom.java.ast.ASTReader;
-import gr.uom.java.ast.AbstractMethodDeclaration;
-import gr.uom.java.ast.ClassObject;
-import gr.uom.java.ast.CompilationErrorDetectedException;
-import gr.uom.java.ast.CompilationUnitCache;
-import gr.uom.java.ast.SystemObject;
-import gr.uom.java.ast.decomposition.cfg.CFG;
-import gr.uom.java.ast.decomposition.cfg.PDG;
+import java.ast.ASTReader;
+import java.ast.AbstractMethodDeclaration;
+import java.ast.ClassObject;
+import java.ast.CompilationErrorDetectedException;
+import java.ast.CompilationUnitCache;
+import java.ast.SystemObject;
+import java.ast.decomposition.cfg.CFG;
+import java.ast.decomposition.cfg.PDG;
 
 import java.lang.reflect.InvocationTargetException;
 

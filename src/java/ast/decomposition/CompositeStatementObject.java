@@ -1,17 +1,17 @@
 package java.ast.decomposition;
 
-import gr.uom.java.ast.AnonymousClassDeclarationObject;
-import gr.uom.java.ast.ArrayCreationObject;
-import gr.uom.java.ast.ClassInstanceCreationObject;
-import gr.uom.java.ast.CreationObject;
-import gr.uom.java.ast.FieldInstructionObject;
-import gr.uom.java.ast.LiteralObject;
-import gr.uom.java.ast.LocalVariableDeclarationObject;
-import gr.uom.java.ast.LocalVariableInstructionObject;
-import gr.uom.java.ast.MethodInvocationObject;
-import gr.uom.java.ast.SuperFieldInstructionObject;
-import gr.uom.java.ast.SuperMethodInvocationObject;
-import gr.uom.java.ast.decomposition.cfg.PlainVariable;
+import java.ast.AnonymousClassDeclarationObject;
+import java.ast.ArrayCreationObject;
+import java.ast.ClassInstanceCreationObject;
+import java.ast.CreationObject;
+import java.ast.FieldInstructionObject;
+import java.ast.LiteralObject;
+import java.ast.LocalVariableDeclarationObject;
+import java.ast.LocalVariableInstructionObject;
+import java.ast.MethodInvocationObject;
+import java.ast.SuperFieldInstructionObject;
+import java.ast.SuperMethodInvocationObject;
+import java.ast.decomposition.cfg.PlainVariable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

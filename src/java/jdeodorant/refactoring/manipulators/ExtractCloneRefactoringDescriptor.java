@@ -2,7 +2,7 @@ package java.jdeodorant.refactoring.manipulators;
 
 import java.util.List;
 
-import gr.uom.java.ast.decomposition.cfg.mapping.DivideAndConquerMatcher;
+import java.ast.decomposition.cfg.mapping.DivideAndConquerMatcher;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ltk.core.refactoring.Refactoring;

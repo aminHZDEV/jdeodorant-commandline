@@ -2,7 +2,7 @@ package java.ast.decomposition.cfg;
 
 import org.eclipse.jdt.core.dom.BreakStatement;
 
-import gr.uom.java.ast.decomposition.AbstractStatement;
+import java.ast.decomposition.AbstractStatement;
 
 public class CFGBreakNode extends CFGNode {
 	private String label;

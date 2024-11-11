@@ -1,6 +1,6 @@
 package java.jdeodorant.refactoring.manipulators;
 
-import gr.uom.java.ast.inheritance.InheritanceTree;
+import java.ast.inheritance.InheritanceTree;
 
 import java.util.ArrayList;
 import java.util.Collections;

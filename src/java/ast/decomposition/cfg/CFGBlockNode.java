@@ -1,6 +1,6 @@
 package java.ast.decomposition.cfg;
 
-import gr.uom.java.ast.decomposition.AbstractStatement;
+import java.ast.decomposition.AbstractStatement;
 
 public class CFGBlockNode extends CFGNode {
 

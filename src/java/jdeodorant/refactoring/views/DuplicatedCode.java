@@ -116,14 +116,14 @@ import ca.concordia.jdeodorant.clone.parsers.CloneGroupList;
 import ca.concordia.jdeodorant.clone.parsers.CloneInstance;
 import ca.concordia.jdeodorant.clone.parsers.CloneInstanceStatus;
 import ca.concordia.jdeodorant.clone.parsers.JavaModelUtility;
-import gr.uom.java.ast.ASTReader;
-import gr.uom.java.ast.CompilationErrorDetectedException;
-import gr.uom.java.ast.CompilationUnitCache;
-import gr.uom.java.ast.decomposition.cfg.mapping.CloneInstanceMapper;
-import gr.uom.java.ast.decomposition.cfg.mapping.PDGRegionSubTreeMapper;
-import gr.uom.java.jdeodorant.preferences.PreferenceConstants;
-import gr.uom.java.jdeodorant.refactoring.Activator;
-import gr.uom.java.jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
+import java.ast.ASTReader;
+import java.ast.CompilationErrorDetectedException;
+import java.ast.CompilationUnitCache;
+import java.ast.decomposition.cfg.mapping.CloneInstanceMapper;
+import java.ast.decomposition.cfg.mapping.PDGRegionSubTreeMapper;
+import java.jdeodorant.preferences.PreferenceConstants;
+import java.jdeodorant.refactoring.Activator;
+import java.jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
 
 public class DuplicatedCode extends ViewPart {
 	private static final String MESSAGE_DIALOG_TITLE = "Duplicated Code Refactoring";

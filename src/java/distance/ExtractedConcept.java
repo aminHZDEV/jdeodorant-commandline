@@ -1,6 +1,6 @@
 package java.distance;
 
-import gr.uom.java.ast.util.TopicFinder;
+import java.ast.util.TopicFinder;
 
 import java.util.ArrayList;
 import java.util.HashSet;

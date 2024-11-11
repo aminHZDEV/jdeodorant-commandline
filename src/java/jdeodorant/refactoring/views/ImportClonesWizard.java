@@ -20,7 +20,7 @@ import ca.concordia.jdeodorant.clone.parsers.CloneDetectorType;
 import ca.concordia.jdeodorant.clone.parsers.CloneGroupList;
 import ca.concordia.jdeodorant.clone.parsers.InvalidInputFileException;
 import ca.concordia.jdeodorant.clone.parsers.ResourceInfo.ICompilationUnitNotFoundException;
-import gr.uom.java.jdeodorant.refactoring.Activator;
+import java.jdeodorant.refactoring.Activator;
 
 public class ImportClonesWizard extends Wizard {
 	private IJavaProject javaProject;

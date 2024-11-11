@@ -3,7 +3,7 @@ package java.ast.decomposition.matching.conditional;
 import java.util.ArrayList;
 import java.util.List;
 
-import gr.uom.java.ast.decomposition.matching.ASTNodeMatcher;
+import java.ast.decomposition.matching.ASTNodeMatcher;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Block;

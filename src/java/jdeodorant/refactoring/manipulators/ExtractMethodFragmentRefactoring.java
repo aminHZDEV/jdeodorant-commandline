@@ -1,13 +1,13 @@
 package java.jdeodorant.refactoring.manipulators;
 
-import gr.uom.java.ast.decomposition.cfg.CFGBranchDoLoopNode;
-import gr.uom.java.ast.decomposition.cfg.GraphEdge;
-import gr.uom.java.ast.decomposition.cfg.PDGControlDependence;
-import gr.uom.java.ast.decomposition.cfg.PDGControlPredicateNode;
-import gr.uom.java.ast.decomposition.cfg.PDGDependence;
-import gr.uom.java.ast.decomposition.cfg.PDGNode;
-import gr.uom.java.ast.util.ExpressionExtractor;
-import gr.uom.java.ast.util.TypeVisitor;
+import java.ast.decomposition.cfg.CFGBranchDoLoopNode;
+import java.ast.decomposition.cfg.GraphEdge;
+import java.ast.decomposition.cfg.PDGControlDependence;
+import java.ast.decomposition.cfg.PDGControlPredicateNode;
+import java.ast.decomposition.cfg.PDGDependence;
+import java.ast.decomposition.cfg.PDGNode;
+import java.ast.util.ExpressionExtractor;
+import java.ast.util.TypeVisitor;
 
 import java.util.ArrayList;
 import java.util.Iterator;

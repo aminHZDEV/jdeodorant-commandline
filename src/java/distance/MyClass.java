@@ -1,6 +1,6 @@
 package java.distance;
 
-import gr.uom.java.ast.ClassObject;
+import java.ast.ClassObject;
 
 import java.util.*;
 

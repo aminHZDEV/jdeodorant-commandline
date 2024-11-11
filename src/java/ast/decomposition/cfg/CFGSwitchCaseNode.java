@@ -2,7 +2,7 @@ package java.ast.decomposition.cfg;
 
 import org.eclipse.jdt.core.dom.SwitchCase;
 
-import gr.uom.java.ast.decomposition.AbstractStatement;
+import java.ast.decomposition.AbstractStatement;
 
 public class CFGSwitchCaseNode extends CFGNode {
 	private boolean isDefault;

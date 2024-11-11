@@ -1,5 +1,5 @@
 package java.ast.visualization;
-import gr.uom.java.jdeodorant.refactoring.views.ZoomValueValidator;
+import java.jdeodorant.refactoring.views.ZoomValueValidator;
 
 import org.eclipse.draw2d.ScalableFreeformLayeredPane;
 import org.eclipse.draw2d.ScalableLayeredPane;
@@ -12,7 +12,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 public class ZoomInputAction extends Action implements IWorkbenchAction{  
 
-	private static final String ID = "gr.uom.java.ast.visualiztion.ZoomInputAction";  
+	private static final String ID = "java.ast.visualiztion.ZoomInputAction";  
 	private ScalableFreeformLayeredPane root;
 	private ScalableLayeredPane root2;
 	private boolean isFreeform= true;

@@ -27,9 +27,9 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.swt.graphics.Color;
 
-import gr.uom.java.ast.ASTInformationGenerator;
-import gr.uom.java.ast.ASTReader;
-import gr.uom.java.distance.CandidateRefactoring;
+import java.ast.ASTInformationGenerator;
+import java.ast.ASTReader;
+import java.distance.CandidateRefactoring;
 
 
 

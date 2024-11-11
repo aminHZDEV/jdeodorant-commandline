@@ -4,12 +4,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import gr.uom.java.ast.ASTReader;
-import gr.uom.java.ast.decomposition.cfg.mapping.CloneStructureNode;
-import gr.uom.java.ast.decomposition.cfg.mapping.DivideAndConquerMatcher;
-import gr.uom.java.ast.decomposition.cfg.mapping.VariableBindingPair;
-import gr.uom.java.ast.decomposition.matching.ASTNodeMatcher;
-import gr.uom.java.jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
+import java.ast.ASTReader;
+import java.ast.decomposition.cfg.mapping.CloneStructureNode;
+import java.ast.decomposition.cfg.mapping.DivideAndConquerMatcher;
+import java.ast.decomposition.cfg.mapping.VariableBindingPair;
+import java.ast.decomposition.matching.ASTNodeMatcher;
+import java.jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
 
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;

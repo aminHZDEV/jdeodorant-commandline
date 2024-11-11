@@ -1,9 +1,9 @@
 package java.history;
 
-import gr.uom.java.ast.ASTReader;
-import gr.uom.java.ast.TypeCheckCodeFragmentAnalyzer;
-import gr.uom.java.ast.util.StatementExtractor;
-import gr.uom.java.jdeodorant.refactoring.manipulators.TypeCheckElimination;
+import java.ast.ASTReader;
+import java.ast.TypeCheckCodeFragmentAnalyzer;
+import java.ast.util.StatementExtractor;
+import java.jdeodorant.refactoring.manipulators.TypeCheckElimination;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

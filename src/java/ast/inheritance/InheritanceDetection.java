@@ -1,8 +1,8 @@
 package java.ast.inheritance;
 
-import gr.uom.java.ast.ClassObject;
-import gr.uom.java.ast.SystemObject;
-import gr.uom.java.ast.TypeObject;
+import java.ast.ClassObject;
+import java.ast.SystemObject;
+import java.ast.TypeObject;
 
 import java.util.List;
 import java.util.ArrayList;

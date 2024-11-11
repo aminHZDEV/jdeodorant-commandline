@@ -1,12 +1,12 @@
 package java.jdeodorant.refactoring.views;
 
-import gr.uom.java.ast.decomposition.cfg.mapping.CloneStructureNode;
-import gr.uom.java.ast.decomposition.cfg.mapping.NodeMapping;
-import gr.uom.java.ast.decomposition.cfg.mapping.PDGNodeMapping;
-import gr.uom.java.ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
-import gr.uom.java.ast.decomposition.cfg.mapping.precondition.Suggestion;
-import gr.uom.java.ast.decomposition.matching.ASTNodeDifference;
-import gr.uom.java.ast.decomposition.matching.Difference;
+import java.ast.decomposition.cfg.mapping.CloneStructureNode;
+import java.ast.decomposition.cfg.mapping.NodeMapping;
+import java.ast.decomposition.cfg.mapping.PDGNodeMapping;
+import java.ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
+import java.ast.decomposition.cfg.mapping.precondition.Suggestion;
+import java.ast.decomposition.matching.ASTNodeDifference;
+import java.ast.decomposition.matching.Difference;
 
 import java.util.List;
 

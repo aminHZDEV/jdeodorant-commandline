@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import gr.uom.java.ast.util.TypeVisitor;
-import gr.uom.java.jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithStateStrategy;
+import java.ast.util.TypeVisitor;
+import java.jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithStateStrategy;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;

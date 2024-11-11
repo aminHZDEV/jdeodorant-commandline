@@ -5,13 +5,13 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import gr.uom.java.ast.ClassInstanceCreationObject;
-import gr.uom.java.ast.CreationObject;
-import gr.uom.java.ast.FieldObject;
-import gr.uom.java.ast.MethodInvocationObject;
-import gr.uom.java.ast.SuperMethodInvocationObject;
-import gr.uom.java.ast.VariableDeclarationObject;
-import gr.uom.java.ast.decomposition.StatementObject;
+import java.ast.ClassInstanceCreationObject;
+import java.ast.CreationObject;
+import java.ast.FieldObject;
+import java.ast.MethodInvocationObject;
+import java.ast.SuperMethodInvocationObject;
+import java.ast.VariableDeclarationObject;
+import java.ast.decomposition.StatementObject;
 
 public class PDGStatementNode extends PDGNode {
 	

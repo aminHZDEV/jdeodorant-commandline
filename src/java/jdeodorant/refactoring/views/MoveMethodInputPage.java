@@ -4,7 +4,7 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import gr.uom.java.jdeodorant.refactoring.manipulators.MoveMethodRefactoring;
+import java.jdeodorant.refactoring.manipulators.MoveMethodRefactoring;
 
 import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
 import org.eclipse.swt.SWT;

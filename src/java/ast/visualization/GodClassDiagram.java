@@ -1,9 +1,9 @@
 package java.ast.visualization;
 
-import gr.uom.java.ast.FieldInstructionObject;
-import gr.uom.java.ast.FieldObject;
-import gr.uom.java.ast.MethodInvocationObject;
-import gr.uom.java.ast.MethodObject;
+import java.ast.FieldInstructionObject;
+import java.ast.FieldObject;
+import java.ast.MethodInvocationObject;
+import java.ast.MethodObject;
 
 import java.util.Map;
 import java.util.Map.Entry;

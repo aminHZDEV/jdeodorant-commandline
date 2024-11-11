@@ -4,19 +4,19 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import gr.uom.java.ast.visualization.DecorationConstants;
-import gr.uom.java.ast.visualization.GodClassInformationControlCreator;
-import gr.uom.java.ast.visualization.ICustomInformationControlCreator;
-import gr.uom.java.ast.visualization.IInformationProvider;
-import gr.uom.java.ast.visualization.FeatureEnviedMethodInformationControlCreator;
-import gr.uom.java.ast.visualization.InformationControlManager;
-import gr.uom.java.ast.visualization.SearchInputAction;
-import gr.uom.java.ast.visualization.ZoomInputAction;
-import gr.uom.java.ast.visualization.PackageMapDiagramInformationProvider;
-import gr.uom.java.ast.visualization.PackageMapDiagram;
-import gr.uom.java.ast.visualization.ZoomAction;
-import gr.uom.java.distance.CandidateRefactoring;
-import gr.uom.java.jdeodorant.refactoring.Activator;
+import java.ast.visualization.DecorationConstants;
+import java.ast.visualization.GodClassInformationControlCreator;
+import java.ast.visualization.ICustomInformationControlCreator;
+import java.ast.visualization.IInformationProvider;
+import java.ast.visualization.FeatureEnviedMethodInformationControlCreator;
+import java.ast.visualization.InformationControlManager;
+import java.ast.visualization.SearchInputAction;
+import java.ast.visualization.ZoomInputAction;
+import java.ast.visualization.PackageMapDiagramInformationProvider;
+import java.ast.visualization.PackageMapDiagram;
+import java.ast.visualization.ZoomAction;
+import java.distance.CandidateRefactoring;
+import java.jdeodorant.refactoring.Activator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.ColorConstants;
@@ -53,7 +53,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 
 public class CodeSmellPackageExplorer extends ViewPart {
-	public static final String ID = "gr.uom.java.jdeodorant.views.CodeSmellPackageExplorer";
+	public static final String ID = "java.jdeodorant.views.CodeSmellPackageExplorer";
 	private FigureCanvas figureCanvas; 
 	private ScalableLayeredPane root = null;
 	private boolean ctrlPressed= false;

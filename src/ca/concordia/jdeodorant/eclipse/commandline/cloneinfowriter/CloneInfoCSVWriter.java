@@ -1,9 +1,9 @@
 package ca.concordia.jdeodorant.eclipse.commandline.cloneinfowriter;
 
-import gr.uom.java.ast.decomposition.cfg.mapping.CloneRefactoringType;
-import gr.uom.java.ast.decomposition.cfg.mapping.PDGExpressionGap;
-import gr.uom.java.ast.decomposition.cfg.mapping.PDGNodeBlockGap;
-import gr.uom.java.ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
+import java.ast.decomposition.cfg.mapping.CloneRefactoringType;
+import java.ast.decomposition.cfg.mapping.PDGExpressionGap;
+import java.ast.decomposition.cfg.mapping.PDGNodeBlockGap;
+import java.ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
 
 import java.io.BufferedWriter;
 import java.io.File;

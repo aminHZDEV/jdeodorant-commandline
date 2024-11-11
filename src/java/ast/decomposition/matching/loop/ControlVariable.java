@@ -1,6 +1,6 @@
 package java.ast.decomposition.matching.loop;
 
-import gr.uom.java.ast.util.ExpressionExtractor;
+import java.ast.util.ExpressionExtractor;
 
 import java.util.ArrayList;
 import java.util.Iterator;

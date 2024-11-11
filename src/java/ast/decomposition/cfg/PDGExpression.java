@@ -1,16 +1,16 @@
 package java.ast.decomposition.cfg;
 
-import gr.uom.java.ast.ASTReader;
-import gr.uom.java.ast.ClassInstanceCreationObject;
-import gr.uom.java.ast.ClassObject;
-import gr.uom.java.ast.ConstructorObject;
-import gr.uom.java.ast.CreationObject;
-import gr.uom.java.ast.MethodInvocationObject;
-import gr.uom.java.ast.MethodObject;
-import gr.uom.java.ast.SuperMethodInvocationObject;
-import gr.uom.java.ast.SystemObject;
-import gr.uom.java.ast.VariableDeclarationObject;
-import gr.uom.java.ast.decomposition.AbstractExpression;
+import java.ast.ASTReader;
+import java.ast.ClassInstanceCreationObject;
+import java.ast.ClassObject;
+import java.ast.ConstructorObject;
+import java.ast.CreationObject;
+import java.ast.MethodInvocationObject;
+import java.ast.MethodObject;
+import java.ast.SuperMethodInvocationObject;
+import java.ast.SystemObject;
+import java.ast.VariableDeclarationObject;
+import java.ast.decomposition.AbstractExpression;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;

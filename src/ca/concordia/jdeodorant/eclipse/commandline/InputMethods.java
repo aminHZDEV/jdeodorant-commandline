@@ -1,6 +1,6 @@
 package ca.concordia.jdeodorant.eclipse.commandline;
 
-import gr.uom.java.ast.decomposition.cfg.PDG;
+import java.ast.decomposition.cfg.PDG;
 
 import org.eclipse.jdt.core.IMethod;
 

@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import gr.uom.java.ast.util.math.HumaniseCamelCase;
-import gr.uom.java.ast.util.math.Stemmer;
-import gr.uom.java.jdeodorant.refactoring.Activator;
+import java.ast.util.math.HumaniseCamelCase;
+import java.ast.util.math.Stemmer;
+import java.jdeodorant.refactoring.Activator;
 
 public class TopicFinder {
 	private static ArrayList<String> stopWords = getStopWords();

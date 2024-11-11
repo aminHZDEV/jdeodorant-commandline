@@ -1,6 +1,6 @@
 package java.ast.decomposition.cfg;
 
-import gr.uom.java.ast.AbstractMethodDeclaration;
+import java.ast.AbstractMethodDeclaration;
 
 import java.util.LinkedHashSet;
 import java.util.Map;

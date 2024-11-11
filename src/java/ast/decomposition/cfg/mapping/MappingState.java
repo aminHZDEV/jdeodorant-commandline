@@ -1,20 +1,20 @@
 package java.ast.decomposition.cfg.mapping;
 
-import gr.uom.java.ast.decomposition.AbstractMethodFragment;
-import gr.uom.java.ast.decomposition.StatementObject;
-import gr.uom.java.ast.decomposition.cfg.AbstractVariable;
-import gr.uom.java.ast.decomposition.cfg.CFGBranchIfNode;
-import gr.uom.java.ast.decomposition.cfg.GraphEdge;
-import gr.uom.java.ast.decomposition.cfg.PDGAbstractDataDependence;
-import gr.uom.java.ast.decomposition.cfg.PDGControlDependence;
-import gr.uom.java.ast.decomposition.cfg.PDGDependence;
-import gr.uom.java.ast.decomposition.cfg.PDGMethodEntryNode;
-import gr.uom.java.ast.decomposition.cfg.PDGNode;
-import gr.uom.java.ast.decomposition.matching.ASTNodeDifference;
-import gr.uom.java.ast.decomposition.matching.ASTNodeMatcher;
-import gr.uom.java.ast.decomposition.matching.Difference;
-import gr.uom.java.ast.decomposition.matching.DifferenceType;
-import gr.uom.java.ast.util.math.LevenshteinDistance;
+import java.ast.decomposition.AbstractMethodFragment;
+import java.ast.decomposition.StatementObject;
+import java.ast.decomposition.cfg.AbstractVariable;
+import java.ast.decomposition.cfg.CFGBranchIfNode;
+import java.ast.decomposition.cfg.GraphEdge;
+import java.ast.decomposition.cfg.PDGAbstractDataDependence;
+import java.ast.decomposition.cfg.PDGControlDependence;
+import java.ast.decomposition.cfg.PDGDependence;
+import java.ast.decomposition.cfg.PDGMethodEntryNode;
+import java.ast.decomposition.cfg.PDGNode;
+import java.ast.decomposition.matching.ASTNodeDifference;
+import java.ast.decomposition.matching.ASTNodeMatcher;
+import java.ast.decomposition.matching.Difference;
+import java.ast.decomposition.matching.DifferenceType;
+import java.ast.util.math.LevenshteinDistance;
 
 import java.util.ArrayList;
 import java.util.HashSet;

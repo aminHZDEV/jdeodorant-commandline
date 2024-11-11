@@ -35,11 +35,11 @@ import org.eclipse.jdt.core.dom.WildcardType;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
-import gr.uom.java.ast.ASTReader;
-import gr.uom.java.ast.ClassObject;
-import gr.uom.java.ast.SystemObject;
-import gr.uom.java.ast.decomposition.cfg.AbstractVariable;
-import gr.uom.java.ast.util.MethodDeclarationUtility;
+import java.ast.ASTReader;
+import java.ast.ClassObject;
+import java.ast.SystemObject;
+import java.ast.decomposition.cfg.AbstractVariable;
+import java.ast.util.MethodDeclarationUtility;
 
 public class RefactoringUtility {
 

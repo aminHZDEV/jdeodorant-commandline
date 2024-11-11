@@ -1,6 +1,6 @@
 package java.ast.visualization;
 
-import gr.uom.java.distance.CandidateRefactoring;
+import java.distance.CandidateRefactoring;
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.graphics.Color;

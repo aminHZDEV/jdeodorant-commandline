@@ -4,11 +4,11 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import gr.uom.java.ast.decomposition.AbstractExpression;
-import gr.uom.java.ast.decomposition.AbstractStatement;
-import gr.uom.java.ast.decomposition.CompositeStatementObject;
-import gr.uom.java.ast.decomposition.MethodBodyObject;
-import gr.uom.java.ast.decomposition.StatementObject;
+import java.ast.decomposition.AbstractExpression;
+import java.ast.decomposition.AbstractStatement;
+import java.ast.decomposition.CompositeStatementObject;
+import java.ast.decomposition.MethodBodyObject;
+import java.ast.decomposition.StatementObject;
 
 public class MyMethodBody {
 	

@@ -1,10 +1,10 @@
 package java.ast.association;
 
-import gr.uom.java.ast.ClassObject;
-import gr.uom.java.ast.FieldInstructionObject;
-import gr.uom.java.ast.FieldObject;
-import gr.uom.java.ast.MethodObject;
-import gr.uom.java.ast.SystemObject;
+import java.ast.ClassObject;
+import java.ast.FieldInstructionObject;
+import java.ast.FieldObject;
+import java.ast.MethodObject;
+import java.ast.SystemObject;
 
 import java.util.ArrayList;
 import java.util.List;

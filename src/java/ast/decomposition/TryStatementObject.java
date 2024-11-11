@@ -1,7 +1,7 @@
 package java.ast.decomposition;
 
-import gr.uom.java.ast.MethodInvocationObject;
-import gr.uom.java.ast.decomposition.cfg.AbstractVariable;
+import java.ast.MethodInvocationObject;
+import java.ast.decomposition.cfg.AbstractVariable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

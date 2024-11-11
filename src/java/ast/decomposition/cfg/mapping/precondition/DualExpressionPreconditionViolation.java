@@ -1,7 +1,7 @@
 package java.ast.decomposition.cfg.mapping.precondition;
 
-import gr.uom.java.ast.decomposition.AbstractExpression;
-import gr.uom.java.ast.decomposition.matching.ASTNodeDifference;
+import java.ast.decomposition.AbstractExpression;
+import java.ast.decomposition.matching.ASTNodeDifference;
 
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IBinding;

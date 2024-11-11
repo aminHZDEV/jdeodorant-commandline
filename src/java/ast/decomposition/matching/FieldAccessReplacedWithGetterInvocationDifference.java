@@ -3,7 +3,7 @@ package java.ast.decomposition.matching;
 import java.util.ArrayList;
 import java.util.List;
 
-import gr.uom.java.ast.decomposition.AbstractExpression;
+import java.ast.decomposition.AbstractExpression;
 
 public class FieldAccessReplacedWithGetterInvocationDifference extends ASTNodeDifference {
 

@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import gr.uom.java.ast.decomposition.cfg.PDGControlDependence;
-import gr.uom.java.ast.decomposition.cfg.PDGNode;
+import java.ast.decomposition.cfg.PDGControlDependence;
+import java.ast.decomposition.cfg.PDGNode;
 
 public class ControlDependenceTreeNode {
 	private ControlDependenceTreeNode parent;

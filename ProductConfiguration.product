@@ -29,7 +29,7 @@
    <plugins>
       <plugin id="ca.concordia.jdeodorant.eclipse.commandline-lambda"/>
       <plugin id="com.ibm.icu"/>
-      <plugin id="gr.uom.java.jdeodorant"/>
+      <plugin id="java.jdeodorant"/>
       <plugin id="javax.inject"/>
       <plugin id="javax.servlet"/>
       <plugin id="javax.xml"/>

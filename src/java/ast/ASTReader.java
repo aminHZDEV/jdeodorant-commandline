@@ -51,9 +51,9 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
-import gr.uom.java.ast.decomposition.AbstractExpression;
-import gr.uom.java.ast.decomposition.MethodBodyObject;
-import gr.uom.java.ast.util.StatementExtractor;
+import java.ast.decomposition.AbstractExpression;
+import java.ast.decomposition.MethodBodyObject;
+import java.ast.util.StatementExtractor;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

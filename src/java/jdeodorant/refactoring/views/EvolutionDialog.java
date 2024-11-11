@@ -4,9 +4,9 @@ import java.text.DecimalFormat;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import gr.uom.java.history.Evolution;
-import gr.uom.java.history.ProjectVersion;
-import gr.uom.java.history.ProjectVersionPair;
+import java.history.Evolution;
+import java.history.ProjectVersion;
+import java.history.ProjectVersionPair;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;

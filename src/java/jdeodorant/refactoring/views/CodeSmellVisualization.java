@@ -1,13 +1,13 @@
 package java.jdeodorant.refactoring.views;
 
-import gr.uom.java.ast.visualization.FeatureEnvyDiagram;
-import gr.uom.java.ast.visualization.FeatureEnvyVisualizationData;
-import gr.uom.java.ast.visualization.GodClassDiagram2;
-import gr.uom.java.ast.visualization.GodClassVisualizationData;
-import gr.uom.java.ast.visualization.ZoomInputAction;
-import gr.uom.java.ast.visualization.VisualizationData;
-import gr.uom.java.ast.visualization.ZoomAction;
-import gr.uom.java.jdeodorant.refactoring.Activator;
+import java.ast.visualization.FeatureEnvyDiagram;
+import java.ast.visualization.FeatureEnvyVisualizationData;
+import java.ast.visualization.GodClassDiagram2;
+import java.ast.visualization.GodClassVisualizationData;
+import java.ast.visualization.ZoomInputAction;
+import java.ast.visualization.VisualizationData;
+import java.ast.visualization.ZoomAction;
+import java.jdeodorant.refactoring.Activator;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureCanvas;
@@ -35,7 +35,7 @@ import org.eclipse.ui.part.ViewPart;
 
 public class CodeSmellVisualization extends ViewPart {
 
-	public static final String ID = "gr.uom.java.jdeodorant.views.CodeSmellVisualization";
+	public static final String ID = "java.jdeodorant.views.CodeSmellVisualization";
 	private FigureCanvas figureCanvas; 
 	private ScalableFreeformLayeredPane root = null;
 	private boolean ctrlPressed= false;

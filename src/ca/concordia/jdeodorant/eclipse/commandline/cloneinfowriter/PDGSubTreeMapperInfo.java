@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 import ca.concordia.jdeodorant.eclipse.commandline.coverage.TestReportResults.TestReportDifference;
-import gr.uom.java.ast.decomposition.cfg.mapping.DivideAndConquerMatcher;
+import java.ast.decomposition.cfg.mapping.DivideAndConquerMatcher;
 
 public class PDGSubTreeMapperInfo {
 	private final DivideAndConquerMatcher mapper;

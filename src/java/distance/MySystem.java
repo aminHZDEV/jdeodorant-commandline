@@ -1,9 +1,9 @@
 package java.distance;
 
-import gr.uom.java.ast.*;
-import gr.uom.java.ast.association.Association;
-import gr.uom.java.ast.association.AssociationDetection;
-import gr.uom.java.ast.decomposition.MethodBodyObject;
+import java.ast.*;
+import java.ast.association.Association;
+import java.ast.association.AssociationDetection;
+import java.ast.decomposition.MethodBodyObject;
 
 import java.util.*;
 

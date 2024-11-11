@@ -1,11 +1,11 @@
 package java.ast.util.math;
 
-import static gr.uom.java.ast.util.math.DoubleArray.deleteColumns;
-import static gr.uom.java.ast.util.math.DoubleArray.deleteRows;
-import static gr.uom.java.ast.util.math.DoubleArray.insertColumns;
-import static gr.uom.java.ast.util.math.DoubleArray.insertRows;
+import static java.ast.util.math.DoubleArray.deleteColumns;
+import static java.ast.util.math.DoubleArray.deleteRows;
+import static java.ast.util.math.DoubleArray.insertColumns;
+import static java.ast.util.math.DoubleArray.insertRows;
 
-import gr.uom.java.distance.Entity;
+import java.distance.Entity;
 
 import java.util.ArrayList;
 import java.util.HashSet;

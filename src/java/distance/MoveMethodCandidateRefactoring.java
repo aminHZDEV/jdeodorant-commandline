@@ -1,11 +1,11 @@
 package java.distance;
 
-import gr.uom.java.ast.FieldInstructionObject;
-import gr.uom.java.ast.MethodInvocationObject;
-import gr.uom.java.ast.MethodObject;
-import gr.uom.java.ast.TypeObject;
-import gr.uom.java.ast.decomposition.cfg.PlainVariable;
-import gr.uom.java.ast.visualization.FeatureEnvyVisualizationData;
+import java.ast.FieldInstructionObject;
+import java.ast.MethodInvocationObject;
+import java.ast.MethodObject;
+import java.ast.TypeObject;
+import java.ast.decomposition.cfg.PlainVariable;
+import java.ast.visualization.FeatureEnvyVisualizationData;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

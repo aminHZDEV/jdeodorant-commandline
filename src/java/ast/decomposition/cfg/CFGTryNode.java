@@ -3,9 +3,9 @@ package java.ast.decomposition.cfg;
 import java.util.ArrayList;
 import java.util.List;
 
-import gr.uom.java.ast.decomposition.AbstractStatement;
-import gr.uom.java.ast.decomposition.CatchClauseObject;
-import gr.uom.java.ast.decomposition.TryStatementObject;
+import java.ast.decomposition.AbstractStatement;
+import java.ast.decomposition.CatchClauseObject;
+import java.ast.decomposition.TryStatementObject;
 
 public class CFGTryNode extends CFGBlockNode {
 	private List<String> handledExceptions;

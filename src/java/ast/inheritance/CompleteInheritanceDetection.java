@@ -6,9 +6,9 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
-import gr.uom.java.ast.ClassObject;
-import gr.uom.java.ast.SystemObject;
-import gr.uom.java.ast.TypeObject;
+import java.ast.ClassObject;
+import java.ast.SystemObject;
+import java.ast.TypeObject;
 
 public class CompleteInheritanceDetection {
 	private Map<String, LinkedHashSet<String>> subclassMap;

@@ -2,8 +2,8 @@ package java.ast.decomposition.matching;
 
 import java.util.Set;
 
-import gr.uom.java.ast.decomposition.AbstractExpression;
-import gr.uom.java.ast.decomposition.cfg.PDGNode;
+import java.ast.decomposition.AbstractExpression;
+import java.ast.decomposition.cfg.PDGNode;
 
 public class BindingSignaturePair {
 

@@ -1,6 +1,6 @@
 package java.distance;
 
-import gr.uom.java.ast.FieldObject;
+import java.ast.FieldObject;
 
 import java.util.*;
 

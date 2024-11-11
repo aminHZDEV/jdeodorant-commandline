@@ -1,6 +1,6 @@
 package java.jdeodorant.refactoring.views;
 
-import gr.uom.java.ast.CompilationUnitCache;
+import java.ast.CompilationUnitCache;
 
 import org.eclipse.jdt.core.ElementChangedEvent;
 import org.eclipse.jdt.core.ICompilationUnit;

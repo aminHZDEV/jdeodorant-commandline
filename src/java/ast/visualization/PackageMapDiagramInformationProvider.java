@@ -1,6 +1,6 @@
 package java.ast.visualization;
 
-import gr.uom.java.jdeodorant.refactoring.views.CodeSmellPackageExplorer;
+import java.jdeodorant.refactoring.views.CodeSmellPackageExplorer;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.graphics.Rectangle;
 

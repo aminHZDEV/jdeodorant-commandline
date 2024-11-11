@@ -3,8 +3,8 @@ package java.ast.decomposition.matching;
 import java.util.ArrayList;
 import java.util.List;
 
-import gr.uom.java.ast.decomposition.AbstractExpression;
-import gr.uom.java.ast.decomposition.cfg.AbstractVariable;
+import java.ast.decomposition.AbstractExpression;
+import java.ast.decomposition.cfg.AbstractVariable;
 
 public class FieldAssignmentReplacedWithSetterInvocationDifference extends ASTNodeDifference {
 	

@@ -1,9 +1,9 @@
 package java.jdeodorant.refactoring.manipulators;
 
-import gr.uom.java.ast.ASTReader;
-import gr.uom.java.ast.inheritance.InheritanceTree;
-import gr.uom.java.ast.util.ExpressionExtractor;
-import gr.uom.java.ast.util.TypeVisitor;
+import java.ast.ASTReader;
+import java.ast.inheritance.InheritanceTree;
+import java.ast.util.ExpressionExtractor;
+import java.ast.util.TypeVisitor;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

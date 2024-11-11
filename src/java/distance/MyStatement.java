@@ -1,6 +1,6 @@
 package java.distance;
 
-import gr.uom.java.ast.decomposition.AbstractStatement;
+import java.ast.decomposition.AbstractStatement;
 
 public class MyStatement extends MyAbstractStatement {
 

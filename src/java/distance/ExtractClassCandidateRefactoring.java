@@ -1,10 +1,10 @@
 package java.distance;
 
-import gr.uom.java.ast.FieldObject;
-import gr.uom.java.ast.MethodObject;
-import gr.uom.java.ast.TypeObject;
-import gr.uom.java.ast.util.TopicFinder;
-import gr.uom.java.ast.visualization.GodClassVisualizationData;
+import java.ast.FieldObject;
+import java.ast.MethodObject;
+import java.ast.TypeObject;
+import java.ast.util.TopicFinder;
+import java.ast.visualization.GodClassVisualizationData;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

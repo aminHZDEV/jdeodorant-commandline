@@ -10,14 +10,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import gr.uom.java.ast.decomposition.cfg.BasicBlock;
-import gr.uom.java.ast.decomposition.cfg.CompositeVariable;
-import gr.uom.java.ast.decomposition.cfg.GraphNode;
-import gr.uom.java.ast.decomposition.cfg.PDG;
-import gr.uom.java.ast.decomposition.cfg.PDGNode;
-import gr.uom.java.ast.decomposition.cfg.PDGObjectSliceUnion;
-import gr.uom.java.ast.decomposition.cfg.PDGSliceUnion;
-import gr.uom.java.ast.decomposition.cfg.PlainVariable;
+import java.ast.decomposition.cfg.BasicBlock;
+import java.ast.decomposition.cfg.CompositeVariable;
+import java.ast.decomposition.cfg.GraphNode;
+import java.ast.decomposition.cfg.PDG;
+import java.ast.decomposition.cfg.PDGNode;
+import java.ast.decomposition.cfg.PDGObjectSliceUnion;
+import java.ast.decomposition.cfg.PDGSliceUnion;
+import java.ast.decomposition.cfg.PlainVariable;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;

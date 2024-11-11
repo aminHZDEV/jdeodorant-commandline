@@ -8,8 +8,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
-import gr.uom.java.ast.decomposition.cfg.PDG;
-import gr.uom.java.ast.decomposition.matching.NodePairComparisonCache;
+import java.ast.decomposition.cfg.PDG;
+import java.ast.decomposition.matching.NodePairComparisonCache;
 
 public class PDGMapper {
 	private List<CompleteSubTreeMatch> bottomUpSubTreeMatches;

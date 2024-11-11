@@ -1,6 +1,6 @@
 package java.ast.decomposition.cfg.mapping.precondition;
 
-import gr.uom.java.ast.decomposition.cfg.PlainVariable;
+import java.ast.decomposition.cfg.PlainVariable;
 
 import java.util.Set;
 

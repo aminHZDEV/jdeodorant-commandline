@@ -9,14 +9,14 @@ import java.util.Set;
 
 import org.eclipse.jdt.core.dom.ITypeBinding;
 
-import gr.uom.java.ast.ClassObject;
-import gr.uom.java.ast.FieldInstructionObject;
-import gr.uom.java.ast.LocalVariableInstructionObject;
-import gr.uom.java.ast.MethodInvocationObject;
-import gr.uom.java.ast.MethodObject;
-import gr.uom.java.ast.decomposition.cfg.AbstractVariable;
-import gr.uom.java.ast.decomposition.cfg.CompositeVariable;
-import gr.uom.java.ast.decomposition.cfg.PlainVariable;
+import java.ast.ClassObject;
+import java.ast.FieldInstructionObject;
+import java.ast.LocalVariableInstructionObject;
+import java.ast.MethodInvocationObject;
+import java.ast.MethodObject;
+import java.ast.decomposition.cfg.AbstractVariable;
+import java.ast.decomposition.cfg.CompositeVariable;
+import java.ast.decomposition.cfg.PlainVariable;
 
 public class FeatureEnvyVisualizationData implements VisualizationData {
 

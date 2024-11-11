@@ -4,11 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import gr.uom.java.ast.FieldObject;
-import gr.uom.java.ast.VariableDeclarationObject;
-import gr.uom.java.ast.decomposition.AbstractStatement;
-import gr.uom.java.ast.decomposition.CatchClauseObject;
-import gr.uom.java.ast.decomposition.TryStatementObject;
+import java.ast.FieldObject;
+import java.ast.VariableDeclarationObject;
+import java.ast.decomposition.AbstractStatement;
+import java.ast.decomposition.CatchClauseObject;
+import java.ast.decomposition.TryStatementObject;
 
 public class PDGTryNode extends PDGBlockNode {
 	public PDGTryNode(CFGTryNode cfgTryNode, Set<VariableDeclarationObject> variableDeclarationsInMethod,

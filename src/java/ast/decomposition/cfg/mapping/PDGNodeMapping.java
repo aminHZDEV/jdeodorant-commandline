@@ -13,21 +13,21 @@ import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.Statement;
 
-import gr.uom.java.ast.decomposition.AbstractMethodFragment;
-import gr.uom.java.ast.decomposition.AbstractStatement;
-import gr.uom.java.ast.decomposition.cfg.AbstractVariable;
-import gr.uom.java.ast.decomposition.cfg.CompositeVariable;
-import gr.uom.java.ast.decomposition.cfg.PDGBlockNode;
-import gr.uom.java.ast.decomposition.cfg.PDGControlDependence;
-import gr.uom.java.ast.decomposition.cfg.PDGNode;
-import gr.uom.java.ast.decomposition.cfg.PlainVariable;
-import gr.uom.java.ast.decomposition.cfg.mapping.precondition.ExpressionPreconditionViolation;
-import gr.uom.java.ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
-import gr.uom.java.ast.decomposition.cfg.mapping.precondition.PreconditionViolationType;
-import gr.uom.java.ast.decomposition.matching.ASTNodeDifference;
-import gr.uom.java.ast.decomposition.matching.ASTNodeMatcher;
-import gr.uom.java.ast.decomposition.matching.Difference;
-import gr.uom.java.ast.decomposition.matching.DifferenceType;
+import java.ast.decomposition.AbstractMethodFragment;
+import java.ast.decomposition.AbstractStatement;
+import java.ast.decomposition.cfg.AbstractVariable;
+import java.ast.decomposition.cfg.CompositeVariable;
+import java.ast.decomposition.cfg.PDGBlockNode;
+import java.ast.decomposition.cfg.PDGControlDependence;
+import java.ast.decomposition.cfg.PDGNode;
+import java.ast.decomposition.cfg.PlainVariable;
+import java.ast.decomposition.cfg.mapping.precondition.ExpressionPreconditionViolation;
+import java.ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
+import java.ast.decomposition.cfg.mapping.precondition.PreconditionViolationType;
+import java.ast.decomposition.matching.ASTNodeDifference;
+import java.ast.decomposition.matching.ASTNodeMatcher;
+import java.ast.decomposition.matching.Difference;
+import java.ast.decomposition.matching.DifferenceType;
 
 public class PDGNodeMapping extends IdBasedMapping {
 	private PDGNode nodeG1;

@@ -3,7 +3,7 @@ package java.ast.decomposition.cfg;
 import java.util.ArrayList;
 import java.util.List;
 
-import gr.uom.java.ast.decomposition.AbstractStatement;
+import java.ast.decomposition.AbstractStatement;
 
 public class CFGBranchLoopNode extends CFGBranchNode {
 

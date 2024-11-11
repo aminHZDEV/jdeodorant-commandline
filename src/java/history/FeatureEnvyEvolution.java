@@ -1,12 +1,12 @@
 package java.history;
 
-import gr.uom.java.ast.ASTInformationGenerator;
-import gr.uom.java.ast.ASTReader;
-import gr.uom.java.ast.MethodInvocationObject;
-import gr.uom.java.ast.decomposition.MethodBodyObject;
-import gr.uom.java.ast.decomposition.cfg.AbstractVariable;
-import gr.uom.java.ast.decomposition.cfg.PlainVariable;
-import gr.uom.java.distance.MoveMethodCandidateRefactoring;
+import java.ast.ASTInformationGenerator;
+import java.ast.ASTReader;
+import java.ast.MethodInvocationObject;
+import java.ast.decomposition.MethodBodyObject;
+import java.ast.decomposition.cfg.AbstractVariable;
+import java.ast.decomposition.cfg.PlainVariable;
+import java.distance.MoveMethodCandidateRefactoring;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

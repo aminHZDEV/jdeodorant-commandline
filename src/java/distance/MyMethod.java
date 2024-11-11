@@ -1,7 +1,7 @@
 package java.distance;
 
-import gr.uom.java.ast.MethodObject;
-import gr.uom.java.ast.decomposition.AbstractStatement;
+import java.ast.MethodObject;
+import java.ast.decomposition.AbstractStatement;
 
 import java.util.*;
 

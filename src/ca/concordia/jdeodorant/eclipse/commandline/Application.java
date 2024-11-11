@@ -251,33 +251,6 @@ public class Application implements IApplication {
 		LOGGER.info("Finished parsing " + toolOutputMainFile);
 	}
 
-	public void testOptimalSolution(PDGMapper mapper) {
-		Hashtable<String, String> fileNamesTable = new Hashtable<String, String>();
-		int id = 0;
-		//MappingState state = mapper.getMaximumStateWithMinimumDifferences();
-		//System.out.println(state);
-
-		List<CompleteSubTreeMatch> subTreeMatches = mapper.getBottomUpSubTreeMatches();
-		//System.out.println("***************************");
-
-		//System.out.println(subTreeMatches.toString());
-		MatchingSubtreesTest subtreesTest;
-		try {
-			System.out.println(subTreeMatches.toString());
-			subtreesTest = new MatchingSubtreesTest(fileNamesTable.get(id),subTreeMatches.toString());
-			subtreesTest.test();
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		/*for(PDGSubTreeMapper subTreeMapper : mapper.getSubTreeMappers()) {
-			System.out.println(subTreeMapper.getMaximumStateWithMinimumDifferences().toString());
-		}*/
-		//MatchingTest ca.concordia.jdeodorant.eclipse.commandline.test = new MatchingTest(fileNamesTable.get(id),state.toString());
-		//ca.concordia.jdeodorant.eclipse.commandline.test.test();
-		/*System.out.println(ASTNodeMatcher.nodeComparionsCount);
-		ASTNodeMatcher.nodeComparionsCount = 0;*/
-	}
 
 	private void testRefactoring(IJavaProject iJavaProject, 
 			File originalExcelFile, 

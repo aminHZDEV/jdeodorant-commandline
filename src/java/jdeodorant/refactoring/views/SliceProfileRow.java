@@ -1,6 +1,6 @@
 package java.jdeodorant.refactoring.views;
 
-import gr.uom.java.ast.decomposition.cfg.PlainVariable;
+import java.ast.decomposition.cfg.PlainVariable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

@@ -1,6 +1,6 @@
 package java.jdeodorant.refactoring.views;
 
-import gr.uom.java.history.ProjectVersionPair;
+import java.history.ProjectVersionPair;
 
 public class EvolutionRow {
 	private ProjectVersionPair projectVersionPair;

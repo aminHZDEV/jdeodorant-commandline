@@ -1,6 +1,6 @@
 package java.ast.util.math;
 
-import gr.uom.java.distance.Entity;
+import java.distance.Entity;
 
 import java.util.ArrayList;
 import java.util.HashSet;

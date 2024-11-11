@@ -1,8 +1,8 @@
 package java.ast;
 
-import gr.uom.java.ast.decomposition.cfg.AbstractVariable;
-import gr.uom.java.jdeodorant.preferences.PreferenceConstants;
-import gr.uom.java.jdeodorant.refactoring.Activator;
+import java.ast.decomposition.cfg.AbstractVariable;
+import java.jdeodorant.preferences.PreferenceConstants;
+import java.jdeodorant.refactoring.Activator;
 
 import java.util.ArrayList;
 import java.util.HashMap;

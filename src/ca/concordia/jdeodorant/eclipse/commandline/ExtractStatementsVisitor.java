@@ -49,10 +49,8 @@ public class ExtractStatementsVisitor extends ASTVisitor {
 
 	public boolean visit(AnonymousClassDeclaration node) {
 		//check if start node is inside the AnonymousClassDeclaration
-		if(isStartNodeNestedUnderAnonymousClassDeclaration(node))
-			return true;
-		return false;
-	}
+        return isStartNodeNestedUnderAnonymousClassDeclaration(node);
+    }
 	
 	private boolean isStartNodeNestedUnderAnonymousClassDeclaration(AnonymousClassDeclaration node) {
 		ASTNode parent = startNode.getParent();

@@ -1,10 +1,10 @@
 package java.ast.metrics;
 
-import gr.uom.java.ast.ClassObject;
-import gr.uom.java.ast.FieldInstructionObject;
-import gr.uom.java.ast.MethodInvocationObject;
-import gr.uom.java.ast.MethodObject;
-import gr.uom.java.ast.SystemObject;
+import java.ast.ClassObject;
+import java.ast.FieldInstructionObject;
+import java.ast.MethodInvocationObject;
+import java.ast.MethodObject;
+import java.ast.SystemObject;
 
 import java.util.LinkedHashMap;
 import java.util.List;

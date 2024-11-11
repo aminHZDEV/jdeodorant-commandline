@@ -1,12 +1,12 @@
 package java.ast;
 
-import gr.uom.java.ast.association.Association;
-import gr.uom.java.ast.decomposition.AbstractStatement;
-import gr.uom.java.ast.decomposition.MethodBodyObject;
-import gr.uom.java.ast.decomposition.StatementObject;
-import gr.uom.java.ast.decomposition.cfg.AbstractVariable;
-import gr.uom.java.ast.decomposition.cfg.PlainVariable;
-import gr.uom.java.ast.util.MethodDeclarationUtility;
+import java.ast.association.Association;
+import java.ast.decomposition.AbstractStatement;
+import java.ast.decomposition.MethodBodyObject;
+import java.ast.decomposition.StatementObject;
+import java.ast.decomposition.cfg.AbstractVariable;
+import java.ast.decomposition.cfg.PlainVariable;
+import java.ast.util.MethodDeclarationUtility;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

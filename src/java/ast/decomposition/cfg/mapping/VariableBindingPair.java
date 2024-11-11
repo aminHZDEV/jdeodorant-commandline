@@ -3,7 +3,7 @@ package java.ast.decomposition.cfg.mapping;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
 
-import gr.uom.java.jdeodorant.refactoring.manipulators.RefactoringUtility;
+import java.jdeodorant.refactoring.manipulators.RefactoringUtility;
 
 public class VariableBindingPair {
 	private IVariableBinding binding1;

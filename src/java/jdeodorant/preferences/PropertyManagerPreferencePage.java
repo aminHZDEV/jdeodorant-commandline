@@ -8,7 +8,7 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
-import gr.uom.java.jdeodorant.refactoring.Activator;
+import java.jdeodorant.refactoring.Activator;
 
 /**
  * This class represents a preference page that

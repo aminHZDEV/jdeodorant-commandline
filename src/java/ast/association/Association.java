@@ -1,6 +1,6 @@
 package java.ast.association;
 
-import gr.uom.java.ast.FieldObject;
+import java.ast.FieldObject;
 
 public class Association {
 

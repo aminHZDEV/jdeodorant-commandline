@@ -1,8 +1,8 @@
 package java.jdeodorant.refactoring.views;
 
-import gr.uom.java.ast.decomposition.cfg.mapping.CloneStructureNode;
-import gr.uom.java.ast.decomposition.matching.ASTNodeDifference;
-import gr.uom.java.ast.decomposition.matching.Difference;
+import java.ast.decomposition.cfg.mapping.CloneStructureNode;
+import java.ast.decomposition.matching.ASTNodeDifference;
+import java.ast.decomposition.matching.Difference;
 
 import java.util.ArrayList;
 import java.util.List;

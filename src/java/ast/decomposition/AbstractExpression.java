@@ -2,9 +2,9 @@ package java.ast.decomposition;
 
 import java.util.List;
 
-import gr.uom.java.ast.ASTInformation;
-import gr.uom.java.ast.ASTInformationGenerator;
-import gr.uom.java.ast.util.ExpressionExtractor;
+import java.ast.ASTInformation;
+import java.ast.ASTInformationGenerator;
+import java.ast.util.ExpressionExtractor;
 
 import org.eclipse.jdt.core.dom.Expression;
 

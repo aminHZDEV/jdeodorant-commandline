@@ -7,13 +7,13 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.Statement;
 
-import gr.uom.java.ast.decomposition.AbstractExpression;
-import gr.uom.java.ast.decomposition.AbstractStatement;
-import gr.uom.java.ast.decomposition.CompositeStatementObject;
-import gr.uom.java.ast.decomposition.cfg.PDGNode;
-import gr.uom.java.ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
-import gr.uom.java.ast.decomposition.matching.ASTNodeDifference;
-import gr.uom.java.ast.decomposition.matching.DifferenceType;
+import java.ast.decomposition.AbstractExpression;
+import java.ast.decomposition.AbstractStatement;
+import java.ast.decomposition.CompositeStatementObject;
+import java.ast.decomposition.cfg.PDGNode;
+import java.ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
+import java.ast.decomposition.matching.ASTNodeDifference;
+import java.ast.decomposition.matching.DifferenceType;
 
 public abstract class NodeMapping implements Comparable<NodeMapping> {
 	private List<PreconditionViolation> preconditionViolations = new ArrayList<PreconditionViolation>();

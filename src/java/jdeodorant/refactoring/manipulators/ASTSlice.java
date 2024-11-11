@@ -1,11 +1,11 @@
 package java.jdeodorant.refactoring.manipulators;
 
-import gr.uom.java.ast.decomposition.cfg.BasicBlock;
-import gr.uom.java.ast.decomposition.cfg.PDGNode;
-import gr.uom.java.ast.decomposition.cfg.PDGObjectSliceUnion;
-import gr.uom.java.ast.decomposition.cfg.PDGSlice;
-import gr.uom.java.ast.decomposition.cfg.PDGSliceUnion;
-import gr.uom.java.ast.decomposition.cfg.AbstractVariable;
+import java.ast.decomposition.cfg.BasicBlock;
+import java.ast.decomposition.cfg.PDGNode;
+import java.ast.decomposition.cfg.PDGObjectSliceUnion;
+import java.ast.decomposition.cfg.PDGSlice;
+import java.ast.decomposition.cfg.PDGSliceUnion;
+import java.ast.decomposition.cfg.AbstractVariable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

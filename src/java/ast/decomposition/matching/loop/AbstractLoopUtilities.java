@@ -1,8 +1,8 @@
 package java.ast.decomposition.matching.loop;
 
-import gr.uom.java.ast.decomposition.matching.conditional.AbstractControlStructureUtilities;
-import gr.uom.java.ast.util.ExpressionExtractor;
-import gr.uom.java.ast.util.StatementExtractor;
+import java.ast.decomposition.matching.conditional.AbstractControlStructureUtilities;
+import java.ast.util.ExpressionExtractor;
+import java.ast.util.StatementExtractor;
 
 import java.util.ArrayList;
 import java.util.Collections;

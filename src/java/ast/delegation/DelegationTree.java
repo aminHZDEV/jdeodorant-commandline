@@ -1,6 +1,6 @@
 package java.ast.delegation;
 
-import gr.uom.java.ast.*;
+import java.ast.*;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Enumeration;
@@ -30,7 +30,7 @@ public class DelegationTree {
 	                // methodPos != methodInvocationPos -> removes self-delegations
 	                // !existsNode(node.children(),methodInvocation) -> removes duplicate delegations
 	                // !existsNode(node.getUserObjectPath(),methodInvocation) -> avoids cyclic delegations
-	                if(!existsNode(node.children(),methodInvocation) && !existsNode(node.getUserObjectPath(),methodInvocation)) {
+	                if(!existsNode(new Enumeration[]{node.children()},methodInvocation) && !existsNode(node.getUserObjectPath(),methodInvocation)) {
 	                    DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(methodInvocation);
 	                    node.add(childNode);
 	                    getDelegations(childNode);

@@ -2,7 +2,7 @@ package java.ast.decomposition.cfg;
 
 import org.eclipse.jdt.core.dom.Statement;
 
-import gr.uom.java.ast.decomposition.AbstractStatement;
+import java.ast.decomposition.AbstractStatement;
 
 public class CFGNode extends GraphNode implements Comparable<CFGNode> {
 	private AbstractStatement statement;

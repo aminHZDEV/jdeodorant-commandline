@@ -1,10 +1,10 @@
 package java.ast.decomposition.cfg.mapping;
 
-import gr.uom.java.ast.decomposition.StatementType;
-import gr.uom.java.ast.decomposition.cfg.CFGBranchIfNode;
-import gr.uom.java.ast.decomposition.cfg.CFGThrowNode;
-import gr.uom.java.ast.decomposition.cfg.PDGExitNode;
-import gr.uom.java.ast.decomposition.cfg.PDGNode;
+import java.ast.decomposition.StatementType;
+import java.ast.decomposition.cfg.CFGBranchIfNode;
+import java.ast.decomposition.cfg.CFGThrowNode;
+import java.ast.decomposition.cfg.PDGExitNode;
+import java.ast.decomposition.cfg.PDGNode;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

@@ -8,16 +8,16 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeSet;
 
-import gr.uom.java.ast.ASTReader;
-import gr.uom.java.ast.AbstractMethodDeclaration;
-import gr.uom.java.ast.ClassDeclarationObject;
-import gr.uom.java.ast.CompilationUnitCache;
-import gr.uom.java.ast.SystemObject;
-import gr.uom.java.ast.decomposition.cfg.CFG;
-import gr.uom.java.ast.decomposition.cfg.PDG;
-import gr.uom.java.ast.decomposition.cfg.PDGMethodEntryNode;
-import gr.uom.java.ast.decomposition.cfg.PDGNode;
-import gr.uom.java.ast.decomposition.matching.NodePairComparisonCache;
+import java.ast.ASTReader;
+import java.ast.AbstractMethodDeclaration;
+import java.ast.ClassDeclarationObject;
+import java.ast.CompilationUnitCache;
+import java.ast.SystemObject;
+import java.ast.decomposition.cfg.CFG;
+import java.ast.decomposition.cfg.PDG;
+import java.ast.decomposition.cfg.PDGMethodEntryNode;
+import java.ast.decomposition.cfg.PDGNode;
+import java.ast.decomposition.matching.NodePairComparisonCache;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;

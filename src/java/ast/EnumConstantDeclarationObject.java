@@ -1,6 +1,6 @@
 package java.ast;
 
-import gr.uom.java.ast.decomposition.AbstractExpression;
+import java.ast.decomposition.AbstractExpression;
 
 import java.util.ArrayList;
 import java.util.List;

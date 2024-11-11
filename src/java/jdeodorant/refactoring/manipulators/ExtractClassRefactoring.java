@@ -1,16 +1,16 @@
 package java.jdeodorant.refactoring.manipulators;
 
-import gr.uom.java.ast.ASTReader;
-import gr.uom.java.ast.decomposition.cfg.PlainVariable;
-import gr.uom.java.ast.util.ExpressionExtractor;
-import gr.uom.java.ast.util.MethodDeclarationUtility;
-import gr.uom.java.ast.util.StatementExtractor;
-import gr.uom.java.ast.util.ThrownExceptionVisitor;
-import gr.uom.java.ast.util.TypeVisitor;
-import gr.uom.java.ast.util.math.AdjacencyList;
-import gr.uom.java.ast.util.math.Edge;
-import gr.uom.java.ast.util.math.Node;
-import gr.uom.java.ast.util.math.TarjanAlgorithm;
+import java.ast.ASTReader;
+import java.ast.decomposition.cfg.PlainVariable;
+import java.ast.util.ExpressionExtractor;
+import java.ast.util.MethodDeclarationUtility;
+import java.ast.util.StatementExtractor;
+import java.ast.util.ThrownExceptionVisitor;
+import java.ast.util.TypeVisitor;
+import java.ast.util.math.AdjacencyList;
+import java.ast.util.math.Edge;
+import java.ast.util.math.Node;
+import java.ast.util.math.TarjanAlgorithm;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

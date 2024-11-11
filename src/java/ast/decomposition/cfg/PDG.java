@@ -1,12 +1,12 @@
 package java.ast.decomposition.cfg;
 
-import gr.uom.java.ast.AbstractMethodDeclaration;
-import gr.uom.java.ast.FieldObject;
-import gr.uom.java.ast.LocalVariableDeclarationObject;
-import gr.uom.java.ast.ParameterObject;
-import gr.uom.java.ast.VariableDeclarationObject;
-import gr.uom.java.jdeodorant.preferences.PreferenceConstants;
-import gr.uom.java.jdeodorant.refactoring.Activator;
+import java.ast.AbstractMethodDeclaration;
+import java.ast.FieldObject;
+import java.ast.LocalVariableDeclarationObject;
+import java.ast.ParameterObject;
+import java.ast.VariableDeclarationObject;
+import java.jdeodorant.preferences.PreferenceConstants;
+import java.jdeodorant.refactoring.Activator;
 
 import java.util.ArrayList;
 import java.util.Collections;

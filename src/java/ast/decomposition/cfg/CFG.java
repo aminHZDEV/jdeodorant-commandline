@@ -22,13 +22,13 @@ import org.eclipse.jdt.core.dom.SwitchStatement;
 import org.eclipse.jdt.core.dom.ThrowStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
 
-import gr.uom.java.ast.AbstractMethodDeclaration;
-import gr.uom.java.ast.decomposition.AbstractStatement;
-import gr.uom.java.ast.decomposition.CompositeStatementObject;
-import gr.uom.java.ast.decomposition.MethodBodyObject;
-import gr.uom.java.ast.decomposition.StatementObject;
-import gr.uom.java.ast.decomposition.SynchronizedStatementObject;
-import gr.uom.java.ast.decomposition.TryStatementObject;
+import java.ast.AbstractMethodDeclaration;
+import java.ast.decomposition.AbstractStatement;
+import java.ast.decomposition.CompositeStatementObject;
+import java.ast.decomposition.MethodBodyObject;
+import java.ast.decomposition.StatementObject;
+import java.ast.decomposition.SynchronizedStatementObject;
+import java.ast.decomposition.TryStatementObject;
 
 public class CFG extends Graph {
 	private static final int PUSH_NEW_LIST = 0;

@@ -1,8 +1,8 @@
 package java.ast.visualization;
 
 
-import gr.uom.java.ast.FieldInstructionObject;
-import gr.uom.java.ast.MethodInvocationObject;
+import java.ast.FieldInstructionObject;
+import java.ast.MethodInvocationObject;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,6 +1,6 @@
 package java.ast.decomposition.matching.conditional;
 
-import gr.uom.java.ast.decomposition.matching.ASTNodeMatcher;
+import java.ast.decomposition.matching.ASTNodeMatcher;
 
 import java.util.ArrayList;
 import java.util.List;

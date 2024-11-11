@@ -5,8 +5,8 @@ import java.util.Set;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jface.viewers.StyledString;
 
-import gr.uom.java.ast.decomposition.AbstractExpression;
-import gr.uom.java.ast.decomposition.matching.ASTNodeDifference;
+import java.ast.decomposition.AbstractExpression;
+import java.ast.decomposition.matching.ASTNodeDifference;
 
 public class DualExpressionWithCommonSuperTypePreconditionViolation extends DualExpressionPreconditionViolation {
 

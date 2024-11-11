@@ -1,8 +1,8 @@
 package java.ast.visualization;
 
-import gr.uom.java.distance.CandidateRefactoring;
-import gr.uom.java.distance.MoveMethodCandidateRefactoring;
-import gr.uom.java.jdeodorant.refactoring.views.FeatureEnvy;
+import java.distance.CandidateRefactoring;
+import java.distance.MoveMethodCandidateRefactoring;
+import java.jdeodorant.refactoring.views.FeatureEnvy;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.draw2d.ColorConstants;
@@ -120,7 +120,7 @@ public class FeatureEnviedMethodInformationControl extends AbstractInformationCo
 					
 					
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-					IViewPart viewPart = page.findView("gr.uom.java.jdeodorant.views.FeatureEnvy");
+					IViewPart viewPart = page.findView("java.jdeodorant.views.FeatureEnvy");
 					if(viewPart != null){
 						FeatureEnvy featureEnvy = (FeatureEnvy) viewPart;
 						featureEnvy.setSelectedLine(candidateRefactoring);

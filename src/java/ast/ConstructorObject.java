@@ -1,8 +1,8 @@
 package java.ast;
 
-import gr.uom.java.ast.decomposition.MethodBodyObject;
-import gr.uom.java.ast.decomposition.cfg.AbstractVariable;
-import gr.uom.java.ast.decomposition.cfg.PlainVariable;
+import java.ast.decomposition.MethodBodyObject;
+import java.ast.decomposition.cfg.AbstractVariable;
+import java.ast.decomposition.cfg.PlainVariable;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

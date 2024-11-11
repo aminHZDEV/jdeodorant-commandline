@@ -8,9 +8,9 @@ import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.LabeledStatement;
 import org.eclipse.jdt.core.dom.SynchronizedStatement;
 
-import gr.uom.java.ast.decomposition.AbstractStatement;
-import gr.uom.java.ast.decomposition.CompositeStatementObject;
-import gr.uom.java.ast.decomposition.TryStatementObject;
+import java.ast.decomposition.AbstractStatement;
+import java.ast.decomposition.CompositeStatementObject;
+import java.ast.decomposition.TryStatementObject;
 
 public class CFGBranchIfNode extends CFGBranchConditionalNode {
 

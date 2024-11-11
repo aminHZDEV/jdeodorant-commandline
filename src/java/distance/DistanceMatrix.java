@@ -1,16 +1,16 @@
 package java.distance;
 
-import gr.uom.java.ast.ASTReader;
-import gr.uom.java.ast.ClassObject;
-import gr.uom.java.ast.FieldInstructionObject;
-import gr.uom.java.ast.MethodInvocationObject;
-import gr.uom.java.ast.MethodObject;
-import gr.uom.java.ast.ParameterObject;
-import gr.uom.java.ast.association.Association;
-import gr.uom.java.ast.util.math.Cluster;
-import gr.uom.java.ast.util.math.Clustering;
-import gr.uom.java.jdeodorant.preferences.PreferenceConstants;
-import gr.uom.java.jdeodorant.refactoring.Activator;
+import java.ast.ASTReader;
+import java.ast.ClassObject;
+import java.ast.FieldInstructionObject;
+import java.ast.MethodInvocationObject;
+import java.ast.MethodObject;
+import java.ast.ParameterObject;
+import java.ast.association.Association;
+import java.ast.util.math.Cluster;
+import java.ast.util.math.Clustering;
+import java.jdeodorant.preferences.PreferenceConstants;
+import java.jdeodorant.refactoring.Activator;
 
 import java.util.*;
 

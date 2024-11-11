@@ -1,7 +1,7 @@
 package java.ast.decomposition.cfg.mapping;
 
-import gr.uom.java.ast.decomposition.cfg.PDGNode;
-import gr.uom.java.ast.decomposition.matching.ASTNodeDifference;
+import java.ast.decomposition.cfg.PDGNode;
+import java.ast.decomposition.matching.ASTNodeDifference;
 
 import java.util.ArrayList;
 import java.util.List;

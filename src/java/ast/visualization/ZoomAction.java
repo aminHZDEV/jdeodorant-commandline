@@ -9,7 +9,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 public class ZoomAction extends Action implements IWorkbenchAction {
 
-	private static final String ID = "gr.uom.java.ast.visualization.ZoomAction";  
+	private static final String ID = "java.ast.visualization.ZoomAction";  
 	private double scale;
 	private ScalableFreeformLayeredPane freeformRoot= null;
 	private ScalableLayeredPane root= null;

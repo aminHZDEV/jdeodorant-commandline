@@ -1,6 +1,6 @@
 package java.jdeodorant.refactoring.views;
 
-import gr.uom.java.jdeodorant.refactoring.manipulators.ExtractClassRefactoring;
+import java.jdeodorant.refactoring.manipulators.ExtractClassRefactoring;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

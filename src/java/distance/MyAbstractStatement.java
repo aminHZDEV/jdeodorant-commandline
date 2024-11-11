@@ -1,10 +1,10 @@
 package java.distance;
 
-import gr.uom.java.ast.ASTReader;
-import gr.uom.java.ast.FieldInstructionObject;
-import gr.uom.java.ast.MethodInvocationObject;
-import gr.uom.java.ast.SystemObject;
-import gr.uom.java.ast.decomposition.AbstractStatement;
+import java.ast.ASTReader;
+import java.ast.FieldInstructionObject;
+import java.ast.MethodInvocationObject;
+import java.ast.SystemObject;
+import java.ast.decomposition.AbstractStatement;
 
 import java.util.ArrayList;
 import java.util.HashSet;

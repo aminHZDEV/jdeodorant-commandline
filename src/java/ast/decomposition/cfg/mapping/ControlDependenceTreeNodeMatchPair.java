@@ -1,10 +1,10 @@
 package java.ast.decomposition.cfg.mapping;
 
-import gr.uom.java.ast.decomposition.AbstractMethodFragment;
-import gr.uom.java.ast.decomposition.matching.ASTNodeDifference;
-import gr.uom.java.ast.decomposition.matching.ASTNodeMatcher;
-import gr.uom.java.ast.decomposition.matching.Difference;
-import gr.uom.java.ast.decomposition.matching.DifferenceType;
+import java.ast.decomposition.AbstractMethodFragment;
+import java.ast.decomposition.matching.ASTNodeDifference;
+import java.ast.decomposition.matching.ASTNodeMatcher;
+import java.ast.decomposition.matching.Difference;
+import java.ast.decomposition.matching.DifferenceType;
 
 import java.util.LinkedHashSet;
 import java.util.List;

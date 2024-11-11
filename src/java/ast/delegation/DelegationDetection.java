@@ -1,8 +1,8 @@
 package java.ast.delegation;
 
-import gr.uom.java.ast.ClassObject;
-import gr.uom.java.ast.MethodObject;
-import gr.uom.java.ast.SystemObject;
+import java.ast.ClassObject;
+import java.ast.MethodObject;
+import java.ast.SystemObject;
 
 import java.util.List;
 import java.util.ArrayList;
