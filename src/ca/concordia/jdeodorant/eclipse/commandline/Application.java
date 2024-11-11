@@ -11,7 +11,6 @@ import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Hashtable;
 import java.util.LinkedHashMap;
 import java.util.LinkedList;
 import java.util.List;
@@ -91,7 +90,7 @@ import ca.concordia.jdeodorant.eclipse.commandline.parsers.CloneToolParser;
 import ca.concordia.jdeodorant.eclipse.commandline.parsers.CloneToolParserType;
 import ca.concordia.jdeodorant.eclipse.commandline.parsers.ExcelFileColumns;
 import ca.concordia.jdeodorant.eclipse.commandline.utility.FileLogger;
-import ca.concordia.jdeodorant.eclipse.commandline.utility.Mailer;
+
 import java.ast.ASTReader;
 import java.ast.AbstractMethodDeclaration;
 import java.ast.ClassDeclarationObject;
@@ -108,7 +107,6 @@ import java.ast.decomposition.cfg.mapping.ControlDependenceTreeGenerator;
 import java.ast.decomposition.cfg.mapping.ControlDependenceTreeNode;
 import java.ast.decomposition.cfg.mapping.ControlDependenceTreeNodeMatchPair;
 import java.ast.decomposition.cfg.mapping.DivideAndConquerMatcher;
-import java.ast.decomposition.cfg.mapping.PDGMapper;
 import java.ast.decomposition.cfg.mapping.PDGRegionSubTreeMapper;
 import java.ast.decomposition.matching.NodePairComparisonCache;
 import java.jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
@@ -216,19 +214,19 @@ public class Application implements IApplication {
 			}
 
 			if (cliParser.getNotificationEmailAddresses().length > 0) {
-				Mailer mailer = new Mailer(cliParser.getSMTPServerAddress(),
-						cliParser.getSMTPServerPort(),
-						cliParser.isMailServerAuthenticated(),
-						cliParser.getMailServerSecurtyType(),
-						cliParser.getMailServerUserName(),
-						cliParser.getMailServerPassword());
+//				Mailer mailer = new Mailer(cliParser.getSMTPServerAddress(),
+//						cliParser.getSMTPServerPort(),
+//						cliParser.isMailServerAuthenticated(),
+//						cliParser.getMailServerSecurtyType(),
+//						cliParser.getMailServerUserName(),
+//						cliParser.getMailServerPassword());
 				String message = String.format("Finished analysing project %s (%s) in %s [%s]",
 						cliParser.getProjectName(),
 						cliParser.getExcelFilePath(),
 						getComputerName(),
 						status);
 				String subject = String.format("Analysis finished [%s]", status);
-				mailer.sendMail(subject, message, cliParser.getMailServerUserName(), cliParser.getNotificationEmailAddresses());
+//				mailer.sendMail(subject, message, cliParser.getMailServerUserName(), cliParser.getNotificationEmailAddresses());
 			}
 		}
 
@@ -379,8 +377,7 @@ public class Application implements IApplication {
 						status = "user has marked this clone group to be skipped";
 					else if(repeatedCloneGroup)
 						status = "this is a repeated clone";
-					else if (classLevelClone)
-						status = "this is a class-level clone group";
+					else status = "this is a class-level clone group";
 
 					LOGGER.warn(String.format("%s%%: Skipping clone group %s (row %s to %s), since %s", 
 							Math.round(100 * (float)cloneGroupStartingRowNumber / numberOfRows),

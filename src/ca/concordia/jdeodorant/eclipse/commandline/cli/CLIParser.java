@@ -15,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import ca.concordia.jdeodorant.eclipse.commandline.parsers.CloneToolParserType;
-import ca.concordia.jdeodorant.eclipse.commandline.utility.Mailer.SecurityType;
 
 
 /**

@@ -20,6 +20,7 @@
     </licenses>
 
     <properties>
+        <main.class>ca.concordia.jdeodorant.eclipse.commandline.Application</main.class>
         <maven.compiler.source>11</maven.compiler.source>
         <maven.compiler.target>11</maven.compiler.target>
         <tycho.version>2.3.0</tycho.version> <!-- Use appropriate Tycho version -->
@@ -126,6 +127,12 @@
                             <id>repository</id>
                         </repository>
                     </artifactRepository>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>ca.concordia.jdeodorant.eclipse.commandline.Application</mainClass>
+                        </manifest>
+                    </archive>
                 </configuration>
             </plugin>
             <plugin>
@@ -135,19 +142,30 @@
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-jar-plugin</artifactId>
-                <version>3.2.0</version> <!-- Use a recent version -->
-                <configuration>
-                    <archive>
-                        <manifest>
-                            <addClasspath>true</addClasspath>
-                            <mainClass>ca.concordia.jdeodorant.eclipse.commandline.Application</mainClass>
-                        </manifest>
-                    </archive>
-                </configuration>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.2.4</version>
+                <executions>
+<!--                    <execution>-->
+<!--                        <phase>package</phase>-->
+<!--                        <goals>-->
+<!--                            <goal>shade</goal>-->
+<!--                        </goals>-->
+<!--                        <configuration>-->
+<!--                            <relocations>-->
+<!--                                <relocation>-->
+<!--                                    <pattern>org.eclipse</pattern>-->
+<!--                                    <shadedPattern>shaded.org.eclipse</shadedPattern>-->
+<!--                                </relocation>-->
+<!--                            </relocations>-->
+<!--                        </configuration>-->
+<!--                    </execution>-->
+                </executions>
             </plugin>
+
         </plugins>
+
     </build>
+
 
     <repositories>
 <!--        <repository>-->
