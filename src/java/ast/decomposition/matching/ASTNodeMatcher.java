@@ -157,7 +157,7 @@ public class ASTNodeMatcher extends ASTMatcher{
 	}
 
 	public boolean isParameterizable() {
-		if(onlyVariableTypeMismatchDifferences() || additionallyMatchedFragments1.size() > 0 || additionallyMatchedFragments2.size() > 0)
+		if(onlyVariableTypeMismatchDifferences() || !additionallyMatchedFragments1.isEmpty() || additionallyMatchedFragments2.size() > 0)
 			return true;
 		else if(methodInvocationMatchWithMissingExpressionAndDifferentNameAndDifferentArguments())
 			return false;
@@ -505,7 +505,7 @@ public class ASTNodeMatcher extends ASTMatcher{
 			for(ITypeBinding superType2 : superTypes2) {
 				if(superType1.getQualifiedName().equals(superType2.getQualifiedName()) &&
 						!superType1.getQualifiedName().equals("java.lang.Object")) {
-					addTypeBinding(superType1, typeBindings);
+					addTypeBinding(superType1, (Set<ITypeBinding>) typeBindings);
 				}
 			}
 		}
