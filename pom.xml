@@ -40,10 +40,14 @@
 
         <dependency>
             <groupId>org.eclipse.jdt</groupId>
-            <artifactId>org.eclipse.jdt.core</artifactId>
-            <version>3.37.0</version>
+            <artifactId>org.eclipse.jdt.core.manipulation</artifactId>
+            <version>1.14.100</version>
         </dependency>
-
+        <dependency>
+            <groupId>org.eclipselabs</groupId>
+            <artifactId>gef-gwt</artifactId>
+            <version>3.7.0</version>
+        </dependency>
         <dependency>
             <groupId>org.eclipse.ltk.core</groupId>
             <artifactId>refactoring</artifactId>
@@ -96,6 +100,18 @@
             <version>4.3</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.eclipse.jdt</groupId>
+            <artifactId>org.eclipse.jdt.ui</artifactId>
+            <version>3.33.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.ui.workbench</artifactId>
+            <version>3.130.0</version>
+        </dependency>
+
     </dependencies>
 
     <build>

@@ -104,6 +104,47 @@ import org.eclipse.jdt.core.dom.SuperMethodInvocation;
 import org.eclipse.jdt.core.dom.ThisExpression;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
 
+
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedHashMap;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.ListIterator;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeSet;
+
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.IType;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
+import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
+import org.eclipse.jdt.core.dom.ArrayAccess;
+import org.eclipse.jdt.core.dom.Assignment;
+import org.eclipse.jdt.core.dom.BodyDeclaration;
+import org.eclipse.jdt.core.dom.ClassInstanceCreation;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.ExpressionStatement;
+import org.eclipse.jdt.core.dom.FieldAccess;
+import org.eclipse.jdt.core.dom.IBinding;
+import org.eclipse.jdt.core.dom.IMethodBinding;
+import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.IVariableBinding;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.NullLiteral;
+import org.eclipse.jdt.core.dom.PostfixExpression;
+import org.eclipse.jdt.core.dom.PrefixExpression;
+import org.eclipse.jdt.core.dom.QualifiedName;
+import org.eclipse.jdt.core.dom.ReturnStatement;
+import org.eclipse.jdt.core.dom.SimpleName;
+import org.eclipse.jdt.core.dom.Statement;
+import org.eclipse.jdt.core.dom.SuperMethodInvocation;
+import org.eclipse.jdt.core.dom.ThisExpression;
+import org.eclipse.jdt.core.dom.VariableDeclaration;
+
 public class PreconditionExaminer {
 	private PDG pdg1;
 	private PDG pdg2;
@@ -149,14 +190,15 @@ public class PreconditionExaminer {
 	private MappingState finalState;
 	private TreeSet<PDGNode> allNodesInSubTreePDG1;
 	private TreeSet<PDGNode> allNodesInSubTreePDG2;
+	private LambdaExpressionPreconditionExaminer lambdaExpressionPreconditionExaminer;
 	private CloneRefactoringType cloneRefactoringType;
 	private Set<PlainVariable> declaredVariablesInRemainingNodesDefinedByMappedNodesG1;
 	private Set<PlainVariable> declaredVariablesInRemainingNodesDefinedByMappedNodesG2;
-	
+
 	public PreconditionExaminer(PDG pdg1, PDG pdg2,
-			ICompilationUnit iCompilationUnit1, ICompilationUnit iCompilationUnit2,
-			CloneStructureNode cloneStructureRoot, MappingState finalState,
-			TreeSet<PDGNode> allNodesInSubTreePDG1, TreeSet<PDGNode> allNodesInSubTreePDG2) {
+								ICompilationUnit iCompilationUnit1, ICompilationUnit iCompilationUnit2,
+								CloneStructureNode cloneStructureRoot, MappingState finalState,
+								TreeSet<PDGNode> allNodesInSubTreePDG1, TreeSet<PDGNode> allNodesInSubTreePDG2) {
 		this.pdg1 = pdg1;
 		this.pdg2 = pdg2;
 		this.iCompilationUnit1 = iCompilationUnit1;
@@ -328,15 +370,78 @@ public class PreconditionExaminer {
 					directlyAccessedLocalMethodsG1, indirectlyAccessedLocalMethodsG1, expressions1, fieldAccessReplacedWithGetterExpressions1, fieldAssignmentReplacedWithSetterExpressions1, this.iCompilationUnit1);
 			findLocallyAccessedFields(pdg2, mappedNodesG2, commonSuperclass, directlyAccessedLocalFieldsG2, indirectlyAccessedLocalFieldsG2, directlyModifiedLocalFieldsG2, indirectlyModifiedLocalFieldsG2,
 					directlyAccessedLocalMethodsG2, indirectlyAccessedLocalMethodsG2, expressions2, fieldAccessReplacedWithGetterExpressions2, fieldAssignmentReplacedWithSetterExpressions2, this.iCompilationUnit2);
-			this.variablesToBeReturnedG1 = variablesToBeReturned(pdg1, getRemovableNodesG1());
-			this.variablesToBeReturnedG2 = variablesToBeReturned(pdg2, getRemovableNodesG2());
 			checkCloneStructureNodeForPreconditions(getCloneStructureRoot());
 			processNonMappedNodesMovableBeforeAndAfter();
+			this.lambdaExpressionPreconditionExaminer = new LambdaExpressionPreconditionExaminer(getCloneStructureRoot(), getMaximumStateWithMinimumDifferences(), getCommonPassedParameters(), nonMappedNodesG1, nonMappedNodesG2);
+			Set<PDGNode> remainingMovableNodesG1 = new TreeSet<PDGNode>();
+			remainingMovableNodesG1.addAll(nonMappedPDGNodesG1MovableBefore);
+			remainingMovableNodesG1.addAll(nonMappedPDGNodesG1MovableAfter);
+			remainingMovableNodesG1.addAll(nonMappedPDGNodesG1MovableBeforeAndAfter);
+
+			Set<PDGNode> remainingMovableNodesG2 = new TreeSet<PDGNode>();
+			remainingMovableNodesG2.addAll(nonMappedPDGNodesG2MovableBefore);
+			remainingMovableNodesG2.addAll(nonMappedPDGNodesG2MovableAfter);
+			remainingMovableNodesG2.addAll(nonMappedPDGNodesG2MovableBeforeAndAfter);
+			//discard the block gaps in which all nodes can be moved before or after the clone fragments, and are directly nested under cloneStructureRoot
+			List<PDGNodeBlockGap> discardedBlockGaps = new ArrayList<PDGNodeBlockGap>();
+			for(PDGNodeBlockGap blockGap : lambdaExpressionPreconditionExaminer.getRefactorableBlockGaps()) {
+				if(remainingMovableNodesG1.containsAll(blockGap.getNodesG1()) && remainingMovableNodesG2.containsAll(blockGap.getNodesG2()) && blockGap.getParent().equals(cloneStructureRoot)) {
+					discardedBlockGaps.add(blockGap);
+				}
+				if(blockGap.getNodesG1().containsAll(allNodesInSubTreePDG1) && blockGap.getNodesG2().containsAll(allNodesInSubTreePDG2)) {
+					//the block gap contains the entire clone fragments
+					discardedBlockGaps.add(blockGap);
+				}
+			}
+			lambdaExpressionPreconditionExaminer.discardBlockGaps(discardedBlockGaps);
+			Set<PDGNode> nodesInBlockGapsG1 = new TreeSet<PDGNode>();
+			Set<PDGNode> nodesInBlockGapsG2 = new TreeSet<PDGNode>();
+			for(PDGNodeBlockGap blockGap : getRefactorableBlockGaps()) {
+				nodesInBlockGapsG1.addAll(blockGap.getNodesG1());
+				nodesInBlockGapsG2.addAll(blockGap.getNodesG2());
+			}
+			Set<PDGNode> allMappedNodesG1 = new TreeSet<PDGNode>(mappedNodesG1);
+			allMappedNodesG1.addAll(nodesInBlockGapsG1);
+			Set<PDGNode> allMappedNodesG2 = new TreeSet<PDGNode>(mappedNodesG2);
+			allMappedNodesG2.addAll(nodesInBlockGapsG2);
+			//Set<PDGNode> allNonMappedNodesG1 = new TreeSet<PDGNode>(nonMappedNodesG1);
+			//allNonMappedNodesG1.removeAll(nodesInBlockGapsG1);
+			//Set<PDGNode> allNonMappedNodesG2 = new TreeSet<PDGNode>(nonMappedNodesG2);
+			//allNonMappedNodesG2.removeAll(nodesInBlockGapsG2);
+			this.variablesToBeReturnedG1 = variablesToBeReturned(pdg1, allMappedNodesG1);
+			this.variablesToBeReturnedG2 = variablesToBeReturned(pdg2, allMappedNodesG2);
 			checkPreconditionsAboutReturnedVariables();
 			checkIfAllPossibleExecutionFlowsEndInReturn();
 			this.cloneRefactoringType = computeRefactoringType();
-			this.declaredVariablesInRemainingNodesDefinedByMappedNodesG1 = findDeclaredVariablesInRemainingNodesDefinedByMappedNodes(pdg1, getRemovableNodesG1());
-			this.declaredVariablesInRemainingNodesDefinedByMappedNodesG2 = findDeclaredVariablesInRemainingNodesDefinedByMappedNodes(pdg2, getRemovableNodesG2());
+			this.declaredVariablesInRemainingNodesDefinedByMappedNodesG1 = findDeclaredVariablesInRemainingNodesDefinedByMappedNodes(pdg1, allMappedNodesG1);
+			this.declaredVariablesInRemainingNodesDefinedByMappedNodesG2 = findDeclaredVariablesInRemainingNodesDefinedByMappedNodes(pdg2, allMappedNodesG2);
+		}
+	}
+
+	public List<PDGExpressionGap> getRefactorableExpressionGaps() {
+		if(lambdaExpressionPreconditionExaminer != null) {
+			return lambdaExpressionPreconditionExaminer.getRefactorableExpressionGaps();
+		}
+		else {
+			return new ArrayList<PDGExpressionGap>();
+		}
+	}
+
+	public List<PDGNodeBlockGap> getRefactorableBlockGaps() {
+		if(lambdaExpressionPreconditionExaminer != null) {
+			return lambdaExpressionPreconditionExaminer.getRefactorableBlockGaps();
+		}
+		else {
+			return new ArrayList<PDGNodeBlockGap>();
+		}
+	}
+
+	public Set<VariableBindingKeyPair> getLocalVariablesReturnedByBlockGaps() {
+		if(lambdaExpressionPreconditionExaminer != null) {
+			return lambdaExpressionPreconditionExaminer.getLocalVariablesReturnedByBlockGaps();
+		}
+		else {
+			return new LinkedHashSet<VariableBindingKeyPair>();
 		}
 	}
 
@@ -558,7 +663,7 @@ public class PreconditionExaminer {
 							if((variable2.getVariableName().equals(variable1.getVariableName()) ||
 									variable1.getVariableName().equals(renamedVariableName)) &&
 									(variable2.getVariableType().equals(variable1.getVariableType()) ||
-											variableBinding1 != null && variableBinding2 != null && ASTNodeMatcher.commonSuperType(variableBinding1.getType(), variableBinding2.getType()) != null)) {
+											commonSuperType(variableBinding1, variableBinding2))) {
 								sortedVariables2.add(variable2);
 								break;
 							}
@@ -607,6 +712,45 @@ public class PreconditionExaminer {
 		}
 	}
 
+	private boolean commonSuperType(IVariableBinding variableBinding1, IVariableBinding variableBinding2) {
+		if(variableBinding1 != null && variableBinding2 != null) {
+			ITypeBinding typeBinding1 = variableBinding1.getType();
+			ITypeBinding typeBinding2 = variableBinding2.getType();
+			ITypeBinding commonSuperTypeBinding = ASTNodeMatcher.commonSuperType(typeBinding1, typeBinding2);
+			if(commonSuperTypeBinding != null) {
+				return true;
+			}
+			else if(typeBinding1.getQualifiedName().equals("java.lang.Number") && isNumberPrimitiveType(typeBinding2)) {
+				return true;
+			}
+			else if(isNumberPrimitiveType(typeBinding1) && typeBinding2.getQualifiedName().equals("java.lang.Number")) {
+				return true;
+			}
+			else if(typeBinding1.getName().equals("float") && typeBinding2.getName().equals("double")) {
+				return true;
+			}
+			else if(typeBinding1.getName().equals("double") && typeBinding2.getName().equals("float")) {
+				return true;
+			}
+			else if(typeBinding1.getName().equals("int") && typeBinding2.getName().equals("byte")) {
+				return true;
+			}
+			else if(typeBinding1.getName().equals("byte") && typeBinding2.getName().equals("int")) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	private static boolean isNumberPrimitiveType(ITypeBinding typeBinding) {
+		if(typeBinding.isPrimitive()) {
+			String name = typeBinding.getQualifiedName();
+			if(name.equals("byte") || name.equals("double") || name.equals("float") || name.equals("int") || name.equals("long") || name.equals("short"))
+				return true;
+		}
+		return false;
+	}
+
 	private VariableBindingKeyPair commonPassedParametersAlreadyContainOneOfTheKeys(VariableBindingKeyPair keyPair) {
 		for(VariableBindingKeyPair key : commonPassedParameters.keySet()) {
 			if(key.getKey1().equals(keyPair.getKey1()) || key.getKey2().equals(keyPair.getKey2())) {
@@ -617,7 +761,7 @@ public class PreconditionExaminer {
 	}
 
 	private void sortVariables(List<AbstractVariable> variables1, List<AbstractVariable> variables2,
-			List<AbstractVariable> sortedVariables1, List<AbstractVariable> sortedVariables2) {
+							   List<AbstractVariable> sortedVariables1, List<AbstractVariable> sortedVariables2) {
 		boolean requireVariableNameMatch = getRenamedVariables().isEmpty() || pdg1.getMethod().equals(pdg2.getMethod());
 		for(int i=0; i<variables1.size(); i++) {
 			AbstractVariable variable1 = variables1.get(i);
@@ -849,9 +993,9 @@ public class PreconditionExaminer {
 	}
 
 	private void findLocallyAccessedFields(PDG pdg, Set<PDGNode> mappedNodes, ITypeBinding commonSuperclass,
-			Set<AbstractVariable> directlyAccessedFields, Set<AbstractVariable> indirectlyAccessedFields, Set<AbstractVariable> directlyModifiedFields, Set<AbstractVariable> indirectlyModifiedFields,
-			Set<MethodObject> directlyAccessedMethods, Set<MethodObject> indirectlyAccessedMethods, List<Expression> expressionsInDifferences,
-			List<AbstractExpression> fieldAccessReplacedWithGetterExpressions, List<AbstractExpression> fieldAssignmentReplacedWithSetterExpressions, ICompilationUnit iCompilationUnit) {
+										   Set<AbstractVariable> directlyAccessedFields, Set<AbstractVariable> indirectlyAccessedFields, Set<AbstractVariable> directlyModifiedFields, Set<AbstractVariable> indirectlyModifiedFields,
+										   Set<MethodObject> directlyAccessedMethods, Set<MethodObject> indirectlyAccessedMethods, List<Expression> expressionsInDifferences,
+										   List<AbstractExpression> fieldAccessReplacedWithGetterExpressions, List<AbstractExpression> fieldAssignmentReplacedWithSetterExpressions, ICompilationUnit iCompilationUnit) {
 		Set<SimpleName> fieldAccessesToBeExcluded = new LinkedHashSet<SimpleName>();
 		Set<MethodInvocation> methodInvocationsToBeExcluded = new LinkedHashSet<MethodInvocation>();
 		for(Expression expression : expressionsInDifferences) {
@@ -1101,7 +1245,7 @@ public class PreconditionExaminer {
 			}
 		}
 	}
-	
+
 	private static Set<ITypeBinding> getAllSuperTypesUpToCommonSuperclass(ITypeBinding typeBinding, ITypeBinding commonSuperclass) {
 		Set<ITypeBinding> superTypes = new LinkedHashSet<ITypeBinding>();
 		ITypeBinding superTypeBinding = typeBinding.getSuperclass();
@@ -1120,7 +1264,7 @@ public class PreconditionExaminer {
 	}
 
 	private void getAdditionalLocallyAccessedFieldsAndMethods(MethodObject calledMethod, ClassObject calledClass,
-			Set<AbstractVariable> accessedFields, Set<AbstractVariable> modifiedFields, Set<MethodObject> accessedMethods) {
+															  Set<AbstractVariable> accessedFields, Set<AbstractVariable> modifiedFields, Set<MethodObject> accessedMethods) {
 		Set<PlainVariable> usedLocalFields = new LinkedHashSet<PlainVariable>();
 		Set<PlainVariable> updatedLocalFields = new LinkedHashSet<PlainVariable>();
 		Set<MethodInvocationObject> accessedLocalMethods = new LinkedHashSet<MethodInvocationObject>();
@@ -1548,12 +1692,12 @@ public class PreconditionExaminer {
 			mappedNodesWithoutAdditionallyMappedNodesG1.removeAll(additionallyMatchedNodesG1);
 			List<AbstractMethodFragment> additionallyMatchedFragments1 = getAdditionallyMatchedFragmentsNotBeingUnderMappedStatement(
 					nodeMapping.getAdditionallyMatchedFragments1(), mappedNodesWithoutAdditionallyMappedNodesG1);
-			
+
 			Set<PDGNode> mappedNodesWithoutAdditionallyMappedNodesG2 = new TreeSet<PDGNode>(mappedNodesG2);
 			mappedNodesWithoutAdditionallyMappedNodesG2.removeAll(additionallyMatchedNodesG2);
 			List<AbstractMethodFragment> additionallyMatchedFragments2 = getAdditionallyMatchedFragmentsNotBeingUnderMappedStatement(
 					nodeMapping.getAdditionallyMatchedFragments2(), mappedNodesWithoutAdditionallyMappedNodesG2);
-			
+
 			Set<PlainVariable> variables1 = getVariables(nodeG1, additionallyMatchedFragments1, expressions1);
 			Set<PlainVariable> variables2 = getVariables(nodeG2, additionallyMatchedFragments2, expressions2);
 			for(PlainVariable plainVariable1 : variables1) {
@@ -1637,7 +1781,7 @@ public class PreconditionExaminer {
 	}
 
 	private Set<PlainVariable> getVariables(PDGNode node, List<AbstractMethodFragment> additionallyMatchedFragments,
-			List<AbstractExpression> expressionsInDifferences) {
+											List<AbstractExpression> expressionsInDifferences) {
 		Set<PlainVariable> variablesToBeExcluded = new LinkedHashSet<PlainVariable>();
 		Set<PlainVariable> definedVariablesToBeExcluded = new LinkedHashSet<PlainVariable>();
 		for(AbstractExpression expression : expressionsInDifferences) {
@@ -2130,7 +2274,7 @@ public class PreconditionExaminer {
 			Expression expression1 = abstractExpression1.getExpression();
 			AbstractExpression abstractExpression2 = difference.getExpression2();
 			Expression expression2 = abstractExpression2.getExpression();
-			if(!renamedVariables.contains(difference.getBindingSignaturePair()) && !renamedFields.contains(difference.getBindingSignaturePair()) && 
+			if(!renamedVariables.contains(difference.getBindingSignaturePair()) && !renamedFields.contains(difference.getBindingSignaturePair()) &&
 					!isVariableWithTypeMismatchDifference(expression1, expression2, difference) &&
 					!isDifferenceInConditionalExpressionOfAdvancedLoopMatch) {
 				PreconditionViolationType violationType1 = isParameterizableExpression(pdg1, removableNodesG1, remainingNodesG1, abstractExpression1, iCompilationUnit1);
@@ -2194,12 +2338,12 @@ public class PreconditionExaminer {
 					Set<IVariableBinding> fields1 = new LinkedHashSet<IVariableBinding>();
 					ITypeBinding typeBinding1 = difference.getExpression1().getExpression().resolveTypeBinding();
 					findMethodsCalledFromType(typeBinding1, pdgNodeMapping.getNodeG1(), methods1, fields1);
-					
+
 					Set<IMethodBinding> methods2 = new LinkedHashSet<IMethodBinding>();
 					Set<IVariableBinding> fields2 = new LinkedHashSet<IVariableBinding>();
 					ITypeBinding typeBinding2 = difference.getExpression2().getExpression().resolveTypeBinding();
 					findMethodsCalledFromType(typeBinding2, pdgNodeMapping.getNodeG2(), methods2, fields2);
-					
+
 					if(!typeBinding1.isEqualTo(typeBinding2) || !typeBinding1.getQualifiedName().equals(typeBinding2.getQualifiedName())) {
 						ITypeBinding commonSuperType = ASTNodeMatcher.commonSuperType(typeBinding1, typeBinding2);
 						if(commonSuperType != null) {
@@ -2519,7 +2663,7 @@ public class PreconditionExaminer {
 	}
 
 	private void processNonMappedNode(PDG pdg, NodeMapping nodeMapping, PDGNode node, TreeSet<PDGNode> removableNodes,
-			TreeSet<PDGNode> movableBeforeAndAfter, TreeSet<PDGNode> movableBefore, TreeSet<PDGNode> movableAfter) {
+									  TreeSet<PDGNode> movableBeforeAndAfter, TreeSet<PDGNode> movableBefore, TreeSet<PDGNode> movableAfter) {
 		boolean movableNonMappedNodeBeforeFirstMappedNode = movableNonMappedNodeBeforeFirstMappedNode(removableNodes, node);
 		boolean movableNonMappedNodeAfterLastMappedNode = movableNonMappedNodeAfterLastMappedNode(removableNodes, node);
 		if(!movableNonMappedNodeBeforeFirstMappedNode && !movableNonMappedNodeAfterLastMappedNode) {
@@ -2869,7 +3013,7 @@ public class PreconditionExaminer {
 			}
 		}
 	}
-	
+
 	private boolean movableNonMappedNodeBeforeNonMappedNodesMovableAfter(TreeSet<PDGNode> nonMappedNodes, PDGNode nonMappedNode) {
 		Iterator<GraphEdge> incomingDependenceIterator = nonMappedNode.getIncomingDependenceIterator();
 		while(incomingDependenceIterator.hasNext()) {
@@ -2895,7 +3039,7 @@ public class PreconditionExaminer {
 		}
 		return true;
 	}
-	
+
 	public boolean movableBeforeFirstMappedNode(PDGNodeMapping nodeMapping) {
 		return movableNonMappedNodeBeforeFirstMappedNode(getRemovableNodesG1(), nodeMapping.getNodeG1()) &&
 				movableNonMappedNodeBeforeFirstMappedNode(getRemovableNodesG2(), nodeMapping.getNodeG2());
@@ -3022,7 +3166,7 @@ public class PreconditionExaminer {
 		}
 		return true;
 	}
-	
+
 	private boolean isVoidMethodCall(AbstractExpression initialAbstractExpression) {
 		Expression initialExpression = initialAbstractExpression.getExpression();
 		Expression expr = ASTNodeDifference.getParentExpressionOfMethodNameOrTypeName(initialExpression);
@@ -3293,7 +3437,7 @@ public class PreconditionExaminer {
 		else
 			return false;
 	}
-	
+
 	private boolean isExpressionWithinExpression(ASTNode expression, Expression parentExpression) {
 		if(expression.equals(parentExpression))
 			return true;
@@ -3303,7 +3447,7 @@ public class PreconditionExaminer {
 		else
 			return false;
 	}
-	
+
 	private IMethodBinding getMethodBinding(Expression expression) {
 		if(expression instanceof SimpleName) {
 			SimpleName simpleName = (SimpleName)expression;
@@ -3322,7 +3466,7 @@ public class PreconditionExaminer {
 		}
 		return null;
 	}
-	
+
 	public CloneType getCloneType() {
 		if(getMaximumStateWithMinimumDifferences() != null) {
 			int nodeDifferences = getNodeDifferences().size();
@@ -3343,7 +3487,7 @@ public class PreconditionExaminer {
 		}
 		return CloneType.UNKNOWN;
 	}
-	
+
 	private boolean isType3(CloneStructureNode node) {
 		Map<Integer, PDGNodeGap> gapMap = new LinkedHashMap<Integer, PDGNodeGap>();
 		int counter = 0;
@@ -3387,7 +3531,7 @@ public class PreconditionExaminer {
 		AbstractMethodDeclaration methodObject2 = getPDG2().getMethod();
 		MethodDeclaration methodDeclaration1 = methodObject1.getMethodDeclaration();
 		MethodDeclaration methodDeclaration2 = methodObject2.getMethodDeclaration();
-		
+
 		ITypeBinding typeBinding1 = null;
 		if(methodDeclaration1.getParent() instanceof AbstractTypeDeclaration) {
 			typeBinding1 = ((AbstractTypeDeclaration)methodDeclaration1.getParent()).resolveBinding();
@@ -3422,7 +3566,7 @@ public class PreconditionExaminer {
 				}
 			}
 		}
-		return false;	
+		return false;
 	}
 
 	private CloneRefactoringType computeRefactoringType() {
@@ -3430,7 +3574,7 @@ public class PreconditionExaminer {
 		AbstractMethodDeclaration methodObject2 = getPDG2().getMethod();
 		MethodDeclaration methodDeclaration1 = methodObject1.getMethodDeclaration();
 		MethodDeclaration methodDeclaration2 = methodObject2.getMethodDeclaration();
-		
+
 		ITypeBinding typeBinding1 = null;
 		if(methodDeclaration1.getParent() instanceof AbstractTypeDeclaration) {
 			typeBinding1 = ((AbstractTypeDeclaration)methodDeclaration1.getParent()).resolveBinding();
@@ -3520,11 +3664,11 @@ public class PreconditionExaminer {
 			//common super type is an interface and at least one of the subclasses does not have java.lang.Object as a superclass
 			return !typeBinding1.getSuperclass().getQualifiedName().equals("java.lang.Object") ||
 					!typeBinding2.getSuperclass().getQualifiedName().equals("java.lang.Object") ||
-			//common super type is a tagging interface and both subclasses have java.lang.Object as a superclass
+					//common super type is a tagging interface and both subclasses have java.lang.Object as a superclass
 					(ASTNodeMatcher.isTaggingInterface(commonSuperTypeOfSourceTypeDeclarations) &&
-					typeBinding1.getSuperclass().getQualifiedName().equals("java.lang.Object") &&
-					typeBinding2.getSuperclass().getQualifiedName().equals("java.lang.Object") &&
-					!allAccessedLocalMethodsHaveMatchingSignatures());
+							typeBinding1.getSuperclass().getQualifiedName().equals("java.lang.Object") &&
+							typeBinding2.getSuperclass().getQualifiedName().equals("java.lang.Object") &&
+							!allAccessedLocalMethodsHaveMatchingSignatures());
 		}
 		else if(commonSuperTypeOfSourceTypeDeclarations.isClass()) {
 			//common super type is a class and at least one of the subclasses does not have the common super type as a direct superclass
@@ -3538,19 +3682,19 @@ public class PreconditionExaminer {
 		return ASTReader.getSystemObject().getClassObject(commonSuperTypeOfSourceTypeDeclarations.getQualifiedName()) != null &&
 				commonSuperTypeOfSourceTypeDeclarations.isClass() &&
 				(cloneFragmentsDoNotAccessFieldsOrMethods() ||
-				superclassInheritedOnlyByRefactoredSubclasses(commonSuperTypeOfSourceTypeDeclarations, typeBinding1, typeBinding2) ||
-				superclassIsOneOfRefactoredSubclasses(commonSuperTypeOfSourceTypeDeclarations, typeBinding1, typeBinding2) ||
-				!superclassDirectlyInheritedFromRefactoredSubclasses(commonSuperTypeOfSourceTypeDeclarations, typeBinding1, typeBinding2));
+						superclassInheritedOnlyByRefactoredSubclasses(commonSuperTypeOfSourceTypeDeclarations, typeBinding1, typeBinding2) ||
+						superclassIsOneOfRefactoredSubclasses(commonSuperTypeOfSourceTypeDeclarations, typeBinding1, typeBinding2) ||
+						!superclassDirectlyInheritedFromRefactoredSubclasses(commonSuperTypeOfSourceTypeDeclarations, typeBinding1, typeBinding2));
 	}
 
 	private boolean superclassDirectlyInheritedFromRefactoredSubclasses(ITypeBinding commonSuperTypeOfSourceTypeDeclarations,
-			ITypeBinding typeBinding1, ITypeBinding typeBinding2) {
+																		ITypeBinding typeBinding1, ITypeBinding typeBinding2) {
 		return typeBinding1.getSuperclass().isEqualTo(commonSuperTypeOfSourceTypeDeclarations) &&
 				typeBinding2.getSuperclass().isEqualTo(commonSuperTypeOfSourceTypeDeclarations);
 	}
 
 	private boolean superclassIsOneOfRefactoredSubclasses(ITypeBinding commonSuperTypeOfSourceTypeDeclarations,
-			ITypeBinding typeBinding1, ITypeBinding typeBinding2) {
+														  ITypeBinding typeBinding1, ITypeBinding typeBinding2) {
 		if(typeBinding1.isEqualTo(commonSuperTypeOfSourceTypeDeclarations) ||
 				typeBinding2.isEqualTo(commonSuperTypeOfSourceTypeDeclarations)) {
 			return true;
@@ -3559,7 +3703,7 @@ public class PreconditionExaminer {
 	}
 
 	private boolean superclassInheritedOnlyByRefactoredSubclasses(ITypeBinding commonSuperTypeOfSourceTypeDeclarations,
-			ITypeBinding typeBinding1, ITypeBinding typeBinding2) {
+																  ITypeBinding typeBinding1, ITypeBinding typeBinding2) {
 		if(!commonSuperTypeOfSourceTypeDeclarations.getQualifiedName().equals("java.lang.Object")) {
 			CompilationUnitCache cache = CompilationUnitCache.getInstance();
 			Set<IType> subTypes = cache.getSubTypes((IType)commonSuperTypeOfSourceTypeDeclarations.getJavaElement());
@@ -3858,11 +4002,11 @@ public class PreconditionExaminer {
 				if(localMethodG1.getName().equals(localMethodG2.getName()) &&
 						(localMethodG1.getReturnType().equals(localMethodG2.getReturnType()) || ASTNodeMatcher.validCommonSuperType(returnTypesCommonSuperType)) &&
 						(localMethodG1.getParameterTypeList().equals(localMethodG2.getParameterTypeList()) ||
-						//only for direct method calls, we allow them having parameter types with subclass type differences
-						(MethodCallAnalyzer.equalSignatureIgnoringSubclassTypeDifferences(methodDeclaration1.resolveBinding(), methodDeclaration2.resolveBinding()) &&
-						getDirectlyAccessedLocalMethodsG1().contains(localMethodG1) &&
-						getDirectlyAccessedLocalMethodsG2().contains(localMethodG2) &&
-						localMethodG1.isStatic() && localMethodG2.isStatic())) ) {
+								//only for direct method calls, we allow them having parameter types with subclass type differences
+								(MethodCallAnalyzer.equalSignatureIgnoringSubclassTypeDifferences(methodDeclaration1.resolveBinding(), methodDeclaration2.resolveBinding()) &&
+										getDirectlyAccessedLocalMethodsG1().contains(localMethodG1) &&
+										getDirectlyAccessedLocalMethodsG2().contains(localMethodG2) &&
+										localMethodG1.isStatic() && localMethodG2.isStatic())) ) {
 					matchCounter++;
 				}
 			}

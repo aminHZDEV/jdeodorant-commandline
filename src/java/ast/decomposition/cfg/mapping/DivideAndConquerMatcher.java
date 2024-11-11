@@ -57,11 +57,11 @@ public abstract class DivideAndConquerMatcher {
 	private CloneStructureNode root;
 	private MappingState finalState;
 	protected PreconditionExaminer preconditionExaminer;
-	
+
 	public DivideAndConquerMatcher(PDG pdg1, PDG pdg2,
-			ICompilationUnit iCompilationUnit1, ICompilationUnit iCompilationUnit2,
-			ControlDependenceTreeNode controlDependenceTreePDG1, ControlDependenceTreeNode controlDependenceTreePDG2,
-			boolean fullTreeMatch, IProgressMonitor monitor) {
+								   ICompilationUnit iCompilationUnit1, ICompilationUnit iCompilationUnit2,
+								   ControlDependenceTreeNode controlDependenceTreePDG1, ControlDependenceTreeNode controlDependenceTreePDG2,
+								   boolean fullTreeMatch, IProgressMonitor monitor) {
 		this.pdg1 = pdg1;
 		this.pdg2 = pdg2;
 		this.iCompilationUnit1 = iCompilationUnit1;
@@ -274,17 +274,29 @@ public abstract class DivideAndConquerMatcher {
 		return preconditionExaminer.isTemplateMethodApplicable();
 	}
 
+	public List<PDGExpressionGap> getRefactorableExpressionGaps() {
+		return preconditionExaminer.getRefactorableExpressionGaps();
+	}
+
+	public List<PDGNodeBlockGap> getRefactorableBlockGaps() {
+		return preconditionExaminer.getRefactorableBlockGaps();
+	}
+
+	public Set<VariableBindingKeyPair> getLocalVariablesReturnedByBlockGaps() {
+		return preconditionExaminer.getLocalVariablesReturnedByBlockGaps();
+	}
+
 	protected abstract Set<PDGNode> getNodesInRegion1(PDG pdg, PDGNode controlPredicate, Set<PDGNode> controlPredicateNodesInCurrentLevel,
-			Set<PDGNode> controlPredicateNodesInNextLevel, ControlDependenceTreeNode controlDependenceTreeRoot);
+													  Set<PDGNode> controlPredicateNodesInNextLevel, ControlDependenceTreeNode controlDependenceTreeRoot);
 
 	protected abstract Set<PDGNode> getNodesInRegion2(PDG pdg, PDGNode controlPredicate, Set<PDGNode> controlPredicateNodesInCurrentLevel,
-			Set<PDGNode> controlPredicateNodesInNextLevel, ControlDependenceTreeNode controlDependenceTreeRoot);
+													  Set<PDGNode> controlPredicateNodesInNextLevel, ControlDependenceTreeNode controlDependenceTreeRoot);
 
 	protected abstract Set<PDGNode> getElseNodesOfSymmetricalIfStatement1(PDG pdg, PDGNode controlPredicate, Set<PDGNode> controlPredicateNodesInCurrentLevel,
-			Set<PDGNode> controlPredicateNodesInNextLevel);
+																		  Set<PDGNode> controlPredicateNodesInNextLevel);
 
 	protected abstract Set<PDGNode> getElseNodesOfSymmetricalIfStatement2(PDG pdg, PDGNode controlPredicate, Set<PDGNode> controlPredicateNodesInCurrentLevel,
-			Set<PDGNode> controlPredicateNodesInNextLevel);
+																		  Set<PDGNode> controlPredicateNodesInNextLevel);
 
 	protected abstract List<ControlDependenceTreeNode> getIfParentChildren1(ControlDependenceTreeNode cdtNode);
 
@@ -293,7 +305,7 @@ public abstract class DivideAndConquerMatcher {
 	public CloneStructureNode getCloneStructureRoot() {
 		return root;
 	}
-	
+
 	public MappingState getMaximumStateWithMinimumDifferences() {
 		return finalState;
 	}
@@ -319,7 +331,7 @@ public abstract class DivideAndConquerMatcher {
 				maximumStates.add(currentState);
 			}
 		}
-		
+
 		List<MappingState> maximumStatesWithMinimumDifferences = new ArrayList<MappingState>();
 		if(maximumStates.size() == 1) {
 			maximumStatesWithMinimumDifferences.add(maximumStates.get(0));
@@ -339,7 +351,7 @@ public abstract class DivideAndConquerMatcher {
 				}
 			}
 		}
-		
+
 		List<MappingState> maximumStatesWithMinimumNonDistinctDifferences = new ArrayList<MappingState>();
 		if(maximumStatesWithMinimumDifferences.size() == 1) {
 			maximumStatesWithMinimumNonDistinctDifferences.add(maximumStatesWithMinimumDifferences.get(0));
@@ -359,7 +371,7 @@ public abstract class DivideAndConquerMatcher {
 				}
 			}
 		}
-		
+
 		List<MappingState> maximumStatesWithMinimumNonDistinctDifferencesIncludingTypeMismatches = new ArrayList<MappingState>();
 		if(maximumStatesWithMinimumNonDistinctDifferences.size() == 1) {
 			maximumStatesWithMinimumNonDistinctDifferencesIncludingTypeMismatches.add(maximumStatesWithMinimumNonDistinctDifferences.get(0));
@@ -401,7 +413,7 @@ public abstract class DivideAndConquerMatcher {
 				}
 			}
 		}
-		
+
 		if(maximumStatesWithMinimumDifferencesAndMinimumIdDiff.size() == 1) {
 			return maximumStatesWithMinimumDifferencesAndMinimumIdDiff.get(0);
 		}
@@ -426,7 +438,7 @@ public abstract class DivideAndConquerMatcher {
 		int level2 = maxLevel2;
 		if(monitor != null)
 			monitor.beginTask("Mapping Program Dependence Graphs", Math.min(maxLevel1, maxLevel2));
-		
+
 		List<CloneStructureNode> parents = new ArrayList<CloneStructureNode>();
 		while(level1 >= 0 && level2 >= 0) {
 			Set<PDGNode> controlPredicateNodesG1 = controlDependenceTreePDG1.getControlPredicateNodesInLevel(level1);
@@ -973,7 +985,7 @@ public abstract class DivideAndConquerMatcher {
 	}
 
 	private List<MappingState> matchBasedOnIfElseSymmetry(MappingState parent, Set<PDGNode> nodesNestedUnderIf1, Set<PDGNode> nodesNestedUnderIf2,
-			Set<PDGNode> nodesNestedUnderElse1, Set<PDGNode> nodesNestedUnderElse2) {
+														  Set<PDGNode> nodesNestedUnderElse1, Set<PDGNode> nodesNestedUnderElse2) {
 		Map<Integer, Set<PDGNode>> map1 = new LinkedHashMap<Integer, Set<PDGNode>>();
 		Map<Integer, Set<PDGNode>> map2 = new LinkedHashMap<Integer, Set<PDGNode>>();
 		map1.put(1, nodesNestedUnderIf1);
@@ -1210,7 +1222,7 @@ public abstract class DivideAndConquerMatcher {
 	}
 
 	private List<MappingState> matchBasedOnIdenticalStatements(MappingState parent, Set<PDGNode> nodesG1, Set<PDGNode> nodesG2,
-			Set<PlainVariable> variables1, Set<PlainVariable> variables2) {
+															   Set<PlainVariable> variables1, Set<PlainVariable> variables2) {
 		IdenticalStatementDecomposer isd1 = new IdenticalStatementDecomposer(nodesG1);
 		IdenticalStatementDecomposer isd2 = new IdenticalStatementDecomposer(nodesG2);
 		Map<String, Set<PDGNode>> map1 = isd1.getIdenticalNodeMap();

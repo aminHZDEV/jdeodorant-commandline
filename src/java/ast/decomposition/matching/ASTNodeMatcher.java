@@ -578,7 +578,7 @@ public class ASTNodeMatcher extends ASTMatcher{
 		return false;
 	}
 
-	private static void addTypeBinding(ITypeBinding typeBinding, List<ITypeBinding> typeBindings) {
+	public static void addTypeBinding(ITypeBinding typeBinding, Set<ITypeBinding> typeBindings) {
 		boolean found = false;
 		for(ITypeBinding typeBinding2 : typeBindings) {
 			if(typeBinding.isEqualTo(typeBinding2) && typeBinding.getQualifiedName().equals(typeBinding2.getQualifiedName())) {

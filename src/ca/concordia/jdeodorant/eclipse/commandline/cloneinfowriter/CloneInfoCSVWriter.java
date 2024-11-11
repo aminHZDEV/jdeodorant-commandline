@@ -115,21 +115,19 @@ public class CloneInfoCSVWriter extends CloneInfoWriter {
 			}
 
 			for (String fileHavingCompileError : mapperInfo.getFilesHavingCompileError()) {
-				StringBuilder compileErrorsLine = new StringBuilder();
-				compileErrorsLine.append(pairInfo.getCloneGroupID()).append(SEPARATOR);
-				compileErrorsLine.append(pairInfo.getClonePairID()).append(SEPARATOR);
-				compileErrorsLine.append(treeID).append(SEPARATOR);
-				compileErrorsLine.append(fileHavingCompileError);
-				compileErrorsLines.add(compileErrorsLine.toString());
+                String compileErrorsLine = pairInfo.getCloneGroupID() + SEPARATOR +
+                        pairInfo.getClonePairID() + SEPARATOR +
+                        treeID + SEPARATOR +
+                        fileHavingCompileError;
+				compileErrorsLines.add(compileErrorsLine);
 			}
 
 			for (TestReportDifference testReportDifference : mapperInfo.getTestDifferences()) {
-				StringBuilder testReportDifferencesLine = new StringBuilder();
-				testReportDifferencesLine.append(pairInfo.getCloneGroupID()).append(SEPARATOR);
-				testReportDifferencesLine.append(pairInfo.getClonePairID()).append(SEPARATOR);
-				testReportDifferencesLine.append(treeID).append(SEPARATOR);
-				testReportDifferencesLine.append(testReportDifference.toString());
-				testReportDifferencesLines.add(testReportDifferencesLine.toString());
+                String testReportDifferencesLine = pairInfo.getCloneGroupID() + SEPARATOR +
+                        pairInfo.getClonePairID() + SEPARATOR +
+                        treeID + SEPARATOR +
+                        testReportDifference.toString();
+				testReportDifferencesLines.add(testReportDifferencesLine);
 			}
 
 			if (mapperInfo.getMapper().getMaximumStateWithMinimumDifferences() != null) {

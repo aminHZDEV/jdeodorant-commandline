@@ -239,16 +239,25 @@ public class Application implements IApplication {
 		String toolOutputMainFile = cliParser.getCloneToolOutputFilePath();
 		CloneToolParserType toolType = CloneToolParserType.valueOf(cliParser.getCloneToolName().toUpperCase());
 		LOGGER.info("Parsing " + toolOutputMainFile);
-		CloneToolParser parser = new CloneToolParser(
-				toolType,
-				jProject, 
-				excelFile, 
-				toolOutputMainFile, 
-				cliParser.hasCoverageReport(),
-				cliParser.getClassFolder(),
-				cliParser.getOtherArgs());
-		parser.execute();
-		LOGGER.info("Finished parsing " + toolOutputMainFile);
+        CloneToolParser parser = null;
+        try {
+            parser = new CloneToolParser(
+                    toolType,
+                    jProject,
+                    excelFile,
+                    toolOutputMainFile,
+                    cliParser.hasCoverageReport(),
+                    cliParser.getClassFolder(),
+                    cliParser.getOtherArgs());
+        } catch (ca.concordia.jdeodorant.clone.parsers.InvalidInputFileException e) {
+            throw new RuntimeException(e);
+        }
+        try {
+            parser.execute();
+        } catch (ca.concordia.jdeodorant.clone.parsers.InvalidInputFileException e) {
+            throw new RuntimeException(e);
+        }
+        LOGGER.info("Finished parsing " + toolOutputMainFile);
 	}
 
 
