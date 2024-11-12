@@ -14,14 +14,14 @@ import ch.qos.logback.core.FileAppender;
 public class FileLogger {
 	
 	private static Logger logBackLogger = null;
-	private static LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
-	private static List<FileAppender<ILoggingEvent>> appenders = new ArrayList<>();
+	private static final LoggerContext loggerContext = (LoggerContext) LoggerFactory.getILoggerFactory();
+	private static final List<FileAppender<ILoggingEvent>> appenders = new ArrayList<>();
 	
 	public static org.slf4j.Logger getLogger(Class<?> clazz) {
 	
 	 	logBackLogger = loggerContext.getLogger(clazz.getName());
 	 	
-	 	if (appenders.size() > 0)
+	 	if (!appenders.isEmpty())
 	 		for (FileAppender<ILoggingEvent> appender : appenders)
 	 			logBackLogger.addAppender(appender);
 	    

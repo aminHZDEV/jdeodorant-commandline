@@ -1,6 +1,6 @@
 package ca.concordia.jdeodorant.clone.parsers;
 
-import java.ast.ASTReader;
+import main.java.ast.ASTReader;
 
 import java.util.Set;
 

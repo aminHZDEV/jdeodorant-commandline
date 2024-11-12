@@ -212,13 +212,7 @@ public class CLIParser {
 				.hasArg()
 				.create("mport"));
 		
-		options.addOption(OptionBuilder
-				.withArgName("")
-				.withLongOpt("mail-server-security-type")
-				.withDescription("Security type for mail server, one of the values: " + Arrays.toString(SecurityType.values()))
-				.hasArg()
-				.create("msectype"));
-		
+
 		options.addOption(OptionBuilder
 				.withArgName("")
 				.withLongOpt("mail-server-authenticated")
@@ -420,46 +414,7 @@ public class CLIParser {
 		return getIntArrayFromStringArrayForOption("group-ids");
 	}
 
-	public int getSMTPServerPort() {
-		try {
-			return Integer.parseInt(getValue("mport", "25"));
-		} catch (NumberFormatException nfex) {
-			LOGGER.warn("Invalid port number, 25 is selected by default");
-			return 25;
-		}
-	}
-	
-	public String getSMTPServerAddress() {
-		return getValue("msrvr", "127.0.0.1");
-	}
 
-	public String[] getNotificationEmailAddresses() {
-		String[] optionValues = cmdLine.getOptionValues("em");
-		if (optionValues != null) {
-			return optionValues;
-		}
-		return new String[] {};
-	}
-
-	public boolean isMailServerAuthenticated() {
-		return hasOption("mauth");
-	}
-
-	public String getMailServerUserName() {
-		return getValue("muser", "");
-	}
-
-	public String getMailServerPassword() {
-		return getValue("mpass", "");
-	}
-
-	public SecurityType getMailServerSecurtyType() {
-		try {
-			return SecurityType.valueOf(getValue("msectype", "none").toUpperCase());
-		} catch (IllegalArgumentException ex) {
-			return SecurityType.NONE;
-		}
-	}
 
 	public String getProjectDescritionFile() {
 		return getValue("project-description");

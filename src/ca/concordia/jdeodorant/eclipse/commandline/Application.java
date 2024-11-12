@@ -91,25 +91,25 @@ import ca.concordia.jdeodorant.eclipse.commandline.parsers.CloneToolParserType;
 import ca.concordia.jdeodorant.eclipse.commandline.parsers.ExcelFileColumns;
 import ca.concordia.jdeodorant.eclipse.commandline.utility.FileLogger;
 
-import java.ast.ASTReader;
-import java.ast.AbstractMethodDeclaration;
-import java.ast.ClassDeclarationObject;
-import java.ast.CompilationErrorDetectedException;
-import java.ast.CompilationUnitCache;
-import java.ast.SystemObject;
-import java.ast.decomposition.cfg.CFG;
-import java.ast.decomposition.cfg.PDG;
-import java.ast.decomposition.cfg.PDGMethodEntryNode;
-import java.ast.decomposition.cfg.PDGNode;
-import java.ast.decomposition.cfg.mapping.BottomUpCDTMapper;
-import java.ast.decomposition.cfg.mapping.CompleteSubTreeMatch;
-import java.ast.decomposition.cfg.mapping.ControlDependenceTreeGenerator;
-import java.ast.decomposition.cfg.mapping.ControlDependenceTreeNode;
-import java.ast.decomposition.cfg.mapping.ControlDependenceTreeNodeMatchPair;
-import java.ast.decomposition.cfg.mapping.DivideAndConquerMatcher;
-import java.ast.decomposition.cfg.mapping.PDGRegionSubTreeMapper;
-import java.ast.decomposition.matching.NodePairComparisonCache;
-import java.jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
+import main.java.ast.ASTReader;
+import main.java.ast.AbstractMethodDeclaration;
+import main.java.ast.ClassDeclarationObject;
+import main.java.ast.CompilationErrorDetectedException;
+import main.java.ast.CompilationUnitCache;
+import main.java.ast.SystemObject;
+import main.java.ast.decomposition.cfg.CFG;
+import main.java.ast.decomposition.cfg.PDG;
+import main.java.ast.decomposition.cfg.PDGMethodEntryNode;
+import main.java.ast.decomposition.cfg.PDGNode;
+import main.java.ast.decomposition.cfg.mapping.BottomUpCDTMapper;
+import main.java.ast.decomposition.cfg.mapping.CompleteSubTreeMatch;
+import main.java.ast.decomposition.cfg.mapping.ControlDependenceTreeGenerator;
+import main.java.ast.decomposition.cfg.mapping.ControlDependenceTreeNode;
+import main.java.ast.decomposition.cfg.mapping.ControlDependenceTreeNodeMatchPair;
+import main.java.ast.decomposition.cfg.mapping.DivideAndConquerMatcher;
+import main.java.ast.decomposition.cfg.mapping.PDGRegionSubTreeMapper;
+import main.java.ast.decomposition.matching.NodePairComparisonCache;
+import main.java.jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
 import jxl.Sheet;
 import jxl.Workbook;
 import jxl.format.Border;
@@ -211,22 +211,6 @@ public class Application implements IApplication {
 			} catch (Throwable throwable) {
 				throwable.printStackTrace();
 				status = "ERROR";
-			}
-
-			if (cliParser.getNotificationEmailAddresses().length > 0) {
-//				Mailer mailer = new Mailer(cliParser.getSMTPServerAddress(),
-//						cliParser.getSMTPServerPort(),
-//						cliParser.isMailServerAuthenticated(),
-//						cliParser.getMailServerSecurtyType(),
-//						cliParser.getMailServerUserName(),
-//						cliParser.getMailServerPassword());
-				String message = String.format("Finished analysing project %s (%s) in %s [%s]",
-						cliParser.getProjectName(),
-						cliParser.getExcelFilePath(),
-						getComputerName(),
-						status);
-				String subject = String.format("Analysis finished [%s]", status);
-//				mailer.sendMail(subject, message, cliParser.getMailServerUserName(), cliParser.getNotificationEmailAddresses());
 			}
 		}
 
