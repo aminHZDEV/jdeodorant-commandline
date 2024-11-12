@@ -39,25 +39,19 @@
         <dependency>
             <groupId>org.eclipse.platform</groupId>
             <artifactId>org.eclipse.core.runtime</artifactId>
-            <version>3.29.0</version> <!-- Adjusted version for Java 11 compatibility -->
+            <version>3.14.0</version> <!-- Adjusted version for Java 11 compatibility -->
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.jdt</groupId>
             <artifactId>org.eclipse.jdt.core</artifactId>
-            <version>3.25.0</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.eclipse.platform</groupId>
-                    <artifactId>org.eclipse.core.runtime</artifactId>
-                </exclusion>
-            </exclusions>
+            <version>3.39.0</version>
         </dependency>
 
         <dependency>
             <groupId>org.eclipse.platform</groupId>
             <artifactId>org.eclipse.text</artifactId>
-            <version>3.12.0</version> <!-- Ensure to add this for compatibility -->
+            <version>3.14.100</version> <!-- Ensure to add this for compatibility -->
         </dependency>
 
         <dependency>
@@ -165,12 +159,6 @@
             <groupId>org.eclipse.swt</groupId>
             <artifactId>org.eclipse.swt.gtk.linux.x86_64</artifactId>
             <version>4.3</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>org.eclipse.platform</groupId>
-                    <artifactId>org.eclipse.core.runtime</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.eclipse.jdt</groupId>
@@ -220,7 +208,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.0</version>
+                <version>3.6.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
