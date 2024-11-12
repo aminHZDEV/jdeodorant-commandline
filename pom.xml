@@ -30,8 +30,22 @@
         <dependency>
             <groupId>org.eclipse.platform</groupId>
             <artifactId>org.eclipse.jface</artifactId>
-            <version>3.35.0</version>
+            <version>3.12.1</version>
         </dependency>
+
+        <!-- https://mvnrepository.com/artifact/org.eclipse.equinox/org.eclipse.equinox.common -->
+        <dependency>
+            <groupId>org.eclipse.core</groupId>
+            <artifactId>org.eclipse.core.commands</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.birt.runtime.3_7_1</groupId>
+            <artifactId>org.eclipse.equinox.common</artifactId>
+            <version>3.6.0</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.eclipse.jdt</groupId>
@@ -111,6 +125,12 @@
             <groupId>org.eclipse.platform</groupId>
             <artifactId>org.eclipse.ui.workbench</artifactId>
             <version>3.130.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.eclipse.platform</groupId>
+            <artifactId>org.eclipse.equinox.preferences</artifactId>
+            <version>3.6.1</version>
         </dependency>
 
     </dependencies>
