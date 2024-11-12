@@ -1,4 +1,4 @@
-package main.java.ast;
+package ast;
 
 public enum CommentType {
 	BLOCK, LINE, JAVADOC;

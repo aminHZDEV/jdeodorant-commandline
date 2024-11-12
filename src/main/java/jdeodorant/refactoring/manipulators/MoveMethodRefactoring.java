@@ -1,13 +1,13 @@
-package main.java.jdeodorant.refactoring.manipulators;
+package jdeodorant.refactoring.manipulators;
 
-import main.java.ast.ASTReader;
-import main.java.ast.ClassObject;
-import main.java.ast.CompilationUnitCache;
-import main.java.ast.decomposition.cfg.MethodCallAnalyzer;
-import main.java.ast.util.ExpressionExtractor;
-import main.java.ast.util.MethodDeclarationUtility;
-import main.java.ast.util.StatementExtractor;
-import main.java.ast.util.TypeVisitor;
+import ast.ASTReader;
+import ast.ClassObject;
+import ast.CompilationUnitCache;
+import ast.decomposition.cfg.MethodCallAnalyzer;
+import ast.util.ExpressionExtractor;
+import ast.util.MethodDeclarationUtility;
+import ast.util.StatementExtractor;
+import ast.util.TypeVisitor;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

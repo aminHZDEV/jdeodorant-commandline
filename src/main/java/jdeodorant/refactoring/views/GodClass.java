@@ -1,4 +1,4 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 
 import java.io.BufferedWriter;
@@ -19,22 +19,22 @@ import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 
-import main.java.ast.ASTReader;
-import main.java.ast.ClassObject;
-import main.java.ast.CompilationErrorDetectedException;
-import main.java.ast.CompilationUnitCache;
-import main.java.ast.SystemObject;
-import main.java.distance.CandidateRefactoring;
-import main.java.distance.DistanceMatrix;
-import main.java.distance.Entity;
-import main.java.distance.ExtractClassCandidateRefactoring;
-import main.java.distance.ExtractClassCandidateGroup;
-import main.java.distance.ExtractedConcept;
-import main.java.distance.MySystem;
-import main.java.jdeodorant.preferences.PreferenceConstants;
-import main.java.jdeodorant.refactoring.Activator;
-import main.java.jdeodorant.refactoring.manipulators.ExtractClassRefactoring;
-import main.java.jdeodorant.refactoring.views.CodeSmellPackageExplorer.CodeSmellType;
+import ast.ASTReader;
+import ast.ClassObject;
+import ast.CompilationErrorDetectedException;
+import ast.CompilationUnitCache;
+import ast.SystemObject;
+import distance.CandidateRefactoring;
+import distance.DistanceMatrix;
+import distance.Entity;
+import distance.ExtractClassCandidateRefactoring;
+import distance.ExtractClassCandidateGroup;
+import distance.ExtractedConcept;
+import distance.MySystem;
+import jdeodorant.preferences.PreferenceConstants;
+import jdeodorant.refactoring.Activator;
+import jdeodorant.refactoring.manipulators.ExtractClassRefactoring;
+import jdeodorant.refactoring.views.CodeSmellPackageExplorer.CodeSmellType;
 
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Display;

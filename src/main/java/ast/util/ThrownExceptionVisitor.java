@@ -1,4 +1,4 @@
-package main.java.ast.util;
+package ast.util;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

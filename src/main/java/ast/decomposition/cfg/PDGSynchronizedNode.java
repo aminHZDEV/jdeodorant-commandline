@@ -1,9 +1,9 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
 import java.util.Set;
 
-import main.java.ast.FieldObject;
-import main.java.ast.VariableDeclarationObject;
+import ast.FieldObject;
+import ast.VariableDeclarationObject;
 
 public class PDGSynchronizedNode extends PDGBlockNode {
 	public PDGSynchronizedNode(CFGSynchronizedNode cfgSynchronizedNode, Set<VariableDeclarationObject> variableDeclarationsInMethod,

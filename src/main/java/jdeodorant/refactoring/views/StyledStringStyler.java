@@ -1,4 +1,4 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 import java.lang.reflect.Field;
 import org.eclipse.jface.viewers.StyledString.Styler;

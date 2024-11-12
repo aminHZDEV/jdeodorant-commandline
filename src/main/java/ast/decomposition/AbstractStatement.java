@@ -1,9 +1,9 @@
-package main.java.ast.decomposition;
+package ast.decomposition;
 
 import java.util.List;
 
-import main.java.ast.ASTInformation;
-import main.java.ast.ASTInformationGenerator;
+import ast.ASTInformation;
+import ast.ASTInformationGenerator;
 
 import org.eclipse.jdt.core.dom.Statement;
 

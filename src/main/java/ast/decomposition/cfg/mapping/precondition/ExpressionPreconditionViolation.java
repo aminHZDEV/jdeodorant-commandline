@@ -1,7 +1,7 @@
-package main.java.ast.decomposition.cfg.mapping.precondition;
+package ast.decomposition.cfg.mapping.precondition;
 
-import main.java.ast.decomposition.AbstractExpression;
-import main.java.ast.decomposition.matching.ASTNodeDifference;
+import ast.decomposition.AbstractExpression;
+import ast.decomposition.matching.ASTNodeDifference;
 
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jface.viewers.StyledString;

@@ -1,13 +1,13 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
-import main.java.ast.visualization.FeatureEnvyDiagram;
-import main.java.ast.visualization.FeatureEnvyVisualizationData;
-import main.java.ast.visualization.GodClassDiagram2;
-import main.java.ast.visualization.GodClassVisualizationData;
-import main.java.ast.visualization.ZoomInputAction;
-import main.java.ast.visualization.VisualizationData;
-import main.java.ast.visualization.ZoomAction;
-import main.java.jdeodorant.refactoring.Activator;
+import ast.visualization.FeatureEnvyDiagram;
+import ast.visualization.FeatureEnvyVisualizationData;
+import ast.visualization.GodClassDiagram2;
+import ast.visualization.GodClassVisualizationData;
+import ast.visualization.ZoomInputAction;
+import ast.visualization.VisualizationData;
+import ast.visualization.ZoomAction;
+import jdeodorant.refactoring.Activator;
 
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.FigureCanvas;

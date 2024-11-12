@@ -1,4 +1,4 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 import org.eclipse.jface.action.ControlContribution;
 import org.eclipse.swt.SWT;

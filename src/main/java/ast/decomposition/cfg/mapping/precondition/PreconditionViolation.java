@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg.mapping.precondition;
+package ast.decomposition.cfg.mapping.precondition;
 
 import java.util.ArrayList;
 import java.util.List;

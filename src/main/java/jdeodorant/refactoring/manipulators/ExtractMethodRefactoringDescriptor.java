@@ -1,4 +1,4 @@
-package main.java.jdeodorant.refactoring.manipulators;
+package jdeodorant.refactoring.manipulators;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.dom.CompilationUnit;

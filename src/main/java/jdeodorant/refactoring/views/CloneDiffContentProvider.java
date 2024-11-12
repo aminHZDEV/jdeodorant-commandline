@@ -1,6 +1,6 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
-import main.java.ast.decomposition.cfg.mapping.CloneStructureNode;
+import ast.decomposition.cfg.mapping.CloneStructureNode;
 
 import java.util.Set;
 

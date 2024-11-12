@@ -1,10 +1,10 @@
-package main.java.distance;
+package distance;
 
-import main.java.ast.FieldObject;
-import main.java.ast.MethodObject;
-import main.java.ast.TypeObject;
-import main.java.ast.util.TopicFinder;
-import main.java.ast.visualization.GodClassVisualizationData;
+import ast.FieldObject;
+import ast.MethodObject;
+import ast.TypeObject;
+import ast.util.TopicFinder;
+import ast.visualization.GodClassVisualizationData;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

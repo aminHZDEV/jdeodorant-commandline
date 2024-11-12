@@ -1,6 +1,6 @@
-package main.java.distance;
+package distance;
 
-import main.java.ast.FieldObject;
+import ast.FieldObject;
 
 import java.util.*;
 

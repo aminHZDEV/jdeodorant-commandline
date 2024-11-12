@@ -1,4 +1,4 @@
-package main.java.ast.inheritance;
+package ast.inheritance;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

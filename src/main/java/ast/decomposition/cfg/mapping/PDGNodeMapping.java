@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
 import java.util.List;
 import java.util.Set;
@@ -13,21 +13,21 @@ import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.Statement;
 
-import main.java.ast.decomposition.AbstractMethodFragment;
-import main.java.ast.decomposition.AbstractStatement;
-import main.java.ast.decomposition.cfg.AbstractVariable;
-import main.java.ast.decomposition.cfg.CompositeVariable;
-import main.java.ast.decomposition.cfg.PDGBlockNode;
-import main.java.ast.decomposition.cfg.PDGControlDependence;
-import main.java.ast.decomposition.cfg.PDGNode;
-import main.java.ast.decomposition.cfg.PlainVariable;
-import main.java.ast.decomposition.cfg.mapping.precondition.ExpressionPreconditionViolation;
-import main.java.ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
-import main.java.ast.decomposition.cfg.mapping.precondition.PreconditionViolationType;
-import main.java.ast.decomposition.matching.ASTNodeDifference;
-import main.java.ast.decomposition.matching.ASTNodeMatcher;
-import main.java.ast.decomposition.matching.Difference;
-import main.java.ast.decomposition.matching.DifferenceType;
+import ast.decomposition.AbstractMethodFragment;
+import ast.decomposition.AbstractStatement;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.CompositeVariable;
+import ast.decomposition.cfg.PDGBlockNode;
+import ast.decomposition.cfg.PDGControlDependence;
+import ast.decomposition.cfg.PDGNode;
+import ast.decomposition.cfg.PlainVariable;
+import ast.decomposition.cfg.mapping.precondition.ExpressionPreconditionViolation;
+import ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
+import ast.decomposition.cfg.mapping.precondition.PreconditionViolationType;
+import ast.decomposition.matching.ASTNodeDifference;
+import ast.decomposition.matching.ASTNodeMatcher;
+import ast.decomposition.matching.Difference;
+import ast.decomposition.matching.DifferenceType;
 
 public class PDGNodeMapping extends IdBasedMapping {
 	private PDGNode nodeG1;

@@ -1,9 +1,9 @@
-package main.java.ast.decomposition.matching;
+package ast.decomposition.matching;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.ast.decomposition.AbstractExpression;
+import ast.decomposition.AbstractExpression;
 
 public class FieldAccessReplacedWithGetterInvocationDifference extends ASTNodeDifference {
 

@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.matching.conditional;
+package ast.decomposition.matching.conditional;
 
 public class Pair<T>
 {

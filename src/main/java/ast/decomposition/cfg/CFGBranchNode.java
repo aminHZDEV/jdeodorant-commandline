@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -9,9 +9,9 @@ import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.LabeledStatement;
 import org.eclipse.jdt.core.dom.SynchronizedStatement;
 
-import main.java.ast.decomposition.AbstractStatement;
-import main.java.ast.decomposition.CompositeStatementObject;
-import main.java.ast.decomposition.TryStatementObject;
+import ast.decomposition.AbstractStatement;
+import ast.decomposition.CompositeStatementObject;
+import ast.decomposition.TryStatementObject;
 
 public abstract class CFGBranchNode extends CFGNode {
 

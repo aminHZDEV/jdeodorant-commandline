@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
 import java.util.Iterator;
 import java.util.LinkedHashSet;
@@ -12,13 +12,13 @@ import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.SimpleName;
 
-import main.java.ast.decomposition.AbstractExpression;
-import main.java.ast.decomposition.AbstractStatement;
-import main.java.ast.decomposition.cfg.AbstractVariable;
-import main.java.ast.decomposition.cfg.PDGNode;
-import main.java.ast.decomposition.cfg.PlainVariable;
-import main.java.ast.decomposition.matching.ASTNodeDifference;
-import main.java.ast.util.ExpressionExtractor;
+import ast.decomposition.AbstractExpression;
+import ast.decomposition.AbstractStatement;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.PDGNode;
+import ast.decomposition.cfg.PlainVariable;
+import ast.decomposition.matching.ASTNodeDifference;
+import ast.util.ExpressionExtractor;
 
 public abstract class Gap {
     private final Set<VariableBindingPair> parameterBindings;

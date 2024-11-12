@@ -1,13 +1,13 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
-import main.java.ast.decomposition.cfg.GraphEdge;
-import main.java.ast.decomposition.cfg.PDG;
-import main.java.ast.decomposition.cfg.PDGBlockNode;
-import main.java.ast.decomposition.cfg.PDGControlDependence;
-import main.java.ast.decomposition.cfg.PDGControlPredicateNode;
-import main.java.ast.decomposition.cfg.PDGDependence;
-import main.java.ast.decomposition.cfg.PDGMethodEntryNode;
-import main.java.ast.decomposition.cfg.PDGNode;
+import ast.decomposition.cfg.GraphEdge;
+import ast.decomposition.cfg.PDG;
+import ast.decomposition.cfg.PDGBlockNode;
+import ast.decomposition.cfg.PDGControlDependence;
+import ast.decomposition.cfg.PDGControlPredicateNode;
+import ast.decomposition.cfg.PDGDependence;
+import ast.decomposition.cfg.PDGMethodEntryNode;
+import ast.decomposition.cfg.PDGNode;
 
 import java.util.ArrayList;
 import java.util.Iterator;

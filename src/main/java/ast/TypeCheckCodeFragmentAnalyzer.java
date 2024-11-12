@@ -1,4 +1,4 @@
-package main.java.ast;
+package ast;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -39,10 +39,10 @@ import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
-import main.java.ast.util.ExpressionExtractor;
-import main.java.ast.util.MethodDeclarationUtility;
-import main.java.ast.util.StatementExtractor;
-import main.java.jdeodorant.refactoring.manipulators.TypeCheckElimination;
+import ast.util.ExpressionExtractor;
+import ast.util.MethodDeclarationUtility;
+import ast.util.StatementExtractor;
+import jdeodorant.refactoring.manipulators.TypeCheckElimination;
 
 public class TypeCheckCodeFragmentAnalyzer {
 	private TypeCheckElimination typeCheckElimination;

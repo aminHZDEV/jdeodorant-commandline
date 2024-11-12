@@ -1,15 +1,15 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import main.java.ast.ASTReader;
-import main.java.ast.decomposition.cfg.mapping.CloneStructureNode;
-import main.java.ast.decomposition.cfg.mapping.DivideAndConquerMatcher;
-import main.java.ast.decomposition.cfg.mapping.VariableBindingPair;
-import main.java.ast.decomposition.matching.ASTNodeMatcher;
-import main.java.jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
+import ast.ASTReader;
+import ast.decomposition.cfg.mapping.CloneStructureNode;
+import ast.decomposition.cfg.mapping.DivideAndConquerMatcher;
+import ast.decomposition.cfg.mapping.VariableBindingPair;
+import ast.decomposition.matching.ASTNodeMatcher;
+import jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
 
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;

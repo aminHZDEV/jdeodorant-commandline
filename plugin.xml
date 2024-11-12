@@ -6,7 +6,7 @@
          point="org.eclipse.core.runtime.applications">
          <application>
          <run
-               class="ca.concordia.jdeodorant.eclipse.commandline.Application">
+               class="jdeodorant.eclipse.commandline.Application">
          </run>
          </application>
    </extension>
@@ -14,7 +14,7 @@
          id="jdproduct"
          point="org.eclipse.core.runtime.products">
       <product
-            application="ca.concordia.jdeodorant.eclipse.commandline-lambda.application"
+            application="jdeodorant.eclipse.commandline-lambda.application"
             name="JDeodorant-Commandline-Product-Configuration">
          <property
                name="appName"

@@ -1,4 +1,4 @@
-package main.java.ast;
+package ast;
 
 import java.util.Set;
 

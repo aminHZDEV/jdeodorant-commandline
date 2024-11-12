@@ -1,11 +1,11 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
-import main.java.jdeodorant.refactoring.manipulators.ExtractClassRefactoring;
-import main.java.jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
-import main.java.jdeodorant.refactoring.manipulators.ExtractMethodRefactoring;
-import main.java.jdeodorant.refactoring.manipulators.MoveMethodRefactoring;
-import main.java.jdeodorant.refactoring.manipulators.ReplaceConditionalWithPolymorphism;
-import main.java.jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithStateStrategy;
+import jdeodorant.refactoring.manipulators.ExtractClassRefactoring;
+import jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
+import jdeodorant.refactoring.manipulators.ExtractMethodRefactoring;
+import jdeodorant.refactoring.manipulators.MoveMethodRefactoring;
+import jdeodorant.refactoring.manipulators.ReplaceConditionalWithPolymorphism;
+import jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithStateStrategy;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

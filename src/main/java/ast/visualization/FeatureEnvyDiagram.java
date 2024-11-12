@@ -1,8 +1,8 @@
-package main.java.ast.visualization;
+package ast.visualization;
 
 
-import main.java.ast.FieldInstructionObject;
-import main.java.ast.MethodInvocationObject;
+import ast.FieldInstructionObject;
+import ast.MethodInvocationObject;
 
 import java.util.ArrayList;
 import java.util.List;

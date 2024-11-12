@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.matching.loop;
+package ast.decomposition.matching.loop;
 
 import org.eclipse.jdt.core.dom.Expression;
 

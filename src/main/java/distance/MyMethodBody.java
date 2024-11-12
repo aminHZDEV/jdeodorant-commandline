@@ -1,14 +1,14 @@
-package main.java.distance;
+package distance;
 
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
-import main.java.ast.decomposition.AbstractExpression;
-import main.java.ast.decomposition.AbstractStatement;
-import main.java.ast.decomposition.CompositeStatementObject;
-import main.java.ast.decomposition.MethodBodyObject;
-import main.java.ast.decomposition.StatementObject;
+import ast.decomposition.AbstractExpression;
+import ast.decomposition.AbstractStatement;
+import ast.decomposition.CompositeStatementObject;
+import ast.decomposition.MethodBodyObject;
+import ast.decomposition.StatementObject;
 
 public class MyMethodBody {
 	

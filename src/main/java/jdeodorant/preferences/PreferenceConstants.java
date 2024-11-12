@@ -1,4 +1,4 @@
-package main.java.jdeodorant.preferences;
+package jdeodorant.preferences;
 
 /**
  * Constant definitions for plug-in preferences

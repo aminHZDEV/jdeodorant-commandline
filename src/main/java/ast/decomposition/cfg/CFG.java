@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,13 +22,13 @@ import org.eclipse.jdt.core.dom.SwitchStatement;
 import org.eclipse.jdt.core.dom.ThrowStatement;
 import org.eclipse.jdt.core.dom.WhileStatement;
 
-import main.java.ast.AbstractMethodDeclaration;
-import main.java.ast.decomposition.AbstractStatement;
-import main.java.ast.decomposition.CompositeStatementObject;
-import main.java.ast.decomposition.MethodBodyObject;
-import main.java.ast.decomposition.StatementObject;
-import main.java.ast.decomposition.SynchronizedStatementObject;
-import main.java.ast.decomposition.TryStatementObject;
+import ast.AbstractMethodDeclaration;
+import ast.decomposition.AbstractStatement;
+import ast.decomposition.CompositeStatementObject;
+import ast.decomposition.MethodBodyObject;
+import ast.decomposition.StatementObject;
+import ast.decomposition.SynchronizedStatementObject;
+import ast.decomposition.TryStatementObject;
 
 public class CFG extends Graph {
 	private static final int PUSH_NEW_LIST = 0;

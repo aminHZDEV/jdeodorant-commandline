@@ -1,8 +1,8 @@
-package main.java.ast;
+package ast;
 
-import main.java.ast.decomposition.cfg.AbstractVariable;
-import main.java.ast.decomposition.cfg.CompositeVariable;
-import main.java.ast.decomposition.cfg.PlainVariable;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.CompositeVariable;
+import ast.decomposition.cfg.PlainVariable;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;

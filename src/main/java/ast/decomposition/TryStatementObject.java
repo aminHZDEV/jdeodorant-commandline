@@ -1,7 +1,7 @@
-package main.java.ast.decomposition;
+package ast.decomposition;
 
-import main.java.ast.MethodInvocationObject;
-import main.java.ast.decomposition.cfg.AbstractVariable;
+import ast.MethodInvocationObject;
+import ast.decomposition.cfg.AbstractVariable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

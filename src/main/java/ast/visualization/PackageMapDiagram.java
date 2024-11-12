@@ -1,4 +1,4 @@
-package main.java.ast.visualization;
+package ast.visualization;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,9 +27,9 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.swt.graphics.Color;
 
-import main.java.ast.ASTInformationGenerator;
-import main.java.ast.ASTReader;
-import main.java.distance.CandidateRefactoring;
+import ast.ASTInformationGenerator;
+import ast.ASTReader;
+import distance.CandidateRefactoring;
 
 
 

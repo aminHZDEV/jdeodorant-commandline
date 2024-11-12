@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
 public class PDGControlDependence extends PDGDependence {
 	private boolean trueControlDependence;

@@ -1,6 +1,6 @@
-package main.java.distance;
+package distance;
 
-import main.java.ast.decomposition.AbstractStatement;
+import ast.decomposition.AbstractStatement;
 
 public class MyStatement extends MyAbstractStatement {
 

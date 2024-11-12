@@ -1,4 +1,4 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 import java.io.ByteArrayInputStream;
 import java.io.DataInputStream;
@@ -111,19 +111,19 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import ca.concordia.jdeodorant.clone.parsers.CloneGroup;
-import ca.concordia.jdeodorant.clone.parsers.CloneGroupList;
-import ca.concordia.jdeodorant.clone.parsers.CloneInstance;
-import ca.concordia.jdeodorant.clone.parsers.CloneInstanceStatus;
-import ca.concordia.jdeodorant.clone.parsers.JavaModelUtility;
-import main.java.ast.ASTReader;
-import main.java.ast.CompilationErrorDetectedException;
-import main.java.ast.CompilationUnitCache;
-import main.java.ast.decomposition.cfg.mapping.CloneInstanceMapper;
-import main.java.ast.decomposition.cfg.mapping.PDGRegionSubTreeMapper;
-import main.java.jdeodorant.preferences.PreferenceConstants;
-import main.java.jdeodorant.refactoring.Activator;
-import main.java.jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
+import jdeodorant.clone.parsers.CloneGroup;
+import jdeodorant.clone.parsers.CloneGroupList;
+import jdeodorant.clone.parsers.CloneInstance;
+import jdeodorant.clone.parsers.CloneInstanceStatus;
+import jdeodorant.clone.parsers.JavaModelUtility;
+import ast.ASTReader;
+import ast.CompilationErrorDetectedException;
+import ast.CompilationUnitCache;
+import ast.decomposition.cfg.mapping.CloneInstanceMapper;
+import ast.decomposition.cfg.mapping.PDGRegionSubTreeMapper;
+import jdeodorant.preferences.PreferenceConstants;
+import jdeodorant.refactoring.Activator;
+import jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
 
 public class DuplicatedCode extends ViewPart {
 	private static final String MESSAGE_DIALOG_TITLE = "Duplicated Code Refactoring";

@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,13 +7,13 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.Statement;
 
-import main.java.ast.decomposition.AbstractExpression;
-import main.java.ast.decomposition.AbstractStatement;
-import main.java.ast.decomposition.CompositeStatementObject;
-import main.java.ast.decomposition.cfg.PDGNode;
-import main.java.ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
-import main.java.ast.decomposition.matching.ASTNodeDifference;
-import main.java.ast.decomposition.matching.DifferenceType;
+import ast.decomposition.AbstractExpression;
+import ast.decomposition.AbstractStatement;
+import ast.decomposition.CompositeStatementObject;
+import ast.decomposition.cfg.PDGNode;
+import ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
+import ast.decomposition.matching.ASTNodeDifference;
+import ast.decomposition.matching.DifferenceType;
 
 public abstract class NodeMapping implements Comparable<NodeMapping> {
 	private List<PreconditionViolation> preconditionViolations = new ArrayList<PreconditionViolation>();

@@ -1,4 +1,4 @@
-package main.java.distance;
+package distance;
 
 import java.util.Set;
 import java.util.HashSet;

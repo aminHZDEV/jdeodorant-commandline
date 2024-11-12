@@ -1,4 +1,4 @@
-package main.java.ast.decomposition;
+package ast.decomposition;
 
 import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.SynchronizedStatement;

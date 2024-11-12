@@ -1,4 +1,4 @@
-package main.java.ast;
+package ast;
 
 public abstract class CreationObject {
 	private TypeObject type;

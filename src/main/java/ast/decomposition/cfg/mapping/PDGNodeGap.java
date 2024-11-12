@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
 import java.util.List;
 
@@ -6,10 +6,10 @@ import org.eclipse.jdt.core.dom.Block;
 import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.Statement;
 
-import main.java.ast.decomposition.cfg.PDGBlockNode;
-import main.java.ast.decomposition.cfg.PDGControlDependence;
-import main.java.ast.decomposition.cfg.PDGNode;
-import main.java.ast.decomposition.matching.ASTNodeDifference;
+import ast.decomposition.cfg.PDGBlockNode;
+import ast.decomposition.cfg.PDGControlDependence;
+import ast.decomposition.cfg.PDGNode;
+import ast.decomposition.matching.ASTNodeDifference;
 
 public class PDGNodeGap extends IdBasedGap {
 	private PDGNode nodeG1;

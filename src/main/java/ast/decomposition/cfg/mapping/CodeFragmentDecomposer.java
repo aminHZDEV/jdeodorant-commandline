@@ -1,9 +1,9 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
-import main.java.ast.decomposition.cfg.AbstractVariable;
-import main.java.ast.decomposition.cfg.CompositeVariable;
-import main.java.ast.decomposition.cfg.PDGNode;
-import main.java.ast.decomposition.cfg.PlainVariable;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.CompositeVariable;
+import ast.decomposition.cfg.PDGNode;
+import ast.decomposition.cfg.PlainVariable;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;

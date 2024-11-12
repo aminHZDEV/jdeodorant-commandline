@@ -1,9 +1,9 @@
-package main.java.ast.decomposition.matching.conditional;
+package ast.decomposition.matching.conditional;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.ast.decomposition.matching.ASTNodeMatcher;
+import ast.decomposition.matching.ASTNodeMatcher;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ConditionalExpression;

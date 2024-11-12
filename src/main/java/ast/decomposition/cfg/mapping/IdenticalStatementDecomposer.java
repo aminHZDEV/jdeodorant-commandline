@@ -1,6 +1,6 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
-import main.java.ast.decomposition.cfg.PDGNode;
+import ast.decomposition.cfg.PDGNode;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

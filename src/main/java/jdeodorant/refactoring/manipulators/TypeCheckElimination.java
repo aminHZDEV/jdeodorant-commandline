@@ -1,10 +1,10 @@
-package main.java.jdeodorant.refactoring.manipulators;
+package jdeodorant.refactoring.manipulators;
 
-import main.java.ast.decomposition.CompositeStatementObject;
-import main.java.ast.inheritance.InheritanceTree;
-import main.java.ast.util.ExpressionExtractor;
-import main.java.ast.util.MethodDeclarationUtility;
-import main.java.ast.util.StatementExtractor;
+import ast.decomposition.CompositeStatementObject;
+import ast.inheritance.InheritanceTree;
+import ast.util.ExpressionExtractor;
+import ast.util.MethodDeclarationUtility;
+import ast.util.StatementExtractor;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

@@ -1,4 +1,4 @@
-package main.java.ast.decomposition;
+package ast.decomposition;
 
 import java.util.ArrayList;
 import java.util.List;

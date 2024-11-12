@@ -1,4 +1,4 @@
-package main.java.ast;
+package ast;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -7,9 +7,9 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
-import main.java.ast.decomposition.MethodBodyObject;
-import main.java.ast.decomposition.cfg.AbstractVariable;
-import main.java.ast.decomposition.cfg.PlainVariable;
+import ast.decomposition.MethodBodyObject;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.PlainVariable;
 
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 

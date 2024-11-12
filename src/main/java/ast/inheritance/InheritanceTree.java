@@ -1,4 +1,4 @@
-package main.java.ast.inheritance;
+package ast.inheritance;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;

@@ -1,14 +1,14 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-import main.java.ast.FieldObject;
-import main.java.ast.VariableDeclarationObject;
-import main.java.ast.decomposition.AbstractStatement;
-import main.java.ast.decomposition.CatchClauseObject;
-import main.java.ast.decomposition.TryStatementObject;
+import ast.FieldObject;
+import ast.VariableDeclarationObject;
+import ast.decomposition.AbstractStatement;
+import ast.decomposition.CatchClauseObject;
+import ast.decomposition.TryStatementObject;
 
 public class PDGTryNode extends PDGBlockNode {
 	public PDGTryNode(CFGTryNode cfgTryNode, Set<VariableDeclarationObject> variableDeclarationsInMethod,

@@ -1,4 +1,4 @@
-package main.java.ast.visualization;
+package ast.visualization;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -9,14 +9,14 @@ import java.util.Set;
 
 import org.eclipse.jdt.core.dom.ITypeBinding;
 
-import main.java.ast.ClassObject;
-import main.java.ast.FieldInstructionObject;
-import main.java.ast.LocalVariableInstructionObject;
-import main.java.ast.MethodInvocationObject;
-import main.java.ast.MethodObject;
-import main.java.ast.decomposition.cfg.AbstractVariable;
-import main.java.ast.decomposition.cfg.CompositeVariable;
-import main.java.ast.decomposition.cfg.PlainVariable;
+import ast.ClassObject;
+import ast.FieldInstructionObject;
+import ast.LocalVariableInstructionObject;
+import ast.MethodInvocationObject;
+import ast.MethodObject;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.CompositeVariable;
+import ast.decomposition.cfg.PlainVariable;
 
 public class FeatureEnvyVisualizationData implements VisualizationData {
 

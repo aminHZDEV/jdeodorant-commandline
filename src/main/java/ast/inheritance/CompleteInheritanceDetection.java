@@ -1,4 +1,4 @@
-package main.java.ast.inheritance;
+package ast.inheritance;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -6,9 +6,9 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 
-import main.java.ast.ClassObject;
-import main.java.ast.SystemObject;
-import main.java.ast.TypeObject;
+import ast.ClassObject;
+import ast.SystemObject;
+import ast.TypeObject;
 
 public class CompleteInheritanceDetection {
 	private Map<String, LinkedHashSet<String>> subclassMap;

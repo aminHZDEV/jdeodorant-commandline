@@ -1,9 +1,9 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
 Bundle-Name: Commandline
-Bundle-SymbolicName: ca.concordia.jdeodorant.eclipse.commandline-lambda;singleton:=true
+Bundle-SymbolicName: jdeodorant.eclipse.commandline-lambda;singleton:=true
 Bundle-Version: 1.0.0.qualifier
-Bundle-Activator: ca.concordia.jdeodorant.eclipse.commandline.Activator
+Bundle-Activator: jdeodorant.eclipse.commandline.Activator
 Require-Bundle: org.eclipse.core.runtime,
  org.eclipse.ui,
  org.eclipse.core.resources,

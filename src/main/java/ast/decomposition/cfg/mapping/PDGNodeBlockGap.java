@@ -1,26 +1,26 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
 
-import main.java.ast.decomposition.AbstractExpression;
-import main.java.ast.decomposition.AbstractStatement;
-import main.java.ast.decomposition.CompositeStatementObject;
-import main.java.ast.decomposition.StatementObject;
-import main.java.ast.decomposition.cfg.AbstractVariable;
-import main.java.ast.decomposition.cfg.CFGBreakNode;
-import main.java.ast.decomposition.cfg.CFGContinueNode;
-import main.java.ast.decomposition.cfg.CFGNode;
-import main.java.ast.decomposition.cfg.GraphEdge;
-import main.java.ast.decomposition.cfg.PDGBlockNode;
-import main.java.ast.decomposition.cfg.PDGControlDependence;
-import main.java.ast.decomposition.cfg.PDGControlPredicateNode;
-import main.java.ast.decomposition.cfg.PDGDataDependence;
-import main.java.ast.decomposition.cfg.PDGDependence;
-import main.java.ast.decomposition.cfg.PDGNode;
-import main.java.ast.decomposition.cfg.PDGStatementNode;
-import main.java.ast.decomposition.cfg.PlainVariable;
-import main.java.ast.decomposition.matching.ASTNodeDifference;
-import main.java.ast.util.ExpressionExtractor;
-import main.java.ast.util.ThrownExceptionVisitor;
+import ast.decomposition.AbstractExpression;
+import ast.decomposition.AbstractStatement;
+import ast.decomposition.CompositeStatementObject;
+import ast.decomposition.StatementObject;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.CFGBreakNode;
+import ast.decomposition.cfg.CFGContinueNode;
+import ast.decomposition.cfg.CFGNode;
+import ast.decomposition.cfg.GraphEdge;
+import ast.decomposition.cfg.PDGBlockNode;
+import ast.decomposition.cfg.PDGControlDependence;
+import ast.decomposition.cfg.PDGControlPredicateNode;
+import ast.decomposition.cfg.PDGDataDependence;
+import ast.decomposition.cfg.PDGDependence;
+import ast.decomposition.cfg.PDGNode;
+import ast.decomposition.cfg.PDGStatementNode;
+import ast.decomposition.cfg.PlainVariable;
+import ast.decomposition.matching.ASTNodeDifference;
+import ast.util.ExpressionExtractor;
+import ast.util.ThrownExceptionVisitor;
 
 import java.util.ArrayList;
 import java.util.Iterator;

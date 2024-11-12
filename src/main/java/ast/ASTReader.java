@@ -1,4 +1,4 @@
-package main.java.ast;
+package ast;
 
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
@@ -51,9 +51,9 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
-import main.java.ast.decomposition.AbstractExpression;
-import main.java.ast.decomposition.MethodBodyObject;
-import main.java.ast.util.StatementExtractor;
+import ast.decomposition.AbstractExpression;
+import ast.decomposition.MethodBodyObject;
+import ast.util.StatementExtractor;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

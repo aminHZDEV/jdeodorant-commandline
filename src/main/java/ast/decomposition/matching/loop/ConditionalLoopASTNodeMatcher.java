@@ -1,11 +1,11 @@
-package main.java.ast.decomposition.matching.loop;
+package ast.decomposition.matching.loop;
 
-import main.java.ast.ASTInformationGenerator;
-import main.java.ast.decomposition.AbstractExpression;
-import main.java.ast.decomposition.matching.ASTNodeDifference;
-import main.java.ast.decomposition.matching.ASTNodeMatcher;
-import main.java.ast.decomposition.matching.Difference;
-import main.java.ast.decomposition.matching.DifferenceType;
+import ast.ASTInformationGenerator;
+import ast.decomposition.AbstractExpression;
+import ast.decomposition.matching.ASTNodeDifference;
+import ast.decomposition.matching.ASTNodeMatcher;
+import ast.decomposition.matching.Difference;
+import ast.decomposition.matching.DifferenceType;
 
 import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.dom.ASTNode;

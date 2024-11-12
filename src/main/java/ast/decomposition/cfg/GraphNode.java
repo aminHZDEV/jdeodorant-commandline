@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

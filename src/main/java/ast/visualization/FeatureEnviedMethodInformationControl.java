@@ -1,8 +1,8 @@
-package main.java.ast.visualization;
+package ast.visualization;
 
-import main.java.distance.CandidateRefactoring;
-import main.java.distance.MoveMethodCandidateRefactoring;
-import main.java.jdeodorant.refactoring.views.FeatureEnvy;
+import distance.CandidateRefactoring;
+import distance.MoveMethodCandidateRefactoring;
+import jdeodorant.refactoring.views.FeatureEnvy;
 import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.draw2d.ColorConstants;

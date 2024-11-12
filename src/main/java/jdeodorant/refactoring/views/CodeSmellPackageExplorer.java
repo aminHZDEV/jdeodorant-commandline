@@ -1,22 +1,22 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.ast.visualization.DecorationConstants;
-import main.java.ast.visualization.GodClassInformationControlCreator;
-import main.java.ast.visualization.ICustomInformationControlCreator;
-import main.java.ast.visualization.IInformationProvider;
-import main.java.ast.visualization.FeatureEnviedMethodInformationControlCreator;
-import main.java.ast.visualization.InformationControlManager;
-import main.java.ast.visualization.SearchInputAction;
-import main.java.ast.visualization.ZoomInputAction;
-import main.java.ast.visualization.PackageMapDiagramInformationProvider;
-import main.java.ast.visualization.PackageMapDiagram;
-import main.java.ast.visualization.ZoomAction;
-import main.java.distance.CandidateRefactoring;
-import main.java.jdeodorant.refactoring.Activator;
+import ast.visualization.DecorationConstants;
+import ast.visualization.GodClassInformationControlCreator;
+import ast.visualization.ICustomInformationControlCreator;
+import ast.visualization.IInformationProvider;
+import ast.visualization.FeatureEnviedMethodInformationControlCreator;
+import ast.visualization.InformationControlManager;
+import ast.visualization.SearchInputAction;
+import ast.visualization.ZoomInputAction;
+import ast.visualization.PackageMapDiagramInformationProvider;
+import ast.visualization.PackageMapDiagram;
+import ast.visualization.ZoomAction;
+import distance.CandidateRefactoring;
+import jdeodorant.refactoring.Activator;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.draw2d.ColorConstants;

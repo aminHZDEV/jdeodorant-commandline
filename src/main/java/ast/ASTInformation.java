@@ -1,4 +1,4 @@
-package main.java.ast;
+package ast;
 
 import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.dom.ASTNode;

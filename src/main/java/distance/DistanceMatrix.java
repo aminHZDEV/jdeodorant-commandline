@@ -1,16 +1,16 @@
-package main.java.distance;
+package distance;
 
-import main.java.ast.ASTReader;
-import main.java.ast.ClassObject;
-import main.java.ast.FieldInstructionObject;
-import main.java.ast.MethodInvocationObject;
-import main.java.ast.MethodObject;
-import main.java.ast.ParameterObject;
-import main.java.ast.association.Association;
-import main.java.ast.util.math.Cluster;
-import main.java.ast.util.math.Clustering;
-import main.java.jdeodorant.preferences.PreferenceConstants;
-import main.java.jdeodorant.refactoring.Activator;
+import ast.ASTReader;
+import ast.ClassObject;
+import ast.FieldInstructionObject;
+import ast.MethodInvocationObject;
+import ast.MethodObject;
+import ast.ParameterObject;
+import ast.association.Association;
+import ast.util.math.Cluster;
+import ast.util.math.Clustering;
+import jdeodorant.preferences.PreferenceConstants;
+import jdeodorant.refactoring.Activator;
 
 import java.util.*;
 
@@ -23,17 +23,17 @@ import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jface.preference.IPreferenceStore;
 
 
-import main.java.ast.ASTReader;
-import main.java.ast.ClassObject;
-import main.java.ast.FieldInstructionObject;
-import main.java.ast.MethodInvocationObject;
-import main.java.ast.MethodObject;
-import main.java.ast.ParameterObject;
-import main.java.ast.association.Association;
-import main.java.ast.util.math.Cluster;
-import main.java.ast.util.math.Clustering;
-import main.java.jdeodorant.preferences.PreferenceConstants;
-import main.java.jdeodorant.refactoring.Activator;
+import ast.ASTReader;
+import ast.ClassObject;
+import ast.FieldInstructionObject;
+import ast.MethodInvocationObject;
+import ast.MethodObject;
+import ast.ParameterObject;
+import ast.association.Association;
+import ast.util.math.Cluster;
+import ast.util.math.Clustering;
+import jdeodorant.preferences.PreferenceConstants;
+import jdeodorant.refactoring.Activator;
 
 import java.util.*;
 

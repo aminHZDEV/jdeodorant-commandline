@@ -1,11 +1,11 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import main.java.ast.ASTReader;
-import main.java.jdeodorant.refactoring.manipulators.ExtractMethodRefactoring;
+import ast.ASTReader;
+import jdeodorant.refactoring.manipulators.ExtractMethodRefactoring;
 
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;

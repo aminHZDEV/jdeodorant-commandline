@@ -1,4 +1,4 @@
-package main.java.ast.util.math;
+package ast.util.math;
 
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;

@@ -1,8 +1,8 @@
-package main.java.ast.delegation;
+package ast.delegation;
 
-import main.java.ast.ClassObject;
-import main.java.ast.MethodObject;
-import main.java.ast.SystemObject;
+import ast.ClassObject;
+import ast.MethodObject;
+import ast.SystemObject;
 
 import java.util.List;
 import java.util.ArrayList;

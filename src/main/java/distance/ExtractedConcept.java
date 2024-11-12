@@ -1,6 +1,6 @@
-package main.java.distance;
+package distance;
 
-import main.java.ast.util.TopicFinder;
+import ast.util.TopicFinder;
 
 import java.util.ArrayList;
 import java.util.HashSet;

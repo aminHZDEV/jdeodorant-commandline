@@ -1,4 +1,4 @@
-package main.java.ast.util;
+package ast.util;
 
 import org.eclipse.jdt.core.dom.BooleanLiteral;
 import org.eclipse.jdt.core.dom.CharacterLiteral;

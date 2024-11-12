@@ -1,6 +1,6 @@
-package main.java.ast.delegation;
+package ast.delegation;
 
-import main.java.ast.*;
+import ast.*;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import java.util.Enumeration;

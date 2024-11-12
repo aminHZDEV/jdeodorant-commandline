@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.matching;
+package ast.decomposition.matching;
 
 import java.util.ArrayList;
 import java.util.List;

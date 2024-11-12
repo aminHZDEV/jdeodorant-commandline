@@ -1,4 +1,4 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jface.layout.GridDataFactory;
@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import ca.concordia.jdeodorant.clone.parsers.CloneDetectorType;
+import jdeodorant.clone.parsers.CloneDetectorType;
 
 public class ImportClonesWizardPage extends WizardPage {
 

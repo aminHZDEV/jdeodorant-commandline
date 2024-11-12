@@ -1,12 +1,12 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 import java.text.DecimalFormat;
 import java.util.Set;
 import java.util.Map.Entry;
 
-import main.java.history.Evolution;
-import main.java.history.ProjectVersion;
-import main.java.history.ProjectVersionPair;
+import history.Evolution;
+import history.ProjectVersion;
+import history.ProjectVersionPair;
 
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareUI;

@@ -1,11 +1,11 @@
-package main.java.distance;
+package distance;
 
-import main.java.ast.FieldInstructionObject;
-import main.java.ast.MethodInvocationObject;
-import main.java.ast.MethodObject;
-import main.java.ast.TypeObject;
-import main.java.ast.decomposition.cfg.PlainVariable;
-import main.java.ast.visualization.FeatureEnvyVisualizationData;
+import ast.FieldInstructionObject;
+import ast.MethodInvocationObject;
+import ast.MethodObject;
+import ast.TypeObject;
+import ast.decomposition.cfg.PlainVariable;
+import ast.visualization.FeatureEnvyVisualizationData;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

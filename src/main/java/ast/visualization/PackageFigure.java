@@ -1,4 +1,4 @@
-package main.java.ast.visualization;
+package ast.visualization;
 
 import java.util.TreeSet;
 import org.eclipse.draw2d.ColorConstants;

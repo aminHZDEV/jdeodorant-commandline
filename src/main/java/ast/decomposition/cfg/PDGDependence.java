@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
 public abstract class PDGDependence extends GraphEdge {
 	private PDGDependenceType type;

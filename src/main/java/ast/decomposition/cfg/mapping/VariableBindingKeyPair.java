@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
 public class VariableBindingKeyPair {
 	private String key1;

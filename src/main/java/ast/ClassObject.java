@@ -1,7 +1,7 @@
-package main.java.ast;
+package ast;
 
-import main.java.ast.decomposition.MethodBodyObject;
-import main.java.jdeodorant.refactoring.manipulators.TypeCheckElimination;
+import ast.decomposition.MethodBodyObject;
+import jdeodorant.refactoring.manipulators.TypeCheckElimination;
 
 import java.util.List;
 import java.util.ArrayList;

@@ -1,10 +1,10 @@
-package main.java.ast.decomposition;
+package ast.decomposition;
 
 import java.util.List;
 
-import main.java.ast.ASTInformation;
-import main.java.ast.ASTInformationGenerator;
-import main.java.ast.util.ExpressionExtractor;
+import ast.ASTInformation;
+import ast.ASTInformationGenerator;
+import ast.util.ExpressionExtractor;
 
 import org.eclipse.jdt.core.dom.Expression;
 

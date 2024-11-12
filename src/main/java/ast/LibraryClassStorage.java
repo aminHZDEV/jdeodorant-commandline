@@ -1,7 +1,7 @@
-package main.java.ast;
+package ast;
 
-import main.java.jdeodorant.preferences.PreferenceConstants;
-import main.java.jdeodorant.refactoring.Activator;
+import jdeodorant.preferences.PreferenceConstants;
+import jdeodorant.refactoring.Activator;
 
 import java.util.LinkedHashSet;
 import java.util.LinkedList;

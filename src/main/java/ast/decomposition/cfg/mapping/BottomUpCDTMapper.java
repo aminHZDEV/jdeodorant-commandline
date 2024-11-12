@@ -1,7 +1,7 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
-import main.java.ast.decomposition.cfg.PDGMethodEntryNode;
-import main.java.ast.decomposition.matching.ASTNodeMatcher;
+import ast.decomposition.cfg.PDGMethodEntryNode;
+import ast.decomposition.matching.ASTNodeMatcher;
 
 import java.util.ArrayList;
 import java.util.Collection;

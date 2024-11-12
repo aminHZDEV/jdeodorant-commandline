@@ -1,12 +1,12 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
-import main.java.ast.AbstractMethodDeclaration;
-import main.java.ast.FieldObject;
-import main.java.ast.LocalVariableDeclarationObject;
-import main.java.ast.ParameterObject;
-import main.java.ast.VariableDeclarationObject;
-import main.java.jdeodorant.preferences.PreferenceConstants;
-import main.java.jdeodorant.refactoring.Activator;
+import ast.AbstractMethodDeclaration;
+import ast.FieldObject;
+import ast.LocalVariableDeclarationObject;
+import ast.ParameterObject;
+import ast.VariableDeclarationObject;
+import jdeodorant.preferences.PreferenceConstants;
+import jdeodorant.refactoring.Activator;
 
 import java.util.ArrayList;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package main.java.ast.decomposition;
+package ast.decomposition;
 
 public enum StatementType {
 	ASSERT,

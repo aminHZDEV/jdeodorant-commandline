@@ -1,6 +1,6 @@
-package main.java.ast.visualization;
+package ast.visualization;
 
-import main.java.distance.CandidateRefactoring;
+import distance.CandidateRefactoring;
 import org.eclipse.draw2d.*;
 import org.eclipse.draw2d.geometry.Dimension;
 import org.eclipse.swt.graphics.Color;

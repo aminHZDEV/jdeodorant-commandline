@@ -1,9 +1,9 @@
-package main.java.distance;
+package distance;
 
-import main.java.ast.*;
-import main.java.ast.association.Association;
-import main.java.ast.association.AssociationDetection;
-import main.java.ast.decomposition.MethodBodyObject;
+import ast.*;
+import ast.association.Association;
+import ast.association.AssociationDetection;
+import ast.decomposition.MethodBodyObject;
 
 import java.util.*;
 

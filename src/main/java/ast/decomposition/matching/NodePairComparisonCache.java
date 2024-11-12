@@ -1,6 +1,6 @@
-package main.java.ast.decomposition.matching;
+package ast.decomposition.matching;
 
-import main.java.ast.decomposition.AbstractMethodFragment;
+import ast.decomposition.AbstractMethodFragment;
 
 import java.util.LinkedHashMap;
 import java.util.List;

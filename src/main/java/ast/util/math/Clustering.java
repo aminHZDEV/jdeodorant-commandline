@@ -1,6 +1,6 @@
-package main.java.ast.util.math;
+package ast.util.math;
 
-import main.java.distance.Entity;
+import distance.Entity;
 
 import java.util.ArrayList;
 import java.util.HashSet;

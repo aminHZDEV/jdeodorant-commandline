@@ -1,4 +1,4 @@
-package main.java.ast.util.math;
+package ast.util.math;
 
 public class LevenshteinDistance {
 	private static int minimum(int a, int b, int c) {

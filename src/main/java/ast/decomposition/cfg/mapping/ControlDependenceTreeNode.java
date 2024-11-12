@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -6,8 +6,8 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import main.java.ast.decomposition.cfg.PDGControlDependence;
-import main.java.ast.decomposition.cfg.PDGNode;
+import ast.decomposition.cfg.PDGControlDependence;
+import ast.decomposition.cfg.PDGNode;
 
 public class ControlDependenceTreeNode {
 	private ControlDependenceTreeNode parent;

@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg.mapping.precondition;
+package ast.decomposition.cfg.mapping.precondition;
 
 import org.eclipse.jface.viewers.StyledString.Styler;
 import org.eclipse.swt.SWT;

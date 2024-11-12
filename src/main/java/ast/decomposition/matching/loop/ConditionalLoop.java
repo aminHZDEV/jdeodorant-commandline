@@ -1,7 +1,7 @@
-package main.java.ast.decomposition.matching.loop;
+package ast.decomposition.matching.loop;
 
-import main.java.ast.decomposition.matching.ASTNodeDifference;
-import main.java.ast.util.ExpressionExtractor;
+import ast.decomposition.matching.ASTNodeDifference;
+import ast.util.ExpressionExtractor;
 
 import java.util.ArrayList;
 import java.util.HashMap;

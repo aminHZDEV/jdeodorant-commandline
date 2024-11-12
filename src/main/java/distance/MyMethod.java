@@ -1,7 +1,7 @@
-package main.java.distance;
+package distance;
 
-import main.java.ast.MethodObject;
-import main.java.ast.decomposition.AbstractStatement;
+import ast.MethodObject;
+import ast.decomposition.AbstractStatement;
 
 import java.util.*;
 

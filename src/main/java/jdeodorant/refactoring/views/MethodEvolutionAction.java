@@ -1,9 +1,9 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 import java.lang.reflect.InvocationTargetException;
 
-import main.java.history.MethodEvolution;
-import main.java.history.ProjectEvolution;
+import history.MethodEvolution;
+import history.ProjectEvolution;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.IJavaProject;

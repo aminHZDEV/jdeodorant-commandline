@@ -1,9 +1,9 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.ast.decomposition.AbstractStatement;
+import ast.decomposition.AbstractStatement;
 
 public class CFGBranchDoLoopNode extends CFGBranchNode {
 

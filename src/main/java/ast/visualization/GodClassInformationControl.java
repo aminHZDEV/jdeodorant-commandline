@@ -1,8 +1,8 @@
-package main.java.ast.visualization;
+package ast.visualization;
 
-import main.java.distance.CandidateRefactoring;
-import main.java.distance.ExtractClassCandidateRefactoring;
-import main.java.jdeodorant.refactoring.views.GodClass;
+import distance.CandidateRefactoring;
+import distance.ExtractClassCandidateRefactoring;
+import jdeodorant.refactoring.views.GodClass;
 
 import java.util.ArrayList;
 

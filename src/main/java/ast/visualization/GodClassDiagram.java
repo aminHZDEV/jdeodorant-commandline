@@ -1,9 +1,9 @@
-package main.java.ast.visualization;
+package ast.visualization;
 
-import main.java.ast.FieldInstructionObject;
-import main.java.ast.FieldObject;
-import main.java.ast.MethodInvocationObject;
-import main.java.ast.MethodObject;
+import ast.FieldInstructionObject;
+import ast.FieldObject;
+import ast.MethodInvocationObject;
+import ast.MethodObject;
 
 import java.util.Map;
 import java.util.Map.Entry;

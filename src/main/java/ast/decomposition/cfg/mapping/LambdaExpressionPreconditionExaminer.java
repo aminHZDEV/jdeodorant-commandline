@@ -1,13 +1,13 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
 
-import main.java.ast.LocalVariableDeclarationObject;
-import main.java.ast.decomposition.cfg.AbstractVariable;
-import main.java.ast.decomposition.cfg.PDGNode;
-import main.java.ast.decomposition.cfg.PlainVariable;
-import main.java.ast.decomposition.matching.ASTNodeMatcher;
-import main.java.ast.decomposition.matching.loop.AbstractLoopUtilities;
-import main.java.ast.util.ExpressionExtractor;
+import ast.LocalVariableDeclarationObject;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.PDGNode;
+import ast.decomposition.cfg.PlainVariable;
+import ast.decomposition.matching.ASTNodeMatcher;
+import ast.decomposition.matching.loop.AbstractLoopUtilities;
+import ast.util.ExpressionExtractor;
 
 import java.util.ArrayList;
 import java.util.Iterator;

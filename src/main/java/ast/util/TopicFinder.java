@@ -1,4 +1,4 @@
-package main.java.ast.util;
+package ast.util;
 
 import java.io.BufferedReader;
 import java.io.FileNotFoundException;
@@ -9,9 +9,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import main.java.ast.util.math.HumaniseCamelCase;
-import main.java.ast.util.math.Stemmer;
-import main.java.jdeodorant.refactoring.Activator;
+import ast.util.math.HumaniseCamelCase;
+import ast.util.math.Stemmer;
+import jdeodorant.refactoring.Activator;
 
 public class TopicFinder {
 	private static ArrayList<String> stopWords = getStopWords();

@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
 public abstract class IdBasedMapping extends NodeMapping {
 	protected double id1;

@@ -1,8 +1,8 @@
-package main.java.ast.decomposition.matching.loop;
+package ast.decomposition.matching.loop;
 
-import main.java.ast.decomposition.matching.conditional.AbstractControlStructureUtilities;
-import main.java.ast.util.ExpressionExtractor;
-import main.java.ast.util.StatementExtractor;
+import ast.decomposition.matching.conditional.AbstractControlStructureUtilities;
+import ast.util.ExpressionExtractor;
+import ast.util.StatementExtractor;
 
 import java.util.ArrayList;
 import java.util.Collections;

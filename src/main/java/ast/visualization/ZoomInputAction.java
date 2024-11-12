@@ -1,5 +1,5 @@
-package main.java.ast.visualization;
-import main.java.jdeodorant.refactoring.views.ZoomValueValidator;
+package ast.visualization;
+import jdeodorant.refactoring.views.ZoomValueValidator;
 
 import org.eclipse.draw2d.ScalableFreeformLayeredPane;
 import org.eclipse.draw2d.ScalableLayeredPane;

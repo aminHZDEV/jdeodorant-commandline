@@ -1,4 +1,4 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
@@ -13,14 +13,14 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
 
-import ca.concordia.jdeodorant.clone.parsers.CloneDetectorOutputParser;
-import ca.concordia.jdeodorant.clone.parsers.CloneDetectorOutputParserFactory;
-import ca.concordia.jdeodorant.clone.parsers.CloneDetectorOutputParserProgressObserver;
-import ca.concordia.jdeodorant.clone.parsers.CloneDetectorType;
-import ca.concordia.jdeodorant.clone.parsers.CloneGroupList;
-import ca.concordia.jdeodorant.clone.parsers.InvalidInputFileException;
-import ca.concordia.jdeodorant.clone.parsers.ResourceInfo.ICompilationUnitNotFoundException;
-import main.java.jdeodorant.refactoring.Activator;
+import jdeodorant.clone.parsers.CloneDetectorOutputParser;
+import jdeodorant.clone.parsers.CloneDetectorOutputParserFactory;
+import jdeodorant.clone.parsers.CloneDetectorOutputParserProgressObserver;
+import jdeodorant.clone.parsers.CloneDetectorType;
+import jdeodorant.clone.parsers.CloneGroupList;
+import jdeodorant.clone.parsers.InvalidInputFileException;
+import jdeodorant.clone.parsers.ResourceInfo.ICompilationUnitNotFoundException;
+import jdeodorant.refactoring.Activator;
 
 public class ImportClonesWizard extends Wizard {
 	private IJavaProject javaProject;

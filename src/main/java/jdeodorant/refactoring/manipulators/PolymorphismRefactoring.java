@@ -1,7 +1,7 @@
-package main.java.jdeodorant.refactoring.manipulators;
+package jdeodorant.refactoring.manipulators;
 
-import main.java.ast.util.ExpressionExtractor;
-import main.java.ast.util.MethodDeclarationUtility;
+import ast.util.ExpressionExtractor;
+import ast.util.MethodDeclarationUtility;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

@@ -1,4 +1,4 @@
-package main.java.ast;
+package ast;
 
 public enum Access {
     NONE, PUBLIC, PRIVATE, PROTECTED;

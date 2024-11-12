@@ -1,11 +1,11 @@
-package main.java.jdeodorant.refactoring.manipulators;
+package jdeodorant.refactoring.manipulators;
 
-import main.java.ast.decomposition.cfg.BasicBlock;
-import main.java.ast.decomposition.cfg.PDGNode;
-import main.java.ast.decomposition.cfg.PDGObjectSliceUnion;
-import main.java.ast.decomposition.cfg.PDGSlice;
-import main.java.ast.decomposition.cfg.PDGSliceUnion;
-import main.java.ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.BasicBlock;
+import ast.decomposition.cfg.PDGNode;
+import ast.decomposition.cfg.PDGObjectSliceUnion;
+import ast.decomposition.cfg.PDGSlice;
+import ast.decomposition.cfg.PDGSliceUnion;
+import ast.decomposition.cfg.AbstractVariable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

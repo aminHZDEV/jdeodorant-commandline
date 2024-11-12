@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
 public abstract class PDGAbstractDataDependence extends PDGDependence {
 	private AbstractVariable data;

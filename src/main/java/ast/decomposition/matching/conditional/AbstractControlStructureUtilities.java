@@ -1,6 +1,6 @@
-package main.java.ast.decomposition.matching.conditional;
+package ast.decomposition.matching.conditional;
 
-import main.java.ast.util.ExpressionExtractor;
+import ast.util.ExpressionExtractor;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -1,20 +1,20 @@
-package main.java.ast.decomposition;
+package ast.decomposition;
 
-import main.java.ast.AnonymousClassDeclarationObject;
-import main.java.ast.ConstructorInvocationObject;
-import main.java.ast.CreationObject;
-import main.java.ast.FieldInstructionObject;
-import main.java.ast.LiteralObject;
-import main.java.ast.LocalVariableDeclarationObject;
-import main.java.ast.LocalVariableInstructionObject;
-import main.java.ast.MethodInvocationObject;
-import main.java.ast.SuperFieldInstructionObject;
-import main.java.ast.SuperMethodInvocationObject;
-import main.java.ast.decomposition.cfg.AbstractVariable;
-import main.java.ast.decomposition.cfg.PlainVariable;
-import main.java.ast.util.ExpressionExtractor;
-import main.java.ast.util.StatementExtractor;
-import main.java.jdeodorant.refactoring.manipulators.TypeCheckElimination;
+import ast.AnonymousClassDeclarationObject;
+import ast.ConstructorInvocationObject;
+import ast.CreationObject;
+import ast.FieldInstructionObject;
+import ast.LiteralObject;
+import ast.LocalVariableDeclarationObject;
+import ast.LocalVariableInstructionObject;
+import ast.MethodInvocationObject;
+import ast.SuperFieldInstructionObject;
+import ast.SuperMethodInvocationObject;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.PlainVariable;
+import ast.util.ExpressionExtractor;
+import ast.util.StatementExtractor;
+import jdeodorant.refactoring.manipulators.TypeCheckElimination;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,8 +8,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
-import main.java.ast.decomposition.cfg.PDG;
-import main.java.ast.decomposition.matching.NodePairComparisonCache;
+import ast.decomposition.cfg.PDG;
+import ast.decomposition.matching.NodePairComparisonCache;
 
 public class PDGMapper {
 	private List<CompleteSubTreeMatch> bottomUpSubTreeMatches;

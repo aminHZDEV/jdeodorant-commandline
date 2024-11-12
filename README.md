@@ -19,13 +19,13 @@ You can run this application from within Eclipse. Please follow these steps:
 		- You can ask the tool to try importing an existing Eclipse project automatically. In this case, the workspace is created in the given path by the tool, and the project is imported to it. You'll need to use the `-pd` switch to specify the path to the `.project` file of the project (See the table below).
 	
         Note that, in any case, Eclipse project files should exist for the Java project that you want to analyze.
-	* In the *Program to Run* select to *Run an application* and from the drop-down list select `ca.concordia.jdeodorant.eclipse.commandline.application`.
+	* In the *Program to Run* select to *Run an application* and from the drop-down list select `jdeodorant.eclipse.commandline.application`.
 
 5. In the *Arguments* tab specify the *Program arguments* (refer to the following table).
 
 6. Next, specify the *VM arguments* as `-Xms128m -Xmx4096m -XX:PermSize=128m` (you can increase the Xmx value, if more memory is available).
 
-7. In the *Plug-ins* tab first select *plug-ins selected below only* in the *Launch with:* drop-down list. Then select `ca.concordia.jdeodorant.eclipse.commandline (1.0.0.qualifier)` and click on *Add Required Plug-ins* button.
+7. In the *Plug-ins* tab first select *plug-ins selected below only* in the *Launch with:* drop-down list. Then select `jdeodorant.eclipse.commandline (1.0.0.qualifier)` and click on *Add Required Plug-ins* button.
 
 8. Apply the changes in order to save the new Launch Configuration.
 Click *Run* to test whether the headless plug-in works properly. If you are getting `BundleException`s, go back to the *Plug-ins* tab (step 7) and select *Launch with*: *all workspace and enabled target plug-ins*. Apply the changes and Run again the headless plug-in.

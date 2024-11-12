@@ -1,4 +1,4 @@
-package main.java.jdeodorant.refactoring;
+package jdeodorant.refactoring;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;

@@ -1,7 +1,7 @@
-package main.java.ast.decomposition.matching;
+package ast.decomposition.matching;
 
-import main.java.ast.decomposition.AbstractExpression;
-import main.java.ast.decomposition.cfg.PDGNode;
+import ast.decomposition.AbstractExpression;
+import ast.decomposition.cfg.PDGNode;
 
 import java.util.ArrayList;
 import java.util.List;

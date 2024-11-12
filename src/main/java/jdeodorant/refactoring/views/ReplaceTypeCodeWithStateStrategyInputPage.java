@@ -1,4 +1,4 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -7,8 +7,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Pattern;
 
-import main.java.ast.util.TypeVisitor;
-import main.java.jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithStateStrategy;
+import ast.util.TypeVisitor;
+import jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithStateStrategy;
 
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IPackageFragment;

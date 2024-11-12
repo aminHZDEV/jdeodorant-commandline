@@ -1,4 +1,4 @@
-package main.java.jdeodorant.refactoring.manipulators;
+package jdeodorant.refactoring.manipulators;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -35,11 +35,11 @@ import org.eclipse.jdt.core.dom.WildcardType;
 import org.eclipse.jdt.core.dom.rewrite.ASTRewrite;
 import org.eclipse.jdt.core.dom.rewrite.ListRewrite;
 
-import main.java.ast.ASTReader;
-import main.java.ast.ClassObject;
-import main.java.ast.SystemObject;
-import main.java.ast.decomposition.cfg.AbstractVariable;
-import main.java.ast.util.MethodDeclarationUtility;
+import ast.ASTReader;
+import ast.ClassObject;
+import ast.SystemObject;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.util.MethodDeclarationUtility;
 
 public class RefactoringUtility {
 

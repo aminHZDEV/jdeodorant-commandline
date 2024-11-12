@@ -1,8 +1,8 @@
-package main.java.ast.inheritance;
+package ast.inheritance;
 
-import main.java.ast.ClassObject;
-import main.java.ast.SystemObject;
-import main.java.ast.TypeObject;
+import ast.ClassObject;
+import ast.SystemObject;
+import ast.TypeObject;
 
 import java.util.List;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package main.java.distance;
+package distance;
 
 public class MyAttributeInstruction {
 

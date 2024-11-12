@@ -1,4 +1,4 @@
-package main.java.jdeodorant.refactoring.actions;
+package jdeodorant.refactoring.actions;
 
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;

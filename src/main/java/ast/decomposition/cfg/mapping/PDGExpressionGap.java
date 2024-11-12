@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -6,12 +6,12 @@ import java.util.Set;
 
 import org.eclipse.jdt.core.dom.*;
 
-import main.java.ast.decomposition.AbstractExpression;
-import main.java.ast.decomposition.cfg.PDGNode;
-import main.java.ast.decomposition.matching.ASTNodeDifference;
-import main.java.ast.decomposition.matching.FieldAssignmentReplacedWithSetterInvocationDifference;
-import main.java.ast.util.ExpressionExtractor;
-import main.java.ast.util.ThrownExceptionVisitor;
+import ast.decomposition.AbstractExpression;
+import ast.decomposition.cfg.PDGNode;
+import ast.decomposition.matching.ASTNodeDifference;
+import ast.decomposition.matching.FieldAssignmentReplacedWithSetterInvocationDifference;
+import ast.util.ExpressionExtractor;
+import ast.util.ThrownExceptionVisitor;
 
 
 public class PDGExpressionGap extends Gap {

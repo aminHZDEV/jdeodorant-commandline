@@ -1,12 +1,12 @@
-package main.java.jdeodorant.refactoring.manipulators;
+package jdeodorant.refactoring.manipulators;
 
-import main.java.ast.decomposition.cfg.CFGBranchDoLoopNode;
-import main.java.ast.decomposition.cfg.CFGNode;
-import main.java.ast.decomposition.cfg.PDGControlPredicateNode;
-import main.java.ast.decomposition.cfg.PDGNode;
-import main.java.ast.decomposition.cfg.PDGTryNode;
-import main.java.ast.util.StatementExtractor;
-import main.java.ast.util.TypeVisitor;
+import ast.decomposition.cfg.CFGBranchDoLoopNode;
+import ast.decomposition.cfg.CFGNode;
+import ast.decomposition.cfg.PDGControlPredicateNode;
+import ast.decomposition.cfg.PDGNode;
+import ast.decomposition.cfg.PDGTryNode;
+import ast.util.StatementExtractor;
+import ast.util.TypeVisitor;
 
 import java.text.MessageFormat;
 import java.util.ArrayList;

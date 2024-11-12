@@ -1,12 +1,12 @@
-package main.java.ast;
+package ast;
 
-import main.java.ast.association.Association;
-import main.java.ast.decomposition.AbstractStatement;
-import main.java.ast.decomposition.MethodBodyObject;
-import main.java.ast.decomposition.StatementObject;
-import main.java.ast.decomposition.cfg.AbstractVariable;
-import main.java.ast.decomposition.cfg.PlainVariable;
-import main.java.ast.util.MethodDeclarationUtility;
+import ast.association.Association;
+import ast.decomposition.AbstractStatement;
+import ast.decomposition.MethodBodyObject;
+import ast.decomposition.StatementObject;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.PlainVariable;
+import ast.util.MethodDeclarationUtility;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

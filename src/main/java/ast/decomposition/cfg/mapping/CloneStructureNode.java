@@ -1,10 +1,10 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
-import main.java.ast.decomposition.StatementType;
-import main.java.ast.decomposition.cfg.CFGBranchIfNode;
-import main.java.ast.decomposition.cfg.CFGThrowNode;
-import main.java.ast.decomposition.cfg.PDGExitNode;
-import main.java.ast.decomposition.cfg.PDGNode;
+import ast.decomposition.StatementType;
+import ast.decomposition.cfg.CFGBranchIfNode;
+import ast.decomposition.cfg.CFGThrowNode;
+import ast.decomposition.cfg.PDGExitNode;
+import ast.decomposition.cfg.PDGNode;
 
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -13,18 +13,18 @@ import java.util.TreeSet;
 import org.eclipse.jdt.core.dom.IfStatement;
 
 
-import main.java.ast.decomposition.StatementType;
-import main.java.ast.decomposition.cfg.CFGBranchIfNode;
-import main.java.ast.decomposition.cfg.CFGThrowNode;
-import main.java.ast.decomposition.cfg.PDGExitNode;
-import main.java.ast.decomposition.cfg.PDGNode;
-import main.java.ast.decomposition.cfg.mapping.precondition.DualExpressionPreconditionViolation;
-import main.java.ast.decomposition.cfg.mapping.precondition.DualExpressionWithCommonSuperTypePreconditionViolation;
-import main.java.ast.decomposition.cfg.mapping.precondition.ExpressionPreconditionViolation;
-import main.java.ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
-import main.java.ast.decomposition.cfg.mapping.precondition.PreconditionViolationType;
-import main.java.ast.decomposition.matching.ASTNodeDifference;
-import main.java.ast.decomposition.matching.DifferenceType;
+import ast.decomposition.StatementType;
+import ast.decomposition.cfg.CFGBranchIfNode;
+import ast.decomposition.cfg.CFGThrowNode;
+import ast.decomposition.cfg.PDGExitNode;
+import ast.decomposition.cfg.PDGNode;
+import ast.decomposition.cfg.mapping.precondition.DualExpressionPreconditionViolation;
+import ast.decomposition.cfg.mapping.precondition.DualExpressionWithCommonSuperTypePreconditionViolation;
+import ast.decomposition.cfg.mapping.precondition.ExpressionPreconditionViolation;
+import ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
+import ast.decomposition.cfg.mapping.precondition.PreconditionViolationType;
+import ast.decomposition.matching.ASTNodeDifference;
+import ast.decomposition.matching.DifferenceType;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

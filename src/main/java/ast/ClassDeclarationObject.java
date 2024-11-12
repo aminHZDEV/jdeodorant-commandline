@@ -1,7 +1,7 @@
-package main.java.ast;
+package ast;
 
-import main.java.ast.decomposition.CatchClauseObject;
-import main.java.ast.decomposition.TryStatementObject;
+import ast.decomposition.CatchClauseObject;
+import ast.decomposition.TryStatementObject;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;

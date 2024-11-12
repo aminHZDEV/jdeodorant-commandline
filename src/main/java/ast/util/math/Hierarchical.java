@@ -1,11 +1,11 @@
-package main.java.ast.util.math;
+package ast.util.math;
 
-import static main.java.ast.util.math.DoubleArray.deleteColumns;
-import static main.java.ast.util.math.DoubleArray.deleteRows;
-import static main.java.ast.util.math.DoubleArray.insertColumns;
-import static main.java.ast.util.math.DoubleArray.insertRows;
+import static ast.util.math.DoubleArray.deleteColumns;
+import static ast.util.math.DoubleArray.deleteRows;
+import static ast.util.math.DoubleArray.insertColumns;
+import static ast.util.math.DoubleArray.insertRows;
 
-import main.java.distance.Entity;
+import distance.Entity;
 
 import java.util.ArrayList;
 import java.util.HashSet;

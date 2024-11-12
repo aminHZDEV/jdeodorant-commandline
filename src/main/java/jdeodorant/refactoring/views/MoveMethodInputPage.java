@@ -1,10 +1,10 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.regex.Pattern;
 
-import main.java.jdeodorant.refactoring.manipulators.MoveMethodRefactoring;
+import jdeodorant.refactoring.manipulators.MoveMethodRefactoring;
 
 import org.eclipse.ltk.ui.refactoring.UserInputWizardPage;
 import org.eclipse.swt.SWT;

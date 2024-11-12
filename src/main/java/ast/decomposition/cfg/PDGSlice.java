@@ -1,6 +1,6 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
-import main.java.ast.AbstractMethodDeclaration;
+import ast.AbstractMethodDeclaration;
 
 import java.util.LinkedHashSet;
 import java.util.Map;

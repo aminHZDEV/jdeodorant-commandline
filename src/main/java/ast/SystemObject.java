@@ -1,12 +1,12 @@
-package main.java.ast;
+package ast;
 
-import main.java.ast.inheritance.CompleteInheritanceDetection;
-import main.java.ast.inheritance.InheritanceTree;
-import main.java.ast.util.ExpressionExtractor;
-import main.java.ast.util.MethodDeclarationUtility;
-import main.java.ast.util.StatementExtractor;
-import main.java.jdeodorant.refactoring.manipulators.TypeCheckElimination;
-import main.java.jdeodorant.refactoring.manipulators.TypeCheckEliminationGroup;
+import ast.inheritance.CompleteInheritanceDetection;
+import ast.inheritance.InheritanceTree;
+import ast.util.ExpressionExtractor;
+import ast.util.MethodDeclarationUtility;
+import ast.util.StatementExtractor;
+import jdeodorant.refactoring.manipulators.TypeCheckElimination;
+import jdeodorant.refactoring.manipulators.TypeCheckEliminationGroup;
 
 import java.util.*;
 

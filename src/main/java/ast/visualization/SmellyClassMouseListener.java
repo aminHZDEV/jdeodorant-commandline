@@ -1,7 +1,7 @@
-package main.java.ast.visualization;
+package ast.visualization;
 
-import main.java.distance.CandidateRefactoring;
-import main.java.distance.MoveMethodCandidateRefactoring;
+import distance.CandidateRefactoring;
+import distance.MoveMethodCandidateRefactoring;
 import java.util.List;
 import org.eclipse.draw2d.ColorConstants;
 import org.eclipse.draw2d.LineBorder;

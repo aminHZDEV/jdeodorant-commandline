@@ -1,10 +1,10 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
-import main.java.ast.decomposition.AbstractMethodFragment;
-import main.java.ast.decomposition.matching.ASTNodeDifference;
-import main.java.ast.decomposition.matching.ASTNodeMatcher;
-import main.java.ast.decomposition.matching.Difference;
-import main.java.ast.decomposition.matching.DifferenceType;
+import ast.decomposition.AbstractMethodFragment;
+import ast.decomposition.matching.ASTNodeDifference;
+import ast.decomposition.matching.ASTNodeMatcher;
+import ast.decomposition.matching.Difference;
+import ast.decomposition.matching.DifferenceType;
 
 import java.util.LinkedHashSet;
 import java.util.List;

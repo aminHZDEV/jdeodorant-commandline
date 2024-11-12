@@ -1,9 +1,9 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
 
-import main.java.jdeodorant.refactoring.manipulators.RefactoringUtility;
+import jdeodorant.refactoring.manipulators.RefactoringUtility;
 
 public class VariableBindingPair {
 	private IVariableBinding binding1;

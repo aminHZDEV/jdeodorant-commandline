@@ -1,9 +1,9 @@
-package main.java.history;
+package history;
 
-import main.java.ast.ASTReader;
-import main.java.ast.TypeCheckCodeFragmentAnalyzer;
-import main.java.ast.util.StatementExtractor;
-import main.java.jdeodorant.refactoring.manipulators.TypeCheckElimination;
+import ast.ASTReader;
+import ast.TypeCheckCodeFragmentAnalyzer;
+import ast.util.StatementExtractor;
+import jdeodorant.refactoring.manipulators.TypeCheckElimination;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

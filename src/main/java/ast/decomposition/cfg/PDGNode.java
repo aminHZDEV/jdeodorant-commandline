@@ -1,17 +1,17 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
-import main.java.ast.ASTReader;
-import main.java.ast.ClassInstanceCreationObject;
-import main.java.ast.ClassObject;
-import main.java.ast.ConstructorObject;
-import main.java.ast.CreationObject;
-import main.java.ast.FieldObject;
-import main.java.ast.MethodInvocationObject;
-import main.java.ast.MethodObject;
-import main.java.ast.SystemObject;
-import main.java.ast.VariableDeclarationObject;
-import main.java.ast.decomposition.AbstractStatement;
-import main.java.ast.util.ExpressionExtractor;
+import ast.ASTReader;
+import ast.ClassInstanceCreationObject;
+import ast.ClassObject;
+import ast.ConstructorObject;
+import ast.CreationObject;
+import ast.FieldObject;
+import ast.MethodInvocationObject;
+import ast.MethodObject;
+import ast.SystemObject;
+import ast.VariableDeclarationObject;
+import ast.decomposition.AbstractStatement;
+import ast.util.ExpressionExtractor;
 
 import java.util.Iterator;
 import java.util.LinkedHashMap;

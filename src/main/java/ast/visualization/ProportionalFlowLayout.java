@@ -1,4 +1,4 @@
-package main.java.ast.visualization;
+package ast.visualization;
 
 import java.util.List;
 import org.eclipse.draw2d.FlowLayout;

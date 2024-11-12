@@ -1,7 +1,7 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
-import main.java.ast.visualization.VisualizationData;
-import main.java.distance.CandidateRefactoring;
+import ast.visualization.VisualizationData;
+import distance.CandidateRefactoring;
 
 public class CodeSmellVisualizationDataSingleton {
 	private static VisualizationData data;

@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -8,16 +8,16 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeSet;
 
-import main.java.ast.ASTReader;
-import main.java.ast.AbstractMethodDeclaration;
-import main.java.ast.ClassDeclarationObject;
-import main.java.ast.CompilationUnitCache;
-import main.java.ast.SystemObject;
-import main.java.ast.decomposition.cfg.CFG;
-import main.java.ast.decomposition.cfg.PDG;
-import main.java.ast.decomposition.cfg.PDGMethodEntryNode;
-import main.java.ast.decomposition.cfg.PDGNode;
-import main.java.ast.decomposition.matching.NodePairComparisonCache;
+import ast.ASTReader;
+import ast.AbstractMethodDeclaration;
+import ast.ClassDeclarationObject;
+import ast.CompilationUnitCache;
+import ast.SystemObject;
+import ast.decomposition.cfg.CFG;
+import ast.decomposition.cfg.PDG;
+import ast.decomposition.cfg.PDGMethodEntryNode;
+import ast.decomposition.cfg.PDGNode;
+import ast.decomposition.matching.NodePairComparisonCache;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -45,10 +45,10 @@ import org.eclipse.jdt.internal.core.SourceType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
-import ca.concordia.jdeodorant.clone.parsers.CloneInstance;
-import ca.concordia.jdeodorant.clone.parsers.JavaModelUtility;
-import ca.concordia.jdeodorant.clone.parsers.TextDiff;
-import ca.concordia.jdeodorant.clone.parsers.TextDiff.Diff;
+import jdeodorant.clone.parsers.CloneInstance;
+import jdeodorant.clone.parsers.JavaModelUtility;
+import jdeodorant.clone.parsers.TextDiff;
+import jdeodorant.clone.parsers.TextDiff.Diff;
 
 @SuppressWarnings("restriction")
 public class CloneInstanceMapper {

@@ -1,4 +1,4 @@
-package main.java.jdeodorant.refactoring.manipulators;
+package jdeodorant.refactoring.manipulators;
 
 import java.util.LinkedHashSet;
 import java.util.Set;

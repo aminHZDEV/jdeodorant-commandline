@@ -1,12 +1,12 @@
-package main.java.history;
+package history;
 
-import main.java.ast.ASTInformationGenerator;
-import main.java.ast.ASTReader;
-import main.java.ast.MethodInvocationObject;
-import main.java.ast.decomposition.MethodBodyObject;
-import main.java.ast.decomposition.cfg.AbstractVariable;
-import main.java.ast.decomposition.cfg.PlainVariable;
-import main.java.distance.MoveMethodCandidateRefactoring;
+import ast.ASTInformationGenerator;
+import ast.ASTReader;
+import ast.MethodInvocationObject;
+import ast.decomposition.MethodBodyObject;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.PlainVariable;
+import distance.MoveMethodCandidateRefactoring;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

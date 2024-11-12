@@ -1,10 +1,10 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
-import main.java.ast.decomposition.cfg.mapping.CloneStructureNode;
-import main.java.ast.decomposition.cfg.mapping.PDGElseGap;
-import main.java.ast.decomposition.cfg.mapping.PDGElseMapping;
-import main.java.ast.decomposition.cfg.mapping.PDGNodeGap;
-import main.java.ast.decomposition.cfg.mapping.PDGNodeMapping;
+import ast.decomposition.cfg.mapping.CloneStructureNode;
+import ast.decomposition.cfg.mapping.PDGElseGap;
+import ast.decomposition.cfg.mapping.PDGElseMapping;
+import ast.decomposition.cfg.mapping.PDGNodeGap;
+import ast.decomposition.cfg.mapping.PDGNodeMapping;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jface.viewers.StyledCellLabelProvider;

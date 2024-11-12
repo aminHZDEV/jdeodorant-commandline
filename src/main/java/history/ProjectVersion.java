@@ -1,4 +1,4 @@
-package main.java.history;
+package history;
 
 public class ProjectVersion implements Comparable<Object> {
 	private String[] tokens;

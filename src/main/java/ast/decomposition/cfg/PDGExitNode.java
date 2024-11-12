@@ -1,9 +1,9 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
 import java.util.Set;
 
-import main.java.ast.FieldObject;
-import main.java.ast.VariableDeclarationObject;
+import ast.FieldObject;
+import ast.VariableDeclarationObject;
 
 public class PDGExitNode extends PDGStatementNode {
 	private AbstractVariable returnedVariable;

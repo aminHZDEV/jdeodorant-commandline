@@ -1,11 +1,11 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
-import main.java.ast.decomposition.cfg.AbstractVariable;
-import main.java.ast.decomposition.cfg.CFGBranchNode;
-import main.java.ast.decomposition.cfg.PDGAbstractDataDependence;
-import main.java.ast.decomposition.cfg.PDGControlDependence;
-import main.java.ast.decomposition.cfg.PDGDependence;
-import main.java.ast.decomposition.matching.ASTNodeMatcher;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.CFGBranchNode;
+import ast.decomposition.cfg.PDGAbstractDataDependence;
+import ast.decomposition.cfg.PDGControlDependence;
+import ast.decomposition.cfg.PDGDependence;
+import ast.decomposition.matching.ASTNodeMatcher;
 
 public class PDGEdgeMapping {
 	private PDGDependence edgeG1;

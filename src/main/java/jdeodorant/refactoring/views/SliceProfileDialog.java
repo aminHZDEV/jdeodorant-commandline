@@ -1,4 +1,4 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
@@ -10,14 +10,14 @@ import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
-import main.java.ast.decomposition.cfg.BasicBlock;
-import main.java.ast.decomposition.cfg.CompositeVariable;
-import main.java.ast.decomposition.cfg.GraphNode;
-import main.java.ast.decomposition.cfg.PDG;
-import main.java.ast.decomposition.cfg.PDGNode;
-import main.java.ast.decomposition.cfg.PDGObjectSliceUnion;
-import main.java.ast.decomposition.cfg.PDGSliceUnion;
-import main.java.ast.decomposition.cfg.PlainVariable;
+import ast.decomposition.cfg.BasicBlock;
+import ast.decomposition.cfg.CompositeVariable;
+import ast.decomposition.cfg.GraphNode;
+import ast.decomposition.cfg.PDG;
+import ast.decomposition.cfg.PDGNode;
+import ast.decomposition.cfg.PDGObjectSliceUnion;
+import ast.decomposition.cfg.PDGSliceUnion;
+import ast.decomposition.cfg.PlainVariable;
 
 import org.eclipse.jface.dialogs.Dialog;
 import org.eclipse.jface.viewers.CheckStateChangedEvent;

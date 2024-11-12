@@ -1,6 +1,6 @@
-package main.java.ast.decomposition.cfg.mapping.precondition;
+package ast.decomposition.cfg.mapping.precondition;
 
-import main.java.ast.decomposition.AbstractStatement;
+import ast.decomposition.AbstractStatement;
 
 import org.eclipse.jface.viewers.StyledString;
 

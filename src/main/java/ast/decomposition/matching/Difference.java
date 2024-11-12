@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.matching;
+package ast.decomposition.matching;
 
 public class Difference {
 	private String firstValue;

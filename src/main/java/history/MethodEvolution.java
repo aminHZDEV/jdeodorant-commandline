@@ -1,8 +1,8 @@
-package main.java.history;
+package history;
 
-import main.java.ast.ASTInformationGenerator;
-import main.java.ast.ASTReader;
-import main.java.ast.decomposition.MethodBodyObject;
+import ast.ASTInformationGenerator;
+import ast.ASTReader;
+import ast.decomposition.MethodBodyObject;
 
 import java.util.LinkedHashMap;
 import java.util.List;

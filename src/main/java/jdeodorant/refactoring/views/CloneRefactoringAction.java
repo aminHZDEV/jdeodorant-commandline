@@ -1,18 +1,18 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
-import main.java.ast.ASTReader;
-import main.java.ast.AbstractMethodDeclaration;
-import main.java.ast.ClassObject;
-import main.java.ast.CompilationErrorDetectedException;
-import main.java.ast.CompilationUnitCache;
-import main.java.ast.SystemObject;
-import main.java.ast.decomposition.cfg.CFG;
-import main.java.ast.decomposition.cfg.PDG;
-import main.java.ast.decomposition.cfg.mapping.PDGMapper;
-import main.java.ast.decomposition.cfg.mapping.PDGSubTreeMapper;
-import main.java.jdeodorant.preferences.PreferenceConstants;
-import main.java.jdeodorant.refactoring.Activator;
-import main.java.jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
+import ast.ASTReader;
+import ast.AbstractMethodDeclaration;
+import ast.ClassObject;
+import ast.CompilationErrorDetectedException;
+import ast.CompilationUnitCache;
+import ast.SystemObject;
+import ast.decomposition.cfg.CFG;
+import ast.decomposition.cfg.PDG;
+import ast.decomposition.cfg.mapping.PDGMapper;
+import ast.decomposition.cfg.mapping.PDGSubTreeMapper;
+import jdeodorant.preferences.PreferenceConstants;
+import jdeodorant.refactoring.Activator;
+import jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;

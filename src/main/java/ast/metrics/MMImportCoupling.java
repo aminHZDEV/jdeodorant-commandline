@@ -1,10 +1,10 @@
-package main.java.ast.metrics;
+package ast.metrics;
 
-import main.java.ast.ClassObject;
-import main.java.ast.FieldInstructionObject;
-import main.java.ast.MethodInvocationObject;
-import main.java.ast.MethodObject;
-import main.java.ast.SystemObject;
+import ast.ClassObject;
+import ast.FieldInstructionObject;
+import ast.MethodInvocationObject;
+import ast.MethodObject;
+import ast.SystemObject;
 
 import java.util.LinkedHashMap;
 import java.util.List;

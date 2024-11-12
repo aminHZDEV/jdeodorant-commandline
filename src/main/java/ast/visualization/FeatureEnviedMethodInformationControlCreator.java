@@ -1,4 +1,4 @@
-package main.java.ast.visualization;
+package ast.visualization;
 
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.text.IInformationControl;

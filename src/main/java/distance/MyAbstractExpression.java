@@ -1,10 +1,10 @@
-package main.java.distance;
+package distance;
 
-import main.java.ast.ASTReader;
-import main.java.ast.FieldInstructionObject;
-import main.java.ast.MethodInvocationObject;
-import main.java.ast.SystemObject;
-import main.java.ast.decomposition.AbstractExpression;
+import ast.ASTReader;
+import ast.FieldInstructionObject;
+import ast.MethodInvocationObject;
+import ast.SystemObject;
+import ast.decomposition.AbstractExpression;
 
 import java.util.ArrayList;
 import java.util.HashSet;

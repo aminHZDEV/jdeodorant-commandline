@@ -1,8 +1,8 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
-import main.java.ast.AbstractMethodDeclaration;
-import main.java.jdeodorant.preferences.PreferenceConstants;
-import main.java.jdeodorant.refactoring.Activator;
+import ast.AbstractMethodDeclaration;
+import jdeodorant.preferences.PreferenceConstants;
+import jdeodorant.refactoring.Activator;
 
 import java.util.LinkedHashSet;
 import java.util.Map;

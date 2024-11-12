@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg.mapping;
+package ast.decomposition.cfg.mapping;
 
 import java.util.Iterator;
 import java.util.List;
@@ -13,15 +13,15 @@ import org.eclipse.jdt.core.dom.ParenthesizedExpression;
 import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.Statement;
 
-import main.java.ast.decomposition.cfg.CFGBranchIfNode;
-import main.java.ast.decomposition.cfg.GraphEdge;
-import main.java.ast.decomposition.cfg.PDG;
-import main.java.ast.decomposition.cfg.PDGBlockNode;
-import main.java.ast.decomposition.cfg.PDGControlDependence;
-import main.java.ast.decomposition.cfg.PDGControlPredicateNode;
-import main.java.ast.decomposition.cfg.PDGDependence;
-import main.java.ast.decomposition.cfg.PDGNode;
-import main.java.ast.util.ExpressionExtractor;
+import ast.decomposition.cfg.CFGBranchIfNode;
+import ast.decomposition.cfg.GraphEdge;
+import ast.decomposition.cfg.PDG;
+import ast.decomposition.cfg.PDGBlockNode;
+import ast.decomposition.cfg.PDGControlDependence;
+import ast.decomposition.cfg.PDGControlPredicateNode;
+import ast.decomposition.cfg.PDGDependence;
+import ast.decomposition.cfg.PDGNode;
+import ast.util.ExpressionExtractor;
 
 public class ControlDependenceTreeGenerator {
 	private PDG pdg;

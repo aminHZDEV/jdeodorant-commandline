@@ -1,17 +1,17 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
 
-import main.java.ast.ASTReader;
-import main.java.ast.ClassObject;
-import main.java.ast.CompilationErrorDetectedException;
-import main.java.ast.CompilationUnitCache;
-import main.java.ast.SystemObject;
-import main.java.jdeodorant.preferences.PreferenceConstants;
-import main.java.jdeodorant.refactoring.Activator;
-import main.java.jdeodorant.refactoring.manipulators.ReplaceConditionalWithPolymorphism;
-import main.java.jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithStateStrategy;
-import main.java.jdeodorant.refactoring.manipulators.TypeCheckElimination;
-import main.java.jdeodorant.refactoring.manipulators.TypeCheckEliminationGroup;
+import ast.ASTReader;
+import ast.ClassObject;
+import ast.CompilationErrorDetectedException;
+import ast.CompilationUnitCache;
+import ast.SystemObject;
+import jdeodorant.preferences.PreferenceConstants;
+import jdeodorant.refactoring.Activator;
+import jdeodorant.refactoring.manipulators.ReplaceConditionalWithPolymorphism;
+import jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithStateStrategy;
+import jdeodorant.refactoring.manipulators.TypeCheckElimination;
+import jdeodorant.refactoring.manipulators.TypeCheckEliminationGroup;
 
 import java.io.BufferedWriter;
 import java.io.DataInputStream;

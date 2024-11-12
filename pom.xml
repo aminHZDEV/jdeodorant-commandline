@@ -3,7 +3,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>ca.concordia.jdeodorant</groupId>
+    <groupId>jdeodorant</groupId>
     <artifactId>jdeodorant-commandline</artifactId>
     <version>0.1-SNAPSHOT</version>
     <packaging>jar</packaging> <!-- Change to jar if you're not creating an Eclipse plugin -->
@@ -20,7 +20,7 @@
     </licenses>
 
     <properties>
-        <main.class>ca.concordia.jdeodorant.eclipse.commandline.MainApplication</main.class>
+        <main.class>jdeodorant.eclipse.commandline.MainApplication</main.class>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
         <tycho.version>2.3.0</tycho.version> <!-- Use appropriate Tycho version -->

@@ -1,18 +1,18 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
-import main.java.ast.ASTReader;
-import main.java.ast.ClassObject;
-import main.java.ast.CompilationErrorDetectedException;
-import main.java.ast.CompilationUnitCache;
-import main.java.ast.SystemObject;
-import main.java.distance.CandidateRefactoring;
-import main.java.distance.MoveMethodCandidateRefactoring;
-import main.java.distance.DistanceMatrix;
-import main.java.distance.MySystem;
-import main.java.jdeodorant.preferences.PreferenceConstants;
-import main.java.jdeodorant.refactoring.Activator;
-import main.java.jdeodorant.refactoring.manipulators.MoveMethodRefactoring;
-import main.java.jdeodorant.refactoring.views.CodeSmellPackageExplorer.CodeSmellType;
+import ast.ASTReader;
+import ast.ClassObject;
+import ast.CompilationErrorDetectedException;
+import ast.CompilationUnitCache;
+import ast.SystemObject;
+import distance.CandidateRefactoring;
+import distance.MoveMethodCandidateRefactoring;
+import distance.DistanceMatrix;
+import distance.MySystem;
+import jdeodorant.preferences.PreferenceConstants;
+import jdeodorant.refactoring.Activator;
+import jdeodorant.refactoring.manipulators.MoveMethodRefactoring;
+import jdeodorant.refactoring.views.CodeSmellPackageExplorer.CodeSmellType;
 
 import java.io.BufferedWriter;
 import java.io.DataInputStream;

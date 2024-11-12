@@ -1,8 +1,8 @@
-package main.java.jdeodorant.refactoring.manipulators;
+package jdeodorant.refactoring.manipulators;
 
 import java.util.List;
 
-import main.java.ast.decomposition.cfg.mapping.DivideAndConquerMatcher;
+import ast.decomposition.cfg.mapping.DivideAndConquerMatcher;
 
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.ltk.core.refactoring.Refactoring;

@@ -1,10 +1,10 @@
-package main.java.ast.decomposition.matching;
+package ast.decomposition.matching;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import main.java.ast.decomposition.AbstractExpression;
-import main.java.ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.AbstractExpression;
+import ast.decomposition.cfg.AbstractVariable;
 
 public class FieldAssignmentReplacedWithSetterInvocationDifference extends ASTNodeDifference {
 	

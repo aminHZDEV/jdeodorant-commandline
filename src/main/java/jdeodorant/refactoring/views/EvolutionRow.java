@@ -1,6 +1,6 @@
-package main.java.jdeodorant.refactoring.views;
+package jdeodorant.refactoring.views;
 
-import main.java.history.ProjectVersionPair;
+import history.ProjectVersionPair;
 
 public class EvolutionRow {
 	private ProjectVersionPair projectVersionPair;

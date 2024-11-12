@@ -1,11 +1,11 @@
-package main.java.ast.visualization;
+package ast.visualization;
 
-import main.java.ast.ClassObject;
-import main.java.ast.FieldInstructionObject;
-import main.java.ast.FieldObject;
-import main.java.ast.MethodInvocationObject;
-import main.java.ast.MethodObject;
-import main.java.ast.decomposition.cfg.PlainVariable;
+import ast.ClassObject;
+import ast.FieldInstructionObject;
+import ast.FieldObject;
+import ast.MethodInvocationObject;
+import ast.MethodObject;
+import ast.decomposition.cfg.PlainVariable;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

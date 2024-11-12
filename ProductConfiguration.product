@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?pde version="3.5"?>
 
-<product name="JDeodorant-Commandline-Product-Configuration" uid="JDeodorant-Commandline-Product-Configuration" id="ca.concordia.jdeodorant.eclipse.commandline-lambda.jdproduct" application="ca.concordia.jdeodorant.eclipse.commandline-lambda.application" version="0.1" useFeatures="false" includeLaunchers="true">
+<product name="JDeodorant-Commandline-Product-Configuration" uid="JDeodorant-Commandline-Product-Configuration" id="jdeodorant.eclipse.commandline-lambda.jdproduct" application="jdeodorant.eclipse.commandline-lambda.application" version="0.1" useFeatures="false" includeLaunchers="true">
 
    <configIni use="default">
    </configIni>
@@ -27,7 +27,7 @@
    </vm>
 
    <plugins>
-      <plugin id="ca.concordia.jdeodorant.eclipse.commandline-lambda"/>
+      <plugin id="jdeodorant.eclipse.commandline-lambda"/>
       <plugin id="com.ibm.icu"/>
       <plugin id="main.main.jdeodorant"/>
       <plugin id="javax.inject"/>

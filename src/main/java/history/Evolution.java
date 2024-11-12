@@ -1,4 +1,4 @@
-package main.java.history;
+package history;
 
 import java.util.Set;
 import java.util.Map.Entry;

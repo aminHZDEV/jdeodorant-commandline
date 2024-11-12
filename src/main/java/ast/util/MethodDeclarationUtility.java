@@ -1,8 +1,8 @@
-package main.java.ast.util;
+package ast.util;
 
-import main.java.ast.decomposition.cfg.AbstractVariable;
-import main.java.ast.decomposition.cfg.CompositeVariable;
-import main.java.ast.decomposition.cfg.PlainVariable;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.CompositeVariable;
+import ast.decomposition.cfg.PlainVariable;
 
 import java.util.ArrayList;
 import java.util.List;

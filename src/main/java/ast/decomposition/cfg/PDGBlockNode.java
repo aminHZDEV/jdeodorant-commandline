@@ -1,13 +1,13 @@
-package main.java.ast.decomposition.cfg;
+package ast.decomposition.cfg;
 
-import main.java.ast.ClassInstanceCreationObject;
-import main.java.ast.CreationObject;
-import main.java.ast.FieldObject;
-import main.java.ast.MethodInvocationObject;
-import main.java.ast.SuperMethodInvocationObject;
-import main.java.ast.VariableDeclarationObject;
-import main.java.ast.decomposition.AbstractExpression;
-import main.java.ast.decomposition.CompositeStatementObject;
+import ast.ClassInstanceCreationObject;
+import ast.CreationObject;
+import ast.FieldObject;
+import ast.MethodInvocationObject;
+import ast.SuperMethodInvocationObject;
+import ast.VariableDeclarationObject;
+import ast.decomposition.AbstractExpression;
+import ast.decomposition.CompositeStatementObject;
 
 import java.util.LinkedHashSet;
 import java.util.List;

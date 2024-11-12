@@ -1,6 +1,6 @@
-package main.java.ast.association;
+package ast.association;
 
-import main.java.ast.FieldObject;
+import ast.FieldObject;
 
 public class Association {
 

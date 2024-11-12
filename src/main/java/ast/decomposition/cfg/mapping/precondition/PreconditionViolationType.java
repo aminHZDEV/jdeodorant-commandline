@@ -1,4 +1,4 @@
-package main.java.ast.decomposition.cfg.mapping.precondition;
+package ast.decomposition.cfg.mapping.precondition;
 
 public enum PreconditionViolationType {
 	EXPRESSION_DIFFERENCE_CANNOT_BE_PARAMETERIZED,
