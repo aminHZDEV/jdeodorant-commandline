@@ -2,3 +2,4 @@ desktop.ini
 /bin
 *.*~
 /runtime-eclipse.commandline.application
+/target/
