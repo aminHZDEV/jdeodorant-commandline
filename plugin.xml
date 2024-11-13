@@ -1,26 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <?eclipse version="3.4"?>
 <plugin>
-   <extension
-         id="application"
-         point="org.eclipse.core.runtime.applications">
-         <application>
-         <run
-               class="jdeodorant.eclipse.commandline.Application">
-         </run>
-         </application>
-   </extension>
-   <extension
-         id="jdproduct"
-         point="org.eclipse.core.runtime.products">
-      <product
-            application="jdeodorant.eclipse.commandline-lambda.application"
-            name="JDeodorant-Commandline-Product-Configuration">
-         <property
-               name="appName"
-               value="JDeodorant-Commandline-Product-Configuration">
-         </property>
-      </product>
-   </extension>
+    <!-- Define the application -->
+    <extension id="application" point="org.eclipse.core.runtime.applications">
+        <application>
+            <run class="jdeodorant.eclipse.commandline.Application"/>
+        </application>
+    </extension>
 
+    <!-- Define your product configuration -->
+    <extension id="jdproduct" point="org.eclipse.core.runtime.products">
+        <product application="jdeodorant.eclipse.commandline.application" name="JDeodorant Commandline Product">
+            <property name="appName" value="JDeodorant Commandline Product"/>
+            <property name="productId" value="jdeodorant.eclipse.commandline.product"/> <!-- Optional but recommended -->
+            <property name="version" value="0.1-SNAPSHOT"/> <!-- Optional version property -->
+        </product>
+    </extension>
 </plugin>
