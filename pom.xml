@@ -30,7 +30,7 @@
             <dependency>
                 <groupId>org.eclipse.platform</groupId>
                 <artifactId>org.eclipse.core.runtime</artifactId>
-                <version>3.14.0</version>
+                <version>3.31.100</version>
             </dependency>
         </dependencies>
     </dependencyManagement>
@@ -39,7 +39,7 @@
         <dependency>
             <groupId>org.eclipse.platform</groupId>
             <artifactId>org.eclipse.core.runtime</artifactId>
-            <version>3.29.0</version> <!-- Adjusted version for Java 11 compatibility -->
+            <version>3.31.100</version> <!-- Adjusted version for Java 11 compatibility -->
         </dependency>
 
         <dependency>
@@ -75,7 +75,7 @@
         <dependency>
             <groupId>org.eclipse.platform</groupId>
             <artifactId>org.eclipse.debug.core</artifactId>
-            <version>3.14.0</version> <!-- Downgraded to a compatible version -->
+            <version>3.21.500</version> <!-- Downgraded to a compatible version -->
         </dependency>
 
         <!-- https://mvnrepository.com/artifact/org.eclipse.equinox/org.eclipse.equinox.common -->
@@ -90,7 +90,7 @@
         <dependency>
             <groupId>org.eclipse.platform</groupId>
             <artifactId>org.eclipse.equinox.common</artifactId>
-            <version>3.14.0</version>
+            <version>3.19.100</version>
         </dependency>
 
 
@@ -185,8 +185,9 @@
             <plugin>
                 <groupId>org.eclipse.tycho</groupId>
                 <artifactId>tycho-maven-plugin</artifactId>
-                <version>2.3.0</version>
+                <version>4.0.9</version>
                 <configuration>
+
                     <artifactRepository>
                         <repository>
                             <id>repository</id>
@@ -198,6 +199,7 @@
                             <mainClass>${main.class}</mainClass> <!-- Ensure this points to your main application -->
                         </manifest>
                     </archive>
+                    <gatherSources>true</gatherSources>
                 </configuration>
             </plugin>
             <plugin>

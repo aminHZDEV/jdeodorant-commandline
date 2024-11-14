@@ -12,5 +12,8 @@
   </component>
   <component name="JavacSettings">
     <option name="ADDITIONAL_OPTIONS_STRING" value="-Djava.security.manager=allow" />
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="jdeodorant-commandline" options="" />
+    </option>
   </component>
 </project>
