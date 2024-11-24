@@ -1,16 +1,20 @@
 package ast.delegation;
 
-import ast.*;
+import ast.MethodInvocationObject;
+import ast.MethodObject;
+import ast.SystemObject;
 
 import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.TreeNode;
+
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ArrayList;
 
 
 public class DelegationTree {
-    private DefaultMutableTreeNode rootNode;
-    private SystemObject systemObject;
+    private final DefaultMutableTreeNode rootNode;
+    private final SystemObject systemObject;
 
     public DelegationTree(SystemObject systemObject, MethodObject methodObject) {
         rootNode = new DefaultMutableTreeNode(methodObject);
@@ -30,7 +34,7 @@ public class DelegationTree {
 	                // methodPos != methodInvocationPos -> removes self-delegations
 	                // !existsNode(node.children(),methodInvocation) -> removes duplicate delegations
 	                // !existsNode(node.getUserObjectPath(),methodInvocation) -> avoids cyclic delegations
-	                if(!existsNode(new Enumeration[]{node.children()},methodInvocation) && !existsNode(node.getUserObjectPath(),methodInvocation)) {
+	                if(!existsNode(node.children(),methodInvocation) && !existsNode(node.getUserObjectPath(),methodInvocation)) {
 	                    DefaultMutableTreeNode childNode = new DefaultMutableTreeNode(methodInvocation);
 	                    node.add(childNode);
 	                    getDelegations(childNode);
@@ -48,9 +52,9 @@ public class DelegationTree {
         return false;
     }
 
-    private boolean existsNode(Enumeration<DefaultMutableTreeNode> children, MethodObject mo) {
+    private boolean existsNode(Enumeration<TreeNode> children, MethodObject mo) {
         while(children.hasMoreElements()) {
-            DefaultMutableTreeNode child = children.nextElement();
+            DefaultMutableTreeNode child = (DefaultMutableTreeNode) children.nextElement();
             MethodObject childMethodObject = (MethodObject)child.getUserObject();
             if(childMethodObject.equals(mo))
                 return true;

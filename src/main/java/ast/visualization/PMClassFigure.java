@@ -1,12 +1,15 @@
 package ast.visualization;
 
-import distance.CandidateRefactoring;
-import org.eclipse.draw2d.*;
-import org.eclipse.draw2d.geometry.Dimension;
-import org.eclipse.swt.graphics.Color;
-
 import java.util.ArrayList;
 import java.util.List;
+import distance.CandidateRefactoring;
+import org.eclipse.draw2d.ColorConstants;
+import org.eclipse.draw2d.Figure;
+import org.eclipse.draw2d.Label;
+import org.eclipse.draw2d.LineBorder;
+import org.eclipse.draw2d.ToolbarLayout;
+import org.eclipse.draw2d.geometry.Dimension;
+import org.eclipse.swt.graphics.Color;
 
 public class PMClassFigure extends PackageMapFigure{
 	

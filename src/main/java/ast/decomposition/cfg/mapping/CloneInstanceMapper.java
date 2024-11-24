@@ -8,16 +8,16 @@ import java.util.ListIterator;
 import java.util.Map;
 import java.util.TreeSet;
 
-import ast.ASTReader;
-import ast.AbstractMethodDeclaration;
-import ast.ClassDeclarationObject;
-import ast.CompilationUnitCache;
-import ast.SystemObject;
 import ast.decomposition.cfg.CFG;
 import ast.decomposition.cfg.PDG;
 import ast.decomposition.cfg.PDGMethodEntryNode;
 import ast.decomposition.cfg.PDGNode;
 import ast.decomposition.matching.NodePairComparisonCache;
+import ast.ASTReader;
+import ast.AbstractMethodDeclaration;
+import ast.ClassDeclarationObject;
+import ast.CompilationUnitCache;
+import ast.SystemObject;
 
 import org.eclipse.core.runtime.IPath;
 import org.eclipse.core.runtime.IProgressMonitor;
@@ -45,10 +45,10 @@ import org.eclipse.jdt.internal.core.SourceType;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
-import jdeodorant.clone.parsers.CloneInstance;
-import jdeodorant.clone.parsers.JavaModelUtility;
-import jdeodorant.clone.parsers.TextDiff;
-import jdeodorant.clone.parsers.TextDiff.Diff;
+import parsers.CloneInstance;
+import parsers.JavaModelUtility;
+import parsers.TextDiff;
+import parsers.TextDiff.Diff;
 
 @SuppressWarnings("restriction")
 public class CloneInstanceMapper {

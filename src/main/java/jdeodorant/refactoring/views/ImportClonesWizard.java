@@ -3,6 +3,7 @@ package jdeodorant.refactoring.views;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
+import jdeodorant.refactoring.Activator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -13,14 +14,13 @@ import org.eclipse.jface.operation.IRunnableWithProgress;
 import org.eclipse.jface.wizard.Wizard;
 import org.eclipse.swt.widgets.Display;
 
-import jdeodorant.clone.parsers.CloneDetectorOutputParser;
-import jdeodorant.clone.parsers.CloneDetectorOutputParserFactory;
-import jdeodorant.clone.parsers.CloneDetectorOutputParserProgressObserver;
-import jdeodorant.clone.parsers.CloneDetectorType;
-import jdeodorant.clone.parsers.CloneGroupList;
-import jdeodorant.clone.parsers.InvalidInputFileException;
-import jdeodorant.clone.parsers.ResourceInfo.ICompilationUnitNotFoundException;
-import jdeodorant.refactoring.Activator;
+import parsers.CloneDetectorOutputParser;
+import parsers.CloneDetectorOutputParserFactory;
+import parsers.CloneDetectorOutputParserProgressObserver;
+import parsers.CloneDetectorType;
+import parsers.CloneGroupList;
+import parsers.InvalidInputFileException;
+import parsers.ResourceInfo.ICompilationUnitNotFoundException;
 
 public class ImportClonesWizard extends Wizard {
 	private IJavaProject javaProject;

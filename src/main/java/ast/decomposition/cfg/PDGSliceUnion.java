@@ -349,7 +349,8 @@ public class PDGSliceUnion {
 	}
 
 	private boolean nonDuplicatedSliceNodeOutputDependsOnNonRemovableNode() {
-        Set<PDGNode> duplicatedNodes = new LinkedHashSet<PDGNode>(sliceNodes);
+		Set<PDGNode> duplicatedNodes = new LinkedHashSet<PDGNode>();
+		duplicatedNodes.addAll(sliceNodes);
 		duplicatedNodes.retainAll(indispensableNodes);
 		for(PDGNode sliceNode : sliceNodes) {
 			if(!duplicatedNodes.contains(sliceNode)) {

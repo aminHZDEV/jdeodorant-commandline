@@ -1,5 +1,6 @@
 package ast;
 
+import ast.util.StatementExtractor;
 import ast.decomposition.cfg.CFG;
 import ast.decomposition.cfg.PDG;
 import ast.decomposition.cfg.PDGObjectSliceUnion;
@@ -7,7 +8,6 @@ import ast.decomposition.cfg.PDGObjectSliceUnionCollection;
 import ast.decomposition.cfg.PDGSliceUnion;
 import ast.decomposition.cfg.PDGSliceUnionCollection;
 import ast.decomposition.cfg.PlainVariable;
-import ast.util.StatementExtractor;
 import distance.DistanceMatrix;
 import distance.ExtractClassCandidateRefactoring;
 import distance.ExtractClassCandidateGroup;

@@ -9,6 +9,7 @@ import java.util.List;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.Annotation;
 import org.eclipse.jdt.core.dom.ArrayAccess;
 import org.eclipse.jdt.core.dom.ArrayCreation;
 import org.eclipse.jdt.core.dom.ArrayInitializer;
@@ -24,10 +25,13 @@ import org.eclipse.jdt.core.dom.ClassInstanceCreation;
 import org.eclipse.jdt.core.dom.ConditionalExpression;
 import org.eclipse.jdt.core.dom.ConstructorInvocation;
 import org.eclipse.jdt.core.dom.ContinueStatement;
+import org.eclipse.jdt.core.dom.CreationReference;
+import org.eclipse.jdt.core.dom.Dimension;
 import org.eclipse.jdt.core.dom.DoStatement;
 import org.eclipse.jdt.core.dom.EmptyStatement;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
 import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.ExpressionMethodReference;
 import org.eclipse.jdt.core.dom.ExpressionStatement;
 import org.eclipse.jdt.core.dom.FieldAccess;
 import org.eclipse.jdt.core.dom.ForStatement;
@@ -38,11 +42,14 @@ import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.InstanceofExpression;
+import org.eclipse.jdt.core.dom.IntersectionType;
 import org.eclipse.jdt.core.dom.LabeledStatement;
+import org.eclipse.jdt.core.dom.LambdaExpression;
 import org.eclipse.jdt.core.dom.MarkerAnnotation;
 import org.eclipse.jdt.core.dom.MemberValuePair;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.NameQualifiedType;
 import org.eclipse.jdt.core.dom.NormalAnnotation;
 import org.eclipse.jdt.core.dom.NullLiteral;
 import org.eclipse.jdt.core.dom.NumberLiteral;
@@ -58,10 +65,12 @@ import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SimpleType;
 import org.eclipse.jdt.core.dom.SingleMemberAnnotation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
+import org.eclipse.jdt.core.dom.Statement;
 import org.eclipse.jdt.core.dom.StringLiteral;
 import org.eclipse.jdt.core.dom.SuperConstructorInvocation;
 import org.eclipse.jdt.core.dom.SuperFieldAccess;
 import org.eclipse.jdt.core.dom.SuperMethodInvocation;
+import org.eclipse.jdt.core.dom.SuperMethodReference;
 import org.eclipse.jdt.core.dom.SwitchCase;
 import org.eclipse.jdt.core.dom.SwitchStatement;
 import org.eclipse.jdt.core.dom.SynchronizedStatement;
@@ -71,7 +80,9 @@ import org.eclipse.jdt.core.dom.TryStatement;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclarationStatement;
 import org.eclipse.jdt.core.dom.TypeLiteral;
+import org.eclipse.jdt.core.dom.TypeMethodReference;
 import org.eclipse.jdt.core.dom.UnionType;
+import org.eclipse.jdt.core.dom.VariableDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
@@ -95,6 +106,7 @@ public class StyledStringVisitor extends ASTVisitor {
 	private static final Color STRING_COLOR = new Color(null, new RGB(112, 0, 255));
 	private static final Color FIELD_COLOR = new Color(null, new RGB(0, 0, 192));
 	private static final Color KEYWORD_COLOR = new Color(null, new RGB(127, 0, 85));
+	private static final Color ANNOTATION_COLOR = new Color(null, new RGB(100, 100, 100));
 	private static final Font CONSOLAS_ITALIC_FONT = new Font(null, new FontData("consolas", 10, SWT.ITALIC));
 	private static final Font CONSOLAS_NORMAL_FONT = new Font(null, new FontData("consolas", 10, SWT.NORMAL));
 	private static final Font CONSOLAS_BOLD_FONT = new Font(null, new FontData("consolas", 10, SWT.BOLD));
@@ -109,6 +121,7 @@ public class StyledStringVisitor extends ASTVisitor {
 	private TextStyle namedConstantStyle;
 	private TextStyle nonStaticFieldStyle;
 	private TextStyle staticMethodCallStyle;
+	private TextStyle annotationStyle;
 
 	private List<ASTNode> astNodesThatAreDifferences;
 	
@@ -126,6 +139,7 @@ public class StyledStringVisitor extends ASTVisitor {
 		namedConstantStyle = initializeNamedConstantStyle();
 		nonStaticFieldStyle = initializeNonStaticFieldStyle();
 		staticMethodCallStyle = initializeStaticMethodCallStyle();
+		annotationStyle = initializeAnnotationStyle();
 
 		if(node.isElseIf()) {
 			styledString.append("else", new StyledStringStyler(keywordStyle));
@@ -235,13 +249,26 @@ public class StyledStringVisitor extends ASTVisitor {
 
 	public boolean visit(ArrayType type) {
 		/*
-		 * ArrayType: Type [ ]
+		 * JLS4 ArrayType: Type [ ]
 		 */
+		/*
 		activateDiffStyle(type);
 		handleType(type.getElementType());
 		for (int i = 0; i < type.getDimensions(); i++) {
 			appendOpenBracket();
 			appendClosedBracket();
+		}
+		deactivateDiffStyle(type);
+		return false;
+		*/
+		/*
+		 * JLS8 ArrayType: Type Dimension { Dimension }
+		 */
+		activateDiffStyle(type);
+		handleType(type.getElementType());
+		//appendSpace();
+		for (int i = 0; i < type.getDimensions(); i++) {
+			visit((Dimension) type.dimensions().get(i));
 		}
 		deactivateDiffStyle(type);
 		return false;
@@ -282,6 +309,16 @@ public class StyledStringVisitor extends ASTVisitor {
 		/*
 		 * { { Statement } }
 		 */
+		if(stmnt.getParent() instanceof LambdaExpression) {
+			appendOpenCurlyBracket();
+			appendSpace();
+			List statements = stmnt.statements();
+			for(int i=0; i < statements.size(); i++) {
+				handleStatement((Statement) statements.get(i));
+				appendSpace();
+			}
+			appendClosedCurlyBracket();
+		}
 		return false;
 	}
 
@@ -399,6 +436,30 @@ public class StyledStringVisitor extends ASTVisitor {
 		appendSemicolon();
 		return false;
 	}
+	
+	public boolean visit(CreationReference reference) {
+		/*
+		 * Type :: [ < Type { , Type } > ] new
+		 */
+		activateDiffStyle(reference);
+		handleType(reference.getType());
+		appendColon();
+		appendColon();
+		handleTypeArguments(reference.typeArguments());
+		styledString.append("new", determineDiffStyle(reference, new StyledStringStyler(keywordStyle)));
+		deactivateDiffStyle(reference);
+		return false;
+	}
+	
+	public boolean visit(Dimension dimension) {
+		/*
+		 * { Annotation } []
+		 */
+		handleAnnotations(dimension.annotations());
+		appendOpenBracket();
+		appendClosedBracket();
+		return false;
+	}
 	public boolean visit(DoStatement stmnt){
 		/*
 		 * do Statement while ( Expression ) ;
@@ -427,9 +488,7 @@ public class StyledStringVisitor extends ASTVisitor {
 		appendSpace();
 		appendOpenParenthesis();
 		SingleVariableDeclaration variableDeclaration = stmnt.getParameter();
-		handleType(variableDeclaration.getType());
-		appendSpace();
-		handleExpression(variableDeclaration.getName());
+		visit(variableDeclaration);
 		appendSpace();
 		appendColon();
 		appendSpace();
@@ -437,6 +496,21 @@ public class StyledStringVisitor extends ASTVisitor {
 		appendClosedParenthesis();
 		return false;
 	}
+
+	public boolean visit(ExpressionMethodReference reference) {
+		/*
+		 * Expression :: [ < Type { , Type } > ] Identifier
+		 */
+		activateDiffStyle(reference);
+		handleExpression(reference.getExpression());
+		appendColon();
+		appendColon();
+		handleTypeArguments(reference.typeArguments());
+		handleExpression(reference.getName());
+		deactivateDiffStyle(reference);
+		return false;
+	}
+
 	public boolean visit(ExpressionStatement expr) {
 		/*
 		 * ExpressionStatement: StatementExpression ;
@@ -527,7 +601,20 @@ public class StyledStringVisitor extends ASTVisitor {
 		deactivateDiffStyle(expr);
 		return false;
 	}
-
+	public boolean visit(IntersectionType type){
+		/*
+		 *  Type & Type { & Type }
+		 */
+		activateDiffStyle(type);
+		for (int i = 0; i < type.types().size(); i++){
+			handleType((Type) type.types().get(i));
+			if (i < type.types().size() - 1){
+				appendAmpersand();
+			}
+		}
+		deactivateDiffStyle(type);
+		return false;
+	}
 	public boolean visit(InstanceofExpression expr) {
 		/*
 		 * InstanceofExpression: Expression instanceof Type
@@ -551,6 +638,42 @@ public class StyledStringVisitor extends ASTVisitor {
 		appendColon();
 		return false;
 	}
+
+	public boolean visit(LambdaExpression expr) {
+		/*
+		 * LambdaExpression:
+    		Identifier -> Body
+    		( [ Identifier { , Identifier } ] ) -> Body
+    		( [ FormalParameter { , FormalParameter } ] ) -> Body
+		 */
+		activateDiffStyle(expr);
+		if(expr.hasParentheses()) {
+			appendOpenParenthesis();
+		}
+		List parameters = expr.parameters();
+		if(!parameters.isEmpty()) {
+			for (int i = 0; i < parameters.size(); i++) {
+				handleVariableDeclaration((VariableDeclaration) parameters.get(i));
+				if (i < parameters.size() - 1) {
+					appendComma();
+				}
+			}
+		}
+		if(expr.hasParentheses()) {
+			appendClosedParenthesis();
+		}
+		appendArrow();
+		
+		ASTNode body = expr.getBody();
+		if(body instanceof Block) {
+			visit((Block) body);
+		} else if(body instanceof Expression) {
+			handleExpression((Expression) body);
+		}
+		deactivateDiffStyle(expr);
+		return false;
+	}
+
 	public boolean visit(MarkerAnnotation annotation) {
 		/*
 		 * MarkerAnnotation: @ TypeName
@@ -594,6 +717,19 @@ public class StyledStringVisitor extends ASTVisitor {
 		 * public protected private static abstract final native synchronized transient volatile strictfp
 		 */
 		styledString.append(modifier.getKeyword().toString(), determineDiffStyle(modifier, new StyledStringStyler(keywordStyle)));
+		return false;
+	}
+	public boolean visit(NameQualifiedType type) {
+		/*
+		 * NameQualifiedType:
+    		Name . { Annotation } SimpleName
+		 */
+		activateDiffStyle(type);
+		handleExpression(type.getQualifier());
+		appendPeriod();
+		handleAnnotations(type.annotations());
+		handleExpression(type.getName());
+		deactivateDiffStyle(type);
 		return false;
 	}
 	public boolean visit(NormalAnnotation annotation) {
@@ -695,6 +831,7 @@ public class StyledStringVisitor extends ASTVisitor {
 		    boolean
 		    void
 		 */
+		handleAnnotations(type.annotations());
 		styledString.append(type.getPrimitiveTypeCode().toString(), determineDiffStyle(type, new StyledStringStyler(keywordStyle)));
 		return false;
 	}
@@ -715,11 +852,12 @@ public class StyledStringVisitor extends ASTVisitor {
 
 	public boolean visit(QualifiedType type) {
 		/*
-		 * QualifiedType: Type . SimpleName
+		 * QualifiedType: Type . { Annotation } SimpleName
 		 */
 		activateDiffStyle(type);
 		handleType(type.getQualifier());
 		appendPeriod();
+		handleAnnotations(type.annotations());
 		handleExpression(type.getName());
 		deactivateDiffStyle(type);
 		return false;
@@ -761,6 +899,7 @@ public class StyledStringVisitor extends ASTVisitor {
 		/*
 		 * This kind of node is used to convert a name (Name) into a type (Type) by wrapping it. 
 		 */
+		handleAnnotations(type.annotations());
 		handleExpression(type.getName());
 		return false;
 	}
@@ -775,6 +914,34 @@ public class StyledStringVisitor extends ASTVisitor {
 		handleExpression(annotation.getValue());
 		appendClosedParenthesis();
 		deactivateDiffStyle(annotation);
+		return false;
+	}
+	public boolean visit(SingleVariableDeclaration variableDeclaration) {
+		/*
+		 * SingleVariableDeclaration:
+    		{ ExtendedModifier } Type {Annotation} [ ... ] Identifier { Dimension } [ = Expression ]
+		 */
+		activateDiffStyle(variableDeclaration);
+		// Append modifiers
+		for (int i = 0; i < variableDeclaration.modifiers().size(); i++) {
+			handleModifier((IExtendedModifier) variableDeclaration.modifiers().get(i));
+			appendSpace();
+		}
+		handleType(variableDeclaration.getType());
+		appendSpace();
+		handleAnnotations(variableDeclaration.varargsAnnotations());
+		if(variableDeclaration.isVarargs()) {
+			for(int i=0; i<3; i++) {
+				appendPeriod();
+			}
+		}
+		handleExpression(variableDeclaration.getName());
+		if(variableDeclaration.getExtraDimensions() > 0)
+			appendSpace();
+		for (int i = 0; i < variableDeclaration.getExtraDimensions(); i++) {
+			visit((Dimension) variableDeclaration.extraDimensions().get(i));
+		}
+		deactivateDiffStyle(variableDeclaration);
 		return false;
 	}
 	public boolean visit(StringLiteral expr) {
@@ -835,6 +1002,25 @@ public class StyledStringVisitor extends ASTVisitor {
 		deactivateDiffStyle(expr);
 		return false;
 	}
+	
+	public boolean visit(SuperMethodReference reference) {
+		/*
+		 * [ ClassName . ] super :: [ < Type { , Type } > ] Identifier
+		 */
+		activateDiffStyle(reference);
+		if (reference.getQualifier() != null) {
+			handleExpression(reference.getQualifier());
+			appendPeriod();
+		}
+		styledString.append("super", determineDiffStyle(reference, new StyledStringStyler(keywordStyle)));
+		appendColon();
+		appendColon();
+		handleTypeArguments(reference.typeArguments());
+		handleExpression(reference.getName());
+		deactivateDiffStyle(reference);
+		return false;
+	}
+
 	public boolean visit(SwitchCase stmnt){
 		/*
 		 * case Expression  :
@@ -939,6 +1125,21 @@ public class StyledStringVisitor extends ASTVisitor {
 		deactivateDiffStyle(expr);
 		return false;
 	}
+	
+	public boolean visit(TypeMethodReference reference) {
+		/*
+		 * Type :: [ < Type { , Type } > ] Identifier
+		 */
+		activateDiffStyle(reference);
+		handleType(reference.getType());
+		appendColon();
+		appendColon();
+		handleTypeArguments(reference.typeArguments());
+		handleExpression(reference.getName());
+		deactivateDiffStyle(reference);
+		return false;
+	}
+	
 	public boolean visit(UnionType type){
 		/*
 		 *  Type | Type { | Type }
@@ -982,13 +1183,20 @@ public class StyledStringVisitor extends ASTVisitor {
 
 	public boolean visit(VariableDeclarationFragment expr) {
 		/*
-		 * Identifier { [] } [ = Expression ]
+		 * Identifier { Dimension } [ = Expression ]
 		 */
 		activateDiffStyle(expr);
 		handleExpression(expr.getName());
+		/*
 		for (int i = 0; i < expr.getExtraDimensions(); i++) {
 			appendOpenBracket();
 			appendClosedBracket();
+		}
+		*/
+		if(expr.getExtraDimensions() > 0)
+			appendSpace();
+		for (int i = 0; i < expr.getExtraDimensions(); i++) {
+			visit((Dimension) expr.extraDimensions().get(i));
 		}
 		if (expr.getInitializer() != null) {
 			appendEquals();
@@ -1036,9 +1244,10 @@ public class StyledStringVisitor extends ASTVisitor {
 
 	public boolean visit(WildcardType type) {
 		/*
-		 * WildcardType: ? [ ( extends | super) Type ]
+		 * WildcardType: { Annotation } ? [ ( extends | super) Type ]
 		 */
 		activateDiffStyle(type);
+		handleAnnotations(type.annotations());
 		appendQuestionMark();
 		if(type.getBound() != null) {
 			if (type.isUpperBound()) {
@@ -1052,6 +1261,13 @@ public class StyledStringVisitor extends ASTVisitor {
 		return false;
 	}
 
+	private void handleVariableDeclaration(VariableDeclaration variableDeclaration) {
+		if(variableDeclaration instanceof SingleVariableDeclaration) {
+			visit((SingleVariableDeclaration) variableDeclaration);
+		} else if(variableDeclaration instanceof VariableDeclarationFragment) {
+			visit((VariableDeclarationFragment) variableDeclaration);
+		}
+	}
 	// Handle expressions and determine which "Visit" to visit
 	private void handleExpression(Expression expression) {
 		if (expression instanceof ArrayAccess) {
@@ -1106,6 +1322,70 @@ public class StyledStringVisitor extends ASTVisitor {
 			visit((TypeLiteral) expression);
 		} else if (expression instanceof VariableDeclarationExpression) {
 			visit((VariableDeclarationExpression) expression);
+		} else if (expression instanceof LambdaExpression) {
+			visit((LambdaExpression) expression);
+		} else if (expression instanceof SingleMemberAnnotation) {
+			visit((SingleMemberAnnotation) expression);
+		} else if (expression instanceof MarkerAnnotation) {
+			visit((MarkerAnnotation) expression);
+		} else if (expression instanceof NormalAnnotation) {
+			visit((NormalAnnotation) expression);
+		} else if (expression instanceof CreationReference) {
+			visit((CreationReference) expression);
+		} else if (expression instanceof ExpressionMethodReference) {
+			visit((ExpressionMethodReference) expression);
+		} else if (expression instanceof SuperMethodReference) {
+			visit((SuperMethodReference) expression);
+		} else if (expression instanceof TypeMethodReference) {
+			visit((TypeMethodReference) expression);
+		}
+	}
+
+	private void handleStatement(Statement statement) {
+		if(statement instanceof AssertStatement) {
+			visit((AssertStatement) statement);
+		} else if(statement instanceof Block) {
+			visit((Block) statement);
+		} else if(statement instanceof BreakStatement) {
+			visit((BreakStatement) statement);
+		} else if(statement instanceof ConstructorInvocation) {
+			visit((ConstructorInvocation) statement);
+		} else if(statement instanceof ContinueStatement) {
+			visit((ContinueStatement) statement);
+		} else if(statement instanceof DoStatement) {
+			visit((DoStatement) statement);
+		} else if(statement instanceof EmptyStatement) {
+			visit((EmptyStatement) statement);
+		} else if(statement instanceof EnhancedForStatement) {
+			visit((EnhancedForStatement) statement);
+		} else if(statement instanceof ExpressionStatement) {
+			visit((ExpressionStatement) statement);
+		} else if(statement instanceof ForStatement) {
+			visit((ForStatement) statement);
+		} else if(statement instanceof IfStatement) {
+			visit((IfStatement) statement);
+		} else if(statement instanceof LabeledStatement) {
+			visit((LabeledStatement) statement);
+		} else if(statement instanceof ReturnStatement) {
+			visit((ReturnStatement) statement);
+		} else if(statement instanceof SuperConstructorInvocation) {
+			visit((SuperConstructorInvocation) statement);
+		} else if(statement instanceof SwitchCase) {
+			visit((SwitchCase) statement);
+		} else if(statement instanceof SwitchStatement) {
+			visit((SwitchStatement) statement);
+		} else if(statement instanceof SynchronizedStatement) {
+			visit((SynchronizedStatement) statement);
+		} else if(statement instanceof ThrowStatement) {
+			visit((ThrowStatement) statement);
+		} else if(statement instanceof TryStatement) {
+			visit((TryStatement) statement);
+		} else if(statement instanceof TypeDeclarationStatement) {
+			visit((TypeDeclarationStatement) statement);
+		} else if(statement instanceof VariableDeclarationStatement) {
+			visit((VariableDeclarationStatement) statement);
+		} else if(statement instanceof WhileStatement) {
+			visit((WhileStatement) statement);
 		}
 	}
 
@@ -1122,6 +1402,12 @@ public class StyledStringVisitor extends ASTVisitor {
 			visit((ParameterizedType) type);
 		} else if (type instanceof WildcardType) {
 			visit((WildcardType) type);
+		} else if (type instanceof UnionType) {
+			visit((UnionType) type);
+		} else if (type instanceof IntersectionType) {
+			visit((IntersectionType) type);
+		} else if (type instanceof NameQualifiedType) {
+			visit((NameQualifiedType) type);
 		}
 	}
 	
@@ -1164,6 +1450,14 @@ public class StyledStringVisitor extends ASTVisitor {
 		appendClosedParenthesis();
 	}
 
+	private void handleAnnotations(List annotations) {
+		for (int i = 0; i < annotations.size(); i++) {
+			handleExpression((Annotation) annotations.get(i));
+			if (i < annotations.size() - 1) {
+				appendSpace();
+			}
+		}
+	}
 
 	// Helper Methods
 	private boolean isDifference(ASTNode node) {
@@ -1361,6 +1655,20 @@ public class StyledStringVisitor extends ASTVisitor {
 		}
 		styledString.append("@", styler);
 	}
+	private void appendArrow() {
+		StyledStringStyler styler = new StyledStringStyler(ordinaryStyle);
+		if (currentCompositeDiffNode != null){
+			styler.appendTextStyle(differenceStyle);
+		}
+		styledString.append(" -> ", styler);
+	}
+	private void appendAmpersand() {
+		StyledStringStyler styler = new StyledStringStyler(ordinaryStyle);
+		if (currentCompositeDiffNode != null){
+			styler.appendTextStyle(differenceStyle);
+		}
+		styledString.append(" & ", styler);
+	}
 	/*
 	//TextStyle Experiment
 	 */
@@ -1397,6 +1705,12 @@ public class StyledStringVisitor extends ASTVisitor {
 		TextStyle ordinaryStyle = new TextStyle();
 		ordinaryStyle.font = initializeFont();
 		//ordinaryStyle.foreground = new Color(null, new RGB(0, 0, 0));
+		return ordinaryStyle;
+	}
+	private static TextStyle initializeAnnotationStyle() {
+		TextStyle ordinaryStyle = new TextStyle();
+		ordinaryStyle.font = initializeFont();
+		ordinaryStyle.foreground = ANNOTATION_COLOR;
 		return ordinaryStyle;
 	}
 	private static TextStyle initializeDifferenceStyle() {

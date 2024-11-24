@@ -10,7 +10,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 public class SearchInputAction extends Action implements IWorkbenchAction {
 
-	public static final String ID = "main.main.ast.visualiztion.SearchInputAction";
+	public static final String ID = "gr.uom.java.ast.visualiztion.SearchInputAction"; 
 
 
 

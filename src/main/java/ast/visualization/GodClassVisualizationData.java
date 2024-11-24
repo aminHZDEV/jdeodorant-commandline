@@ -1,11 +1,11 @@
 package ast.visualization;
 
+import ast.decomposition.cfg.PlainVariable;
 import ast.ClassObject;
 import ast.FieldInstructionObject;
 import ast.FieldObject;
 import ast.MethodInvocationObject;
 import ast.MethodObject;
-import ast.decomposition.cfg.PlainVariable;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

@@ -53,7 +53,7 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 
 public class CodeSmellPackageExplorer extends ViewPart {
-	public static final String ID = "main.main.jdeodorant.views.CodeSmellPackageExplorer";
+	public static final String ID = "gr.uom.java.jdeodorant.views.CodeSmellPackageExplorer";
 	private FigureCanvas figureCanvas; 
 	private ScalableLayeredPane root = null;
 	private boolean ctrlPressed= false;

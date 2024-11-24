@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.CompositeVariable;
+import ast.decomposition.cfg.PlainVariable;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 
 import ast.ClassObject;
@@ -14,9 +17,6 @@ import ast.FieldInstructionObject;
 import ast.LocalVariableInstructionObject;
 import ast.MethodInvocationObject;
 import ast.MethodObject;
-import ast.decomposition.cfg.AbstractVariable;
-import ast.decomposition.cfg.CompositeVariable;
-import ast.decomposition.cfg.PlainVariable;
 
 public class FeatureEnvyVisualizationData implements VisualizationData {
 

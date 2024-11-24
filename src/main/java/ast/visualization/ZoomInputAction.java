@@ -12,7 +12,7 @@ import org.eclipse.ui.actions.ActionFactory.IWorkbenchAction;
 
 public class ZoomInputAction extends Action implements IWorkbenchAction{  
 
-	private static final String ID = "main.main.ast.visualiztion.ZoomInputAction";
+	private static final String ID = "gr.uom.java.ast.visualiztion.ZoomInputAction";  
 	private ScalableFreeformLayeredPane root;
 	private ScalableLayeredPane root2;
 	private boolean isFreeform= true;

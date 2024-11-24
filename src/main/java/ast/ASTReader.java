@@ -1,5 +1,8 @@
 package ast;
 
+import ast.decomposition.AbstractExpression;
+import ast.decomposition.MethodBodyObject;
+import ast.util.StatementExtractor;
 import org.eclipse.core.filebuffers.FileBuffers;
 import org.eclipse.core.filebuffers.ITextFileBuffer;
 import org.eclipse.core.filebuffers.ITextFileBufferManager;
@@ -21,7 +24,6 @@ import org.eclipse.jdt.core.IPackageFragment;
 import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.Annotation;
@@ -35,6 +37,7 @@ import org.eclipse.jdt.core.dom.EnumDeclaration;
 import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.FieldDeclaration;
 import org.eclipse.jdt.core.dom.IBinding;
+import org.eclipse.jdt.core.dom.IDocElement;
 import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.Javadoc;
@@ -51,10 +54,6 @@ import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jface.text.BadLocationException;
 import org.eclipse.jface.text.IDocument;
 
-import ast.decomposition.AbstractExpression;
-import ast.decomposition.MethodBodyObject;
-import ast.util.StatementExtractor;
-
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -64,7 +63,7 @@ public class ASTReader {
 
 	private static SystemObject systemObject;
 	private static IJavaProject examinedProject;
-	public static final int JLS = AST.JLS4;
+	public static final int JLS = AST.getJLSLatest();
 
 	public ASTReader(IJavaProject iJavaProject, IProgressMonitor monitor) throws CompilationErrorDetectedException {
 		List<IMarker> markers = buildProject(iJavaProject, monitor);
@@ -497,8 +496,8 @@ public class ASTReader {
 			for(TagElement tagElement : tags) {
 				String tagName = tagElement.getTagName();
 				if(tagName != null && tagName.equals(TagElement.TAG_THROWS)) {
-					List<ASTNode> fragments = tagElement.fragments();
-					for(ASTNode docElement : fragments) {
+					List<IDocElement> fragments = tagElement.fragments();
+					for(IDocElement docElement : fragments) {
 						if(docElement instanceof Name) {
 							Name name = (Name)docElement;
 							IBinding binding = name.resolveBinding();

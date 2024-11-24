@@ -5,19 +5,6 @@ import ast.decomposition.cfg.CFGBranchIfNode;
 import ast.decomposition.cfg.CFGThrowNode;
 import ast.decomposition.cfg.PDGExitNode;
 import ast.decomposition.cfg.PDGNode;
-
-import java.util.LinkedHashSet;
-import java.util.Set;
-import java.util.TreeSet;
-
-import org.eclipse.jdt.core.dom.IfStatement;
-
-
-import ast.decomposition.StatementType;
-import ast.decomposition.cfg.CFGBranchIfNode;
-import ast.decomposition.cfg.CFGThrowNode;
-import ast.decomposition.cfg.PDGExitNode;
-import ast.decomposition.cfg.PDGNode;
 import ast.decomposition.cfg.mapping.precondition.DualExpressionPreconditionViolation;
 import ast.decomposition.cfg.mapping.precondition.DualExpressionWithCommonSuperTypePreconditionViolation;
 import ast.decomposition.cfg.mapping.precondition.ExpressionPreconditionViolation;
@@ -41,7 +28,7 @@ public class CloneStructureNode implements Comparable<CloneStructureNode> {
 	private CloneStructureNode parent;
 	private NodeMapping mapping;
 	private Set<CloneStructureNode> children;
-
+	
 	public CloneStructureNode(NodeMapping mapping) {
 		this.mapping = mapping;
 		this.children = new TreeSet<CloneStructureNode>();
@@ -194,7 +181,7 @@ public class CloneStructureNode implements Comparable<CloneStructureNode> {
 			PDGNode nodeG2 = nodeGap.getNodeG2();
 			if(nodeGap.isFalseControlDependent() &&
 					((nodeG1 != null && nodeG1.getASTStatement() instanceof IfStatement && nodeG1.getASTStatement().getParent() instanceof IfStatement) ||
-							(nodeG2 != null && nodeG2.getASTStatement() instanceof IfStatement && nodeG2.getASTStatement().getParent() instanceof IfStatement)))
+					(nodeG2 != null && nodeG2.getASTStatement() instanceof IfStatement && nodeG2.getASTStatement().getParent() instanceof IfStatement)))
 				return true;
 		}
 		return false;
@@ -397,7 +384,7 @@ public class CloneStructureNode implements Comparable<CloneStructureNode> {
 			}
 		}
 	}
-
+	
 	private CloneStructureNode containsChildSymmetricalToNode(CloneStructureNode other) {
 		if(other.getMapping() instanceof PDGElseMapping)
 			return null;
@@ -415,7 +402,7 @@ public class CloneStructureNode implements Comparable<CloneStructureNode> {
 		}
 		return null;
 	}
-
+	
 	private CloneStructureNode containsControlChildOfNode(CloneStructureNode other) {
 		if(other.getMapping() instanceof PDGElseMapping) {
 			for(CloneStructureNode otherChild : other.children) {
@@ -435,7 +422,7 @@ public class CloneStructureNode implements Comparable<CloneStructureNode> {
 								childNodeMapping.getNodeG2().getCFGNode() instanceof CFGBranchIfNode) {
 							PDGNode nodeG1ControlParent = childNodeMapping.getNodeG1().getControlDependenceParent();
 							PDGNode nodeG2ControlParent = childNodeMapping.getNodeG2().getControlDependenceParent();
-							if(otherNodeMapping.getNodeG1().equals(nodeG1ControlParent) &&
+							if(otherNodeMapping.getNodeG1().equals(nodeG1ControlParent) && 
 									otherNodeMapping.getNodeG2().equals(nodeG2ControlParent))
 								return child;
 						}
@@ -445,7 +432,7 @@ public class CloneStructureNode implements Comparable<CloneStructureNode> {
 		}
 		return null;
 	}
-
+	
 	private CloneStructureNode containsControlParentOfNode(CloneStructureNode other) {
 		if(other.getMapping() instanceof PDGElseMapping) {
 			for(CloneStructureNode otherChild : other.children) {
@@ -474,7 +461,7 @@ public class CloneStructureNode implements Comparable<CloneStructureNode> {
 						PDGNodeMapping childNodeMapping = (PDGNodeMapping)child.getMapping();
 						if(childNodeMapping.getNodeG1().getCFGNode() instanceof CFGBranchIfNode &&
 								childNodeMapping.getNodeG2().getCFGNode() instanceof CFGBranchIfNode) {
-							if(childNodeMapping.getNodeG1().equals(otherNodeG1ControlParent) &&
+							if(childNodeMapping.getNodeG1().equals(otherNodeG1ControlParent) && 
 									childNodeMapping.getNodeG2().equals(otherNodeG2ControlParent)) {
 								return child;
 							}
@@ -712,7 +699,7 @@ public class CloneStructureNode implements Comparable<CloneStructureNode> {
 		}
 		return false;
 	}
-
+	
 	public int compareTo(CloneStructureNode other) {
 		return this.mapping.compareTo(other.mapping);
 	}

@@ -72,7 +72,7 @@ implements IInformationControlExtension2 {
 
 				public void mousePressed(MouseEvent me) {
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-					IViewPart viewPart = page.findView("main.main.jdeodorant.views.GodClass");
+					IViewPart viewPart = page.findView("gr.uom.java.jdeodorant.views.GodClass");
 					if(viewPart != null){
 						GodClass godClass = (GodClass) viewPart;
 						godClass.setSelectedLine(candidateRefactoring);

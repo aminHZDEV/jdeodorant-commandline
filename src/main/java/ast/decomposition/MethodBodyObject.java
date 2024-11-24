@@ -1,5 +1,7 @@
 package ast.decomposition;
 
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.PlainVariable;
 import ast.AnonymousClassDeclarationObject;
 import ast.ConstructorInvocationObject;
 import ast.CreationObject;
@@ -10,8 +12,6 @@ import ast.LocalVariableInstructionObject;
 import ast.MethodInvocationObject;
 import ast.SuperFieldInstructionObject;
 import ast.SuperMethodInvocationObject;
-import ast.decomposition.cfg.AbstractVariable;
-import ast.decomposition.cfg.PlainVariable;
 import ast.util.ExpressionExtractor;
 import ast.util.StatementExtractor;
 import jdeodorant.refactoring.manipulators.TypeCheckElimination;
@@ -83,7 +83,10 @@ public class MethodBodyObject {
 			for(Statement statement2 : statements) {
 				if(statement2 instanceof SwitchCase) {
 					SwitchCase switchCase = (SwitchCase)statement2;
-					switchCaseExpression = switchCase.getExpression();
+					List<Expression> expressions = switchCase.expressions();
+					if (expressions != null && !expressions.isEmpty()) {
+						switchCaseExpression = expressions.get(0);
+					}
 					isDefaultCase = switchCase.isDefault();
 					if(!isDefaultCase)
 						switchCaseExpressions.add(switchCaseExpression);

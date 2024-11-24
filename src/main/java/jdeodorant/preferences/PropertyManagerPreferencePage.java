@@ -1,5 +1,6 @@
 package jdeodorant.preferences;
 
+import jdeodorant.refactoring.Activator;
 import org.eclipse.jface.preference.*;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.SWT;
@@ -8,7 +9,6 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 import org.eclipse.ui.IWorkbench;
-import jdeodorant.refactoring.Activator;
 
 /**
  * This class represents a preference page that

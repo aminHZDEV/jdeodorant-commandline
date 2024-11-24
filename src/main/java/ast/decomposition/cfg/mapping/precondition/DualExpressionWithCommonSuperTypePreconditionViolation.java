@@ -2,19 +2,18 @@ package ast.decomposition.cfg.mapping.precondition;
 
 import java.util.Set;
 
-import org.eclipse.jdt.core.dom.Expression;
-import org.eclipse.jface.viewers.StyledString;
-
 import ast.decomposition.AbstractExpression;
 import ast.decomposition.matching.ASTNodeDifference;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jface.viewers.StyledString;
 
 public class DualExpressionWithCommonSuperTypePreconditionViolation extends DualExpressionPreconditionViolation {
 
 	private String commonSuperType;
 	private Set<String> commonSuperTypeMembers;
 	public DualExpressionWithCommonSuperTypePreconditionViolation(
-			AbstractExpression expression1, AbstractExpression expression2, PreconditionViolationType type,
-			String commonSuperType, Set<String> commonSuperTypeMembers) {
+            AbstractExpression expression1, AbstractExpression expression2, PreconditionViolationType type,
+            String commonSuperType, Set<String> commonSuperTypeMembers) {
 		super(expression1, expression2, type);
 		this.commonSuperType = commonSuperType;
 		this.commonSuperTypeMembers = commonSuperTypeMembers;

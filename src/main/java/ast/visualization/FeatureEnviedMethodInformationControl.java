@@ -120,7 +120,7 @@ public class FeatureEnviedMethodInformationControl extends AbstractInformationCo
 					
 					
 					IWorkbenchPage page = PlatformUI.getWorkbench().getActiveWorkbenchWindow().getActivePage();
-					IViewPart viewPart = page.findView("main.main.jdeodorant.views.FeatureEnvy");
+					IViewPart viewPart = page.findView("gr.uom.java.jdeodorant.views.FeatureEnvy");
 					if(viewPart != null){
 						FeatureEnvy featureEnvy = (FeatureEnvy) viewPart;
 						featureEnvy.setSelectedLine(candidateRefactoring);

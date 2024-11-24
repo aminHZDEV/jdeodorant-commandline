@@ -33,20 +33,20 @@ public class BadSmellsMenu implements IWorkbenchWindowActionDelegate {
 	public void run(IAction action) {
 		IWorkbenchPage page=window.getActivePage();
 		try {
-			if(action.getId().equals("main.main.jdeodorant.actions.FeatureEnvy")) {
-				page.showView("main.main.jdeodorant.views.FeatureEnvy");
+			if(action.getId().equals("gr.uom.java.jdeodorant.actions.FeatureEnvy")) {
+				page.showView("gr.uom.java.jdeodorant.views.FeatureEnvy");
 			}
-			else if(action.getId().equals("main.main.jdeodorant.actions.TypeChecking")) {
-				page.showView("main.main.jdeodorant.views.TypeChecking");
+			else if(action.getId().equals("gr.uom.java.jdeodorant.actions.TypeChecking")) {
+				page.showView("gr.uom.java.jdeodorant.views.TypeChecking");
 			}
-			else if(action.getId().equals("main.main.jdeodorant.actions.LongMethod")) {
-				page.showView("main.main.jdeodorant.views.LongMethod");
+			else if(action.getId().equals("gr.uom.java.jdeodorant.actions.LongMethod")) {
+				page.showView("gr.uom.java.jdeodorant.views.LongMethod");
 			}
-			else if(action.getId().equals("main.main.jdeodorant.actions.GodClass")) {
-				page.showView("main.main.jdeodorant.views.GodClass");
+			else if(action.getId().equals("gr.uom.java.jdeodorant.actions.GodClass")) {
+				page.showView("gr.uom.java.jdeodorant.views.GodClass");
 			}
-			else if(action.getId().equals("main.main.jdeodorant.actions.DuplicatedCode")) {
-				page.showView("main.main.jdeodorant.views.DuplicatedCode");
+			else if(action.getId().equals("gr.uom.java.jdeodorant.actions.DuplicatedCode")) {
+				page.showView("gr.uom.java.jdeodorant.views.DuplicatedCode");
 			}
 		} catch (PartInitException e) {
 			e.printStackTrace();

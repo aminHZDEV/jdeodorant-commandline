@@ -64,6 +64,7 @@ import org.eclipse.jdt.core.dom.IfStatement;
 import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.InstanceofExpression;
 import org.eclipse.jdt.core.dom.LabeledStatement;
+import org.eclipse.jdt.core.dom.LambdaExpression;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Modifier;
@@ -157,7 +158,7 @@ public class ASTNodeMatcher extends ASTMatcher{
 	}
 
 	public boolean isParameterizable() {
-		if(onlyVariableTypeMismatchDifferences() || !additionallyMatchedFragments1.isEmpty() || additionallyMatchedFragments2.size() > 0)
+		if(onlyVariableTypeMismatchDifferences() || additionallyMatchedFragments1.size() > 0 || additionallyMatchedFragments2.size() > 0)
 			return true;
 		else if(methodInvocationMatchWithMissingExpressionAndDifferentNameAndDifferentArguments())
 			return false;
@@ -241,7 +242,8 @@ public class ASTNodeMatcher extends ASTMatcher{
 				|| o.getClass().equals(SimpleName.class) || o.getClass().equals(QualifiedName.class)
 				|| o.getClass().equals(CastExpression.class) || o.getClass().equals(InfixExpression.class)
 				|| o.getClass().equals(PrefixExpression.class) || o.getClass().equals(InstanceofExpression.class)
-				|| o.getClass().equals(ThisExpression.class) || o.getClass().equals(ConditionalExpression.class))
+				|| o.getClass().equals(ThisExpression.class) || o.getClass().equals(ConditionalExpression.class)
+				|| o.getClass().equals(LambdaExpression.class))
 			return true;
 		return false;
 	}
@@ -364,6 +366,10 @@ public class ASTNodeMatcher extends ASTMatcher{
 		}
 		else if(o.getClass().equals(ConditionalExpression.class)) {
 			ConditionalExpression expression = (ConditionalExpression) o;
+			return expression.resolveTypeBinding();
+		}
+		else if(o.getClass().equals(LambdaExpression.class)) {
+			LambdaExpression expression = (LambdaExpression) o;
 			return expression.resolveTypeBinding();
 		}
 		return null;
@@ -505,7 +511,7 @@ public class ASTNodeMatcher extends ASTMatcher{
 			for(ITypeBinding superType2 : superTypes2) {
 				if(superType1.getQualifiedName().equals(superType2.getQualifiedName()) &&
 						!superType1.getQualifiedName().equals("java.lang.Object")) {
-					addTypeBinding(superType1, (Set<ITypeBinding>) typeBindings);
+					addTypeBinding(superType1, typeBindings);
 				}
 			}
 		}
@@ -578,7 +584,7 @@ public class ASTNodeMatcher extends ASTMatcher{
 		return false;
 	}
 
-	public static void addTypeBinding(ITypeBinding typeBinding, Set<ITypeBinding> typeBindings) {
+	private static void addTypeBinding(ITypeBinding typeBinding, List<ITypeBinding> typeBindings) {
 		boolean found = false;
 		for(ITypeBinding typeBinding2 : typeBindings) {
 			if(typeBinding.isEqualTo(typeBinding2) && typeBinding.getQualifiedName().equals(typeBinding2.getQualifiedName())) {
@@ -1478,6 +1484,50 @@ public class ASTNodeMatcher extends ASTMatcher{
 		}
 		return (
 				safeSubtreeMatch(node.getLabel(), o.getLabel()));
+	}
+
+	public boolean match(LambdaExpression node, Object other) {
+		ASTInformationGenerator.setCurrentITypeRoot(typeRoot1);
+		AbstractExpression exp1 = new AbstractExpression(node);
+		ASTInformationGenerator.setCurrentITypeRoot(typeRoot2);
+		AbstractExpression exp2 = new AbstractExpression((Expression)other);
+		if(isInfixExpressionWithCompositeParent((ASTNode)other)) {
+			return super.match(node, other);
+		}
+		ASTNodeDifference astNodeDifference = new ASTNodeDifference(exp1, exp2);
+		if(isTypeHolder(other)) {
+			boolean typeMatch = typeBindingMatch(node.resolveTypeBinding(), getTypeBinding(other));
+			if (!(other instanceof LambdaExpression)) {
+				if(typeMatch) {
+					Difference diff = new Difference(node.toString(),other.toString(),DifferenceType.TYPE_COMPATIBLE_REPLACEMENT,astNodeDifference.getWeight());
+					astNodeDifference.addDifference(diff);
+					addDifference(astNodeDifference);
+				}
+				else {
+					Difference diff = new Difference(node.toString(),other.toString(),DifferenceType.AST_TYPE_MISMATCH);
+					astNodeDifference.addDifference(diff);
+					addDifference(astNodeDifference);
+				}
+			}
+			else {
+				LambdaExpression o = (LambdaExpression)other;
+				if(node.parameters().size() != o.parameters().size()) {
+					Difference diff = new Difference(node.toString(),other.toString(),DifferenceType.ARGUMENT_NUMBER_MISMATCH);
+					astNodeDifference.addDifference(diff);
+					addDifference(astNodeDifference);
+				}
+				if(node.getBody().getNodeType() != o.getBody().getNodeType()) {
+					return false;
+				}
+				safeSubtreeListMatch(node.parameters(), o.parameters());
+				safeSubtreeMatch(node.getBody(), o.getBody());
+			}
+			return typeMatch;
+		}
+		Difference diff = new Difference(node.toString(),other.toString(),DifferenceType.AST_TYPE_MISMATCH);
+		astNodeDifference.addDifference(diff);
+		addDifference(astNodeDifference);
+		return false;
 	}
 
 	public boolean match(MethodInvocation node, Object other) {
@@ -2528,7 +2578,7 @@ public class ASTNodeMatcher extends ASTMatcher{
 		ASTNode parent = node.getParent();
 		while(parent != null) {
 			if(parent instanceof AnonymousClassDeclaration || parent instanceof CatchClause ||
-					isFinallyBlockOfTryStatement(parent)) {
+					isFinallyBlockOfTryStatement(parent) || parent instanceof LambdaExpression) {
 				return true;
 			}
 			parent = parent.getParent();

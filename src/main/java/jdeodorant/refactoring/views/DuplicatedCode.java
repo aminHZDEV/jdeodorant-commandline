@@ -16,6 +16,9 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
+import jdeodorant.preferences.PreferenceConstants;
+import jdeodorant.refactoring.Activator;
+import jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
 import org.eclipse.compare.BufferedContent;
 import org.eclipse.compare.CompareConfiguration;
 import org.eclipse.compare.CompareEditorInput;
@@ -111,19 +114,16 @@ import org.eclipse.ui.part.ViewPart;
 import org.eclipse.ui.progress.IProgressService;
 import org.eclipse.ui.texteditor.ITextEditor;
 
-import jdeodorant.clone.parsers.CloneGroup;
-import jdeodorant.clone.parsers.CloneGroupList;
-import jdeodorant.clone.parsers.CloneInstance;
-import jdeodorant.clone.parsers.CloneInstanceStatus;
-import jdeodorant.clone.parsers.JavaModelUtility;
+import parsers.CloneGroup;
+import parsers.CloneGroupList;
+import parsers.CloneInstance;
+import parsers.CloneInstanceStatus;
+import parsers.JavaModelUtility;
 import ast.ASTReader;
 import ast.CompilationErrorDetectedException;
 import ast.CompilationUnitCache;
 import ast.decomposition.cfg.mapping.CloneInstanceMapper;
 import ast.decomposition.cfg.mapping.PDGRegionSubTreeMapper;
-import jdeodorant.preferences.PreferenceConstants;
-import jdeodorant.refactoring.Activator;
-import jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
 
 public class DuplicatedCode extends ViewPart {
 	private static final String MESSAGE_DIALOG_TITLE = "Duplicated Code Refactoring";
@@ -714,6 +714,11 @@ public class DuplicatedCode extends ViewPart {
 						String fullPath = path.toString().substring(iJavaProject.getProject().getName().length() + 2) + "/" + fullName;
 
 						ICompilationUnit iCompilationUnit = (ICompilationUnit)JavaCore.create(iJavaProject.getProject().getFile(fullPath));
+						if (iCompilationUnit != null && iCompilationUnit.exists())
+							return iCompilationUnit;
+					}
+					else {
+						ICompilationUnit iCompilationUnit = (ICompilationUnit)JavaCore.create(iJavaProject.getProject().getFile(fullName));
 						if (iCompilationUnit != null && iCompilationUnit.exists())
 							return iCompilationUnit;
 					}

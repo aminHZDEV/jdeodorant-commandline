@@ -19,7 +19,7 @@ import org.eclipse.swt.widgets.Group;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
-import jdeodorant.clone.parsers.CloneDetectorType;
+import parsers.CloneDetectorType;
 
 public class ImportClonesWizardPage extends WizardPage {
 

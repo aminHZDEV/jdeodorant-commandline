@@ -2,6 +2,7 @@ package ast.inheritance;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
+
 import java.util.Enumeration;
 import java.util.LinkedHashSet;
 import java.util.Set;

@@ -55,8 +55,8 @@ public class IfStatementExpressionAnalyzer {
 	public Set<SimpleName> getTargetVariables() {
 		Set<SimpleName> targetVariables = new LinkedHashSet<SimpleName>();
 		for(SimpleName targetVariable : typeVariableExpressionMap.keySet()) {
-			if(typeVariableStaticFieldMap.containsKey(targetVariable) ||
-					typeVariableSubclassMap.containsKey(targetVariable))
+			if(typeVariableStaticFieldMap.keySet().contains(targetVariable) ||
+					typeVariableSubclassMap.keySet().contains(targetVariable))
 				targetVariables.add(targetVariable);
 		}
 		return targetVariables;

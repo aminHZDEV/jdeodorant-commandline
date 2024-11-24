@@ -1,9 +1,8 @@
 package jdeodorant.preferences;
 
+import jdeodorant.refactoring.Activator;
 import org.eclipse.core.runtime.preferences.AbstractPreferenceInitializer;
 import org.eclipse.jface.preference.IPreferenceStore;
-
-import jdeodorant.refactoring.Activator;
 
 /**
  * Class used to initialize default preference values.

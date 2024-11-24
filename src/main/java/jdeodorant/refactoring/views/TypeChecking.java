@@ -6,10 +6,12 @@ import ast.ClassObject;
 import ast.CompilationErrorDetectedException;
 import ast.CompilationUnitCache;
 import ast.SystemObject;
+import ast.delegation.DelegationDetection;
 import jdeodorant.preferences.PreferenceConstants;
 import jdeodorant.refactoring.Activator;
 import jdeodorant.refactoring.manipulators.ReplaceConditionalWithPolymorphism;
 import jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithStateStrategy;
+import jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithSubclass;
 import jdeodorant.refactoring.manipulators.TypeCheckElimination;
 import jdeodorant.refactoring.manipulators.TypeCheckEliminationGroup;
 
@@ -158,10 +160,7 @@ public class TypeChecking extends ViewPart {
 				TypeCheckElimination typeCheckElimination = (TypeCheckElimination)obj;
 				switch(index) {
 				case 0:
-					if(typeCheckElimination.getExistingInheritanceTree() == null)
-						return "Replace Type Code with State/Strategy";
-					else
-						return "Replace Conditional with Polymorphism";
+					return typeCheckElimination.getApplicableRefactoringName();
 				case 1:
 					return typeCheckElimination.toString();
 				case 2:
@@ -590,11 +589,16 @@ public class TypeChecking extends ViewPart {
 						}
 					}
 					Refactoring refactoring = null;
-					if(typeCheckElimination.getExistingInheritanceTree() == null) {
-						refactoring = new ReplaceTypeCodeWithStateStrategy(sourceFile, sourceCompilationUnit, sourceTypeDeclaration, typeCheckElimination);
-					}
-					else {
+					String refactoringName = typeCheckElimination.getApplicableRefactoringName();
+					if (refactoringName.equals("Replace Conditional with Polymorphism")){
 						refactoring = new ReplaceConditionalWithPolymorphism(sourceFile, sourceCompilationUnit, sourceTypeDeclaration, typeCheckElimination);
+					} else if (refactoringName.equals("Replace Typecode with State/Strategy") || refactoringName.equals("Replace Typecode with Strategy")  || refactoringName.equals("Replace Typecode with State")) {
+						refactoring = new ReplaceTypeCodeWithStateStrategy(sourceFile, sourceCompilationUnit, sourceTypeDeclaration, typeCheckElimination);
+					} else if (refactoringName.equals("Replace Typecode with Subclass")) { 
+						DelegationDetection dd = new DelegationDetection(ASTReader.getSystemObject());
+//						DelegationTree dt = new DelegationTree(ASTReader.getSystemObject(), null);
+						refactoring = new ReplaceTypeCodeWithSubclass(sourceFile, sourceCompilationUnit, sourceTypeDeclaration, typeCheckElimination);
+//						refactoring = null;
 					}
 					try {
 						IJavaElement sourceJavaElement = JavaCore.create(sourceFile);
@@ -748,6 +752,8 @@ public class TypeChecking extends ViewPart {
 						typeCheckEliminationGroups.addAll(systemObject.generateTypeCheckEliminations(filteredClassObjectsToBeExamined, monitor));
 					}
 				});
+				
+				
 
 				table = new TypeCheckEliminationGroup[typeCheckEliminationGroups.size()];
 				int i = 0;

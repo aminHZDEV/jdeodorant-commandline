@@ -1,5 +1,6 @@
 package ast.decomposition.cfg;
 
+import ast.decomposition.matching.ASTNodeMatcher;
 import ast.ASTInformationGenerator;
 import ast.ASTReader;
 import ast.AbstractMethodDeclaration;
@@ -17,7 +18,6 @@ import ast.VariableDeclarationObject;
 import ast.decomposition.AbstractStatement;
 import ast.decomposition.MethodBodyObject;
 import ast.decomposition.StatementType;
-import ast.decomposition.matching.ASTNodeMatcher;
 import ast.util.ExpressionExtractor;
 import jdeodorant.preferences.PreferenceConstants;
 import jdeodorant.refactoring.Activator;

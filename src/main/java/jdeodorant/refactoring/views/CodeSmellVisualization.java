@@ -35,7 +35,7 @@ import org.eclipse.ui.part.ViewPart;
 
 public class CodeSmellVisualization extends ViewPart {
 
-	public static final String ID = "main.main.jdeodorant.views.CodeSmellVisualization";
+	public static final String ID = "gr.uom.java.jdeodorant.views.CodeSmellVisualization";
 	private FigureCanvas figureCanvas; 
 	private ScalableFreeformLayeredPane root = null;
 	private boolean ctrlPressed= false;

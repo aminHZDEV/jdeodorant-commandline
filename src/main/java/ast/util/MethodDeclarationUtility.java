@@ -20,6 +20,7 @@ import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.QualifiedName;
 import org.eclipse.jdt.core.dom.ReturnStatement;
@@ -140,6 +141,9 @@ public class MethodDeclarationUtility {
 	}
 
 	public static SimpleName isSetter(MethodDeclaration methodDeclaration) {
+		if (isConstructor(methodDeclaration) != null) {
+			return null;
+		}
 		Block methodBody = methodDeclaration.getBody();
 		List<SingleVariableDeclaration> parameters = methodDeclaration.parameters();
 		if(methodBody != null) {
@@ -171,6 +175,29 @@ public class MethodDeclarationUtility {
 		}
 		return null;
 	}
+	
+	public static SimpleName isConstructor(MethodDeclaration methodDeclaration) {
+		return methodDeclaration.isConstructor() ? methodDeclaration.getName() : null;
+	}
+	
+	public static boolean isPrivate(MethodDeclaration methodDeclaration) {
+		if (methodDeclaration == null) {
+			throw new IllegalArgumentException("MethodDeclaration cannot be null");
+		}
+
+		int modifiers = methodDeclaration.getModifiers();
+		return Modifier.isPrivate(modifiers);
+	}
+	
+	public static boolean isPublic(MethodDeclaration methodDeclaration) {
+		if (methodDeclaration == null) {
+			throw new IllegalArgumentException("MethodDeclaration cannot be null");
+		}
+
+		int modifiers = methodDeclaration.getModifiers();
+		return Modifier.isPublic(modifiers);
+	}
+
 
 	public static AbstractVariable createVariable(SimpleName simpleName, AbstractVariable rightPart) {
 		IBinding binding = simpleName.resolveBinding();
