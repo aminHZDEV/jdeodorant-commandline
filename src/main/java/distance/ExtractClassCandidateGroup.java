@@ -9,9 +9,9 @@ import java.util.TreeSet;
 
 public class ExtractClassCandidateGroup implements Comparable<ExtractClassCandidateGroup> {
 
-	private String source;
-	private ArrayList<ExtractClassCandidateRefactoring> candidates;
-	private ArrayList<ExtractedConcept> extractedConcepts;
+	private final String source;
+	private final ArrayList<ExtractClassCandidateRefactoring> candidates;
+	private final ArrayList<ExtractedConcept> extractedConcepts;
 
 	public ExtractClassCandidateGroup(String source) {
 		this.source = source;
@@ -38,7 +38,7 @@ public class ExtractClassCandidateGroup implements Comparable<ExtractClassCandid
 
 	public void groupConcepts() {
 		ArrayList<ExtractClassCandidateRefactoring> tempCandidates = new ArrayList<ExtractClassCandidateRefactoring>(candidates);
-		Collections.sort(tempCandidates, new ClusterSizeComparator());
+		tempCandidates.sort(new ClusterSizeComparator());
 		while (!tempCandidates.isEmpty()) {
 			Set<Entity> conceptEntities = new HashSet<Entity>(tempCandidates.get(0).getExtractedEntities());
 			Set<Integer> indexSet = new LinkedHashSet<Integer>();

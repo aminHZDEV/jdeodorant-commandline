@@ -51,7 +51,8 @@ public class GodClassVisualizationData implements VisualizationData {
 			for(PlainVariable fieldAccess : fieldAccesses) {
 				FieldInstructionObject fieldInstruction = findFieldInstruction(fieldAccess, fieldInstructions);
 				//exclude accesses to static fields
-				if(!fieldInstruction.isStatic()) {
+                assert fieldInstruction != null;
+                if(!fieldInstruction.isStatic()) {
 					if(isAccessToExtractedField(fieldInstruction, extractedFields)) {
 						insertToMap(method, fieldInstruction, internalFieldReadMap, 1);
 					}

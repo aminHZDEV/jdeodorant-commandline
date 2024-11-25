@@ -49,16 +49,14 @@ public class ExtractClassCandidateRefactoring extends CandidateRefactoring imple
 		Set<MethodObject> extractedMethods = new LinkedHashSet<MethodObject>();
 		Set<FieldObject> extractedFields = new LinkedHashSet<FieldObject>();
 		for(Entity entity : extractedEntities) {
-			if(entity instanceof MyMethod) {
-				MyMethod myMethod = (MyMethod)entity;
-				extractedMethods.add(myMethod.getMethodObject());
+			if(entity instanceof MyMethod myMethod) {
+                extractedMethods.add(myMethod.getMethodObject());
 			}
-			else if(entity instanceof MyAttribute) {
-				MyAttribute myAttribute = (MyAttribute)entity;
-				extractedFields.add(myAttribute.getFieldObject());
+			else if(entity instanceof MyAttribute myAttribute) {
+                extractedFields.add(myAttribute.getFieldObject());
 			}
 		}
-		this.visualizationData = new GodClassVisualizationData(sourceClass.getClassObject(), extractedMethods, extractedFields);
+//		this.visualizationData = new GodClassVisualizationData(sourceClass.getClassObject(), extractedMethods, extractedFields);
 	}
 
 	public String getTargetClassName() {
@@ -76,9 +74,8 @@ public class ExtractClassCandidateRefactoring extends CandidateRefactoring imple
 	public Set<MethodDeclaration> getExtractedMethods() {
 		Set<MethodDeclaration> extractedMethods = new LinkedHashSet<MethodDeclaration>();
 		for(Entity entity : extractedEntities) {
-			if(entity instanceof MyMethod) {
-				MyMethod method = (MyMethod)entity;
-				extractedMethods.add(method.getMethodObject().getMethodDeclaration());
+			if(entity instanceof MyMethod method) {
+                extractedMethods.add(method.getMethodObject().getMethodDeclaration());
 			}
 		}
 		return extractedMethods;
@@ -87,7 +84,7 @@ public class ExtractClassCandidateRefactoring extends CandidateRefactoring imple
 	public Set<MethodDeclaration> getDelegateMethods() {
 		Set<MethodDeclaration> delegateMethods = new LinkedHashSet<MethodDeclaration>();
 		for(MyMethod method : leaveDelegate.keySet()) {
-			if(leaveDelegate.get(method) == true)
+			if(leaveDelegate.get(method))
 				delegateMethods.add(method.getMethodObject().getMethodDeclaration());
 		}
 		return delegateMethods;
@@ -96,15 +93,12 @@ public class ExtractClassCandidateRefactoring extends CandidateRefactoring imple
 	public Set<VariableDeclaration> getExtractedFieldFragments() {
 		Map<Integer, VariableDeclaration> extractedFieldFragmentMap = new TreeMap<Integer, VariableDeclaration>();
 		for(Entity entity : extractedEntities) {
-			if(entity instanceof MyAttribute) {
-				MyAttribute attribute = (MyAttribute)entity;
-				int index = sourceClass.getAttributeList().indexOf(attribute);
+			if(entity instanceof MyAttribute attribute) {
+                int index = sourceClass.getAttributeList().indexOf(attribute);
 				extractedFieldFragmentMap.put(index, attribute.getFieldObject().getVariableDeclaration());
 			}
 		}
-		Set<VariableDeclaration> extractedFieldFragments = new LinkedHashSet<VariableDeclaration>();
-		extractedFieldFragments.addAll(extractedFieldFragmentMap.values());
-		return extractedFieldFragments;
+        return new LinkedHashSet<VariableDeclaration>(extractedFieldFragmentMap.values());
 	}
 
 	public Map<MyMethod, Boolean> getLeaveDelegate() {
@@ -119,28 +113,21 @@ public class ExtractClassCandidateRefactoring extends CandidateRefactoring imple
 	public boolean isApplicable() {
 		int methodCounter = 0;
 		for (Entity entity : extractedEntities) {
-			if(entity instanceof MyMethod) {
-				MyMethod method = (MyMethod)entity;
-				methodCounter++;
+			if(entity instanceof MyMethod method) {
+                methodCounter++;
 				if (isSynchronized(method) || containsSuperMethodInvocation(method) ||
 						overridesMethod(method) || method.isAbstract() || containsFieldAccessOfEnclosingClass(method) ||
 						isReadObject(method) || isWriteObject(method))
 					return false;
 			}
-			else if(entity instanceof MyAttribute) {
-				MyAttribute attribute = (MyAttribute)entity;
-				if(!attribute.getAccess().equals("private")) {
+			else if(entity instanceof MyAttribute attribute) {
+                if(!attribute.getAccess().equals("private")) {
 					if(system.getSystemObject().containsFieldInstruction(attribute.getFieldObject().generateFieldInstruction(), sourceClass.getClassObject()))
 						return false;
 				}
 			}
 		}
-		if(extractedEntities.size() <=2 || methodCounter == 0 || !validRemainingMethodsInSourceClass() || !validRemainingFieldsInSourceClass() || visualizationData.containsNonAccessedFieldInExtractedClass()) {
-			return false;
-		}
-		else {
-			return true;
-		}
+        return extractedEntities.size() > 2 && methodCounter != 0 && validRemainingMethodsInSourceClass() && validRemainingFieldsInSourceClass() && !visualizationData.containsNonAccessedFieldInExtractedClass();
 	}
 
 	private boolean validRemainingMethodsInSourceClass() {
@@ -221,30 +208,18 @@ public class ExtractClassCandidateRefactoring extends CandidateRefactoring imple
 	}
 
 	private boolean overridesMethod(MyMethod method) {
-		if(method.getMethodObject().overridesMethod()) {
-			//System.out.println(this.toString() + "\toverrides method of superclass");
-			return true;
-		}
-		else
-			return false;
+        //System.out.println(this.toString() + "\toverrides method of superclass");
+        return method.getMethodObject().overridesMethod();
 	}
 
 	private boolean containsSuperMethodInvocation(MyMethod method) {
-		if(method.getMethodObject().containsSuperMethodInvocation()) {
-			//System.out.println(this.toString() + "\tcontains super method invocation");
-			return true;
-		}
-		else
-			return false;
+        //System.out.println(this.toString() + "\tcontains super method invocation");
+        return method.getMethodObject().containsSuperMethodInvocation();
 	}
 
 	private boolean isSynchronized(MyMethod method) {
-		if(method.getMethodObject().isSynchronized()) {
-			//System.out.println(this.toString() + "\tis synchronized");
-			return true;
-		}
-		else
-			return false;
+        //System.out.println(this.toString() + "\tis synchronized");
+        return method.getMethodObject().isSynchronized();
 	}
 
 	@Override
@@ -255,25 +230,28 @@ public class ExtractClassCandidateRefactoring extends CandidateRefactoring imple
 	public List<Position> getPositions() {
 		ArrayList<Position> positions = new ArrayList<Position>();
 		for(Entity entity : extractedEntities) {
-			if(entity instanceof MyMethod) {
-				MyMethod method = (MyMethod)entity;
-				Position position = new Position(method.getMethodObject().getMethodDeclaration().getStartPosition(), method.getMethodObject().getMethodDeclaration().getLength());
+			if(entity instanceof MyMethod method) {
+                Position position = new Position(method.getMethodObject().getMethodDeclaration().getStartPosition(), method.getMethodObject().getMethodDeclaration().getLength());
 				positions.add(position);
 			} else if(entity instanceof MyAttribute) {
-				MyAttribute attribute = (MyAttribute)entity;
-				VariableDeclarationFragment fragment = attribute.getFieldObject().getVariableDeclarationFragment();
-				FieldDeclaration fieldDeclaration = (FieldDeclaration)fragment.getParent();
-				Position position = null;
-				if(fieldDeclaration.fragments().size() > 1) {
-					position = new Position(fragment.getStartPosition(), fragment.getLength());
-				}
-				else {
-					position = new Position(fieldDeclaration.getStartPosition(), fieldDeclaration.getLength());
-				}
+				Position position = getPosition((MyAttribute) entity);
 				positions.add(position);
 			}
 		}
 		return positions;
+	}
+
+	private static Position getPosition(MyAttribute entity) {
+        VariableDeclarationFragment fragment = entity.getFieldObject().getVariableDeclarationFragment();
+		FieldDeclaration fieldDeclaration = (FieldDeclaration)fragment.getParent();
+		Position position = null;
+		if(fieldDeclaration.fragments().size() > 1) {
+			position = new Position(fragment.getStartPosition(), fragment.getLength());
+		}
+		else {
+			position = new Position(fieldDeclaration.getStartPosition(), fieldDeclaration.getLength());
+		}
+		return position;
 	}
 
 	@Override
