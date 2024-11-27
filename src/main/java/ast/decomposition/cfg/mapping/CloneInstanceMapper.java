@@ -1,12 +1,6 @@
 package ast.decomposition.cfg.mapping;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.ListIterator;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 
 import ast.decomposition.cfg.CFG;
 import ast.decomposition.cfg.PDG;
@@ -31,18 +25,11 @@ import org.eclipse.jdt.core.IType;
 import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.ASTMatcher;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
-import org.eclipse.jdt.core.dom.Block;
-import org.eclipse.jdt.core.dom.CatchClause;
-import org.eclipse.jdt.core.dom.IfStatement;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.NodeFinder;
-import org.eclipse.jdt.core.dom.TryStatement;
+import org.eclipse.jdt.core.dom.*;
 import org.eclipse.jdt.internal.core.SourceMethod;
 import org.eclipse.jdt.internal.core.SourceType;
 import org.eclipse.jface.text.BadLocationException;
+import org.eclipse.jface.text.Document;
 import org.eclipse.jface.text.IDocument;
 
 import parsers.CloneInstance;
@@ -53,7 +40,7 @@ import parsers.TextDiff.Diff;
 @SuppressWarnings("restriction")
 public class CloneInstanceMapper {
 
-	private List<PDGRegionSubTreeMapper> subTreeMappers;
+	private final List<PDGRegionSubTreeMapper> subTreeMappers;
 
 	public List<PDGRegionSubTreeMapper> getSubTreeMappers() {
 		return subTreeMappers;
@@ -73,8 +60,10 @@ public class CloneInstanceMapper {
 			IMethod iMethod2 = getIMethod(javaProject, instance2.getPackageName() + "." + instance2.getClassName(),
 					instance2.getMethodName(), instance2.getIMethodSignature(), secondStartOffset, secondEndOffset);
 
-			AbstractMethodDeclaration methodObject1 = systemObject.getMethodObject(iMethod1);
-			AbstractMethodDeclaration methodObject2 = systemObject.getMethodObject(iMethod2);
+            assert iMethod1 != null;
+            AbstractMethodDeclaration methodObject1 = systemObject.getMethodObject(iMethod1);
+            assert iMethod2 != null;
+            AbstractMethodDeclaration methodObject2 = systemObject.getMethodObject(iMethod2);
 
 			if(methodObject1 != null && methodObject2 != null && methodObject1.getMethodBody() != null && methodObject2.getMethodBody() != null) {
 				ClassDeclarationObject classObject1 = null;
@@ -97,8 +86,8 @@ public class CloneInstanceMapper {
 
 				ITypeRoot typeRoot1 = classObject1.getITypeRoot();
 				ITypeRoot typeRoot2 = classObject2.getITypeRoot();
-				ICompilationUnit iCompilationUnit1 = (ICompilationUnit)JavaCore.create(classObject1.getIFile());
-				ICompilationUnit iCompilationUnit2 = (ICompilationUnit)JavaCore.create(classObject2.getIFile());
+				CompilationUnit iCompilationUnit1 = (CompilationUnit)JavaCore.create(String.valueOf(classObject1.getIFile()));
+				CompilationUnit iCompilationUnit2 = (CompilationUnit)JavaCore.create(String.valueOf(classObject2.getIFile()));
 				CompilationUnitCache.getInstance().lock(typeRoot1);
 				CompilationUnitCache.getInstance().lock(typeRoot2);
 
@@ -106,14 +95,14 @@ public class CloneInstanceMapper {
 				ExtractStatementsVisitor visitor1 = new ExtractStatementsVisitor(node1);
 				node1.accept(visitor1);
 
-				if(visitor1.getStatementsList().size() == 0)
+				if(visitor1.getStatementsList().isEmpty())
 					node1.getParent().accept(visitor1);
 
 				ASTNode node2 = NodeFinder.perform(classObject2.getClassObject().getAbstractTypeDeclaration().getRoot(), secondStartOffset, secondEndOffset - secondStartOffset);
 				ExtractStatementsVisitor visitor2 = new ExtractStatementsVisitor(node2);
 				node2.accept(visitor2);
 
-				if(visitor2.getStatementsList().size() == 0)
+				if(visitor2.getStatementsList().isEmpty())
 					node2.getParent().accept(visitor2);
 
 				PDG pdg1 = getPDG(iMethod1, monitor);
@@ -182,7 +171,7 @@ public class CloneInstanceMapper {
 				}
 				
 				// If one of the clone fragments contain no control predicate nodes, create a dummy CDT 
-				if(subTreeCDTNodes1.size() == 0 || subTreeCDTNodes2.size() == 0) {
+				if(subTreeCDTNodes1.isEmpty() || subTreeCDTNodes2.isEmpty()) {
 
 					if (allStatementsAreInAnonymousClassDeclarationOrCatchClauseOrFinallyBlock(ASTNodes1) || 
 							allStatementsAreInAnonymousClassDeclarationOrCatchClauseOrFinallyBlock(ASTNodes2)) {
@@ -264,7 +253,7 @@ public class CloneInstanceMapper {
 									treeChain.add(elseIfChild);
 								}
 							}
-							if(!subTreeCDTNodes1Copy.containsAll(treeChain)) {
+							if(!new HashSet<>(subTreeCDTNodes1Copy).containsAll(treeChain)) {
 								subTreeCDTNodes1.remove(subTreeCDTNode1);
 								subTreeCDTNodes1.removeAll(subTreeCDTNode1.getDescendants());
 							}
@@ -287,14 +276,14 @@ public class CloneInstanceMapper {
 									treeChain.add(elseIfChild);
 								}
 							}
-							if(!subTreeCDTNodes2Copy.containsAll(treeChain)) {
+							if(!new HashSet<>(subTreeCDTNodes2Copy).containsAll(treeChain)) {
 								subTreeCDTNodes2.remove(subTreeCDTNode2);
 								subTreeCDTNodes2.removeAll(subTreeCDTNode2.getDescendants());
 							}
 						}
 					}
 
-					if(subTreeCDTNodes1.size() > 0 && subTreeCDTNodes2.size() > 0) {
+					if(!subTreeCDTNodes1.isEmpty() && !subTreeCDTNodes2.isEmpty()) {
 						// Create CDT subtree with containing only the filtered CDTNodes
 						ControlDependenceTreeNode controlDependenceSubTreePDG1X = generateControlDependenceSubTree(controlDependenceTreePDG1, subTreeCDTNodes1);
 						ControlDependenceTreeNode controlDependenceSubTreePDG2X = generateControlDependenceSubTree(controlDependenceTreePDG2, subTreeCDTNodes2);
@@ -309,7 +298,7 @@ public class CloneInstanceMapper {
 						// Get the solutions
 						List<CompleteSubTreeMatch> bottomUpSubTreeMatches = bottomUpCDTMapper.getSolutions();
 						
-						if (bottomUpSubTreeMatches.size() == 0) {
+						if (bottomUpSubTreeMatches.isEmpty()) {
 							if(ASTNodes1.size() == pdg1.getTotalNumberOfStatements() && ASTNodes2.size() == pdg2.getTotalNumberOfStatements()) {
 								PDGRegionSubTreeMapper mapper = new PDGRegionSubTreeMapper(pdg1, pdg2, iCompilationUnit1, iCompilationUnit2, 
 										controlDependenceTreePDG1, controlDependenceTreePDG2, ASTNodes1, ASTNodes2, true, monitor);
@@ -447,23 +436,14 @@ public class CloneInstanceMapper {
 			parent = root.getNode(cdtNode.getParent().getNode());
 		}
 		ControlDependenceTreeNode newNode = new ControlDependenceTreeNode(parent, cdtNode.getNode());
-		if(cdtNode.isElseNode()) {
-			newNode.setElseNode(true);
-			ControlDependenceTreeNode newIfParent = root.getNode(cdtNode.getIfParent().getNode());
-			if (newIfParent!=null) {
-				newIfParent.setElseIfChild(newNode);
-				newNode.setIfParent(newIfParent);
-			}
-		}
-		else if(cdtNode.getIfParent() != null) {
-			ControlDependenceTreeNode newIfParent = root.getNode(cdtNode.getIfParent().getNode());
-			if (newIfParent!=null) {
-				newNode.setIfParentAndElseIfChild(newIfParent);
-			}
-		}
+		checkElseNode(cdtNode, root, newNode);
 	}
 
 	private void insertCDTNodeInTreeAfterSibling(ControlDependenceTreeNode cdtNode, ControlDependenceTreeNode previousSibling, ControlDependenceTreeNode root) {
+		extractInsertCDTNodeInTreeAfterSibling(cdtNode, previousSibling, root);
+	}
+
+	static void extractInsertCDTNodeInTreeAfterSibling(ControlDependenceTreeNode cdtNode, ControlDependenceTreeNode previousSibling, ControlDependenceTreeNode root) {
 		ControlDependenceTreeNode parent;
 		if(cdtNode.getParent().isElseNode()) {
 			parent = root.getElseNode(cdtNode.getParent().getIfParent().getNode());
@@ -472,6 +452,10 @@ public class CloneInstanceMapper {
 			parent = root.getNode(cdtNode.getParent().getNode());
 		}
 		ControlDependenceTreeNode newNode = new ControlDependenceTreeNode(parent, previousSibling, cdtNode.getNode());
+		checkElseNode(cdtNode, root, newNode);
+	}
+
+	static void checkElseNode(ControlDependenceTreeNode cdtNode, ControlDependenceTreeNode root, ControlDependenceTreeNode newNode) {
 		if(cdtNode.isElseNode()) {
 			newNode.setElseNode(true);
 			ControlDependenceTreeNode newIfParent = root.getNode(cdtNode.getIfParent().getNode());
@@ -529,17 +513,13 @@ public class CloneInstanceMapper {
 	}
 
 	private boolean isNestedUnderElse(ASTNode astNode) {
-		if(astNode.getParent() instanceof IfStatement) {
-			IfStatement ifParent = (IfStatement)astNode.getParent();
-			if(ifParent.getElseStatement()!=null && ifParent.getElseStatement().equals(astNode))
+		if(astNode.getParent() instanceof IfStatement ifParent) {
+            if(ifParent.getElseStatement()!=null && ifParent.getElseStatement().equals(astNode))
 				return true;
 		}
-		if(astNode.getParent() instanceof Block) {
-			Block blockParent = (Block)astNode.getParent();
-			if(blockParent.getParent() instanceof IfStatement) {
-				IfStatement ifGrandParent = (IfStatement)blockParent.getParent();
-				if(ifGrandParent.getElseStatement()!=null && ifGrandParent.getElseStatement().equals(blockParent))
-					return true;
+		if(astNode.getParent() instanceof Block blockParent) {
+            if(blockParent.getParent() instanceof IfStatement ifGrandParent) {
+                return ifGrandParent.getElseStatement() != null && ifGrandParent.getElseStatement().equals(blockParent);
 			}
 		}
 		return false;
@@ -579,9 +559,8 @@ public class CloneInstanceMapper {
 		while(controlNode.getParent() instanceof Block) {
 			controlNode = controlNode.getParent();
 		}
-		if(controlNode.getParent() instanceof CatchClause) {
-			CatchClause catchClause = (CatchClause)controlNode.getParent();
-			return catchClause.getParent();
+		if(controlNode.getParent() instanceof CatchClause catchClause) {
+            return catchClause.getParent();
 		}
 		return controlNode.getParent();
 	}
@@ -608,9 +587,8 @@ public class CloneInstanceMapper {
 	
 	private boolean isFinallyBlockOfTryStatement(ASTNode node) {
 		ASTNode parent = node.getParent();
-		if(parent != null && parent instanceof TryStatement) {
-			TryStatement tryStatement = (TryStatement)parent;
-			Block finallyBlock = tryStatement.getFinally();
+		if(parent instanceof TryStatement tryStatement) {
+            Block finallyBlock = tryStatement.getFinally();
 			if(node instanceof Block && finallyBlock != null) {
 				return finallyBlock.equals((Block)node);
 			}
@@ -655,7 +633,7 @@ public class CloneInstanceMapper {
 		return subTreeCDTNodes;
 	}
 
-	private boolean isInside(ASTNode astNode, int startOffset, int endOffset, ICompilationUnit iCompilationUnit) {
+	private boolean isInside(ASTNode astNode, int startOffset, int endOffset, CompilationUnit iCompilationUnit) {
 
 		int astNodeStartOffset = astNode.getStartPosition();
 		int astNodeLength = astNode.getLength();
@@ -666,7 +644,7 @@ public class CloneInstanceMapper {
 			return true;
 
 		if (astNodeStartOffset >= startOffset && astNodeStartOffset <= endOffset) {
-			IDocument iDocument = JavaModelUtility.getIDocument(iCompilationUnit);
+			Document iDocument = JavaModelUtility.getIDocument(iCompilationUnit);
 			try {
 				String realSourceCode = iDocument.get(astNodeStartOffset, endOffset - astNodeStartOffset + 1);
 				String astNodeSourceCode = iDocument.get(astNodeStartOffset, astNodeLength);
@@ -725,8 +703,7 @@ public class CloneInstanceMapper {
 		ITypeRoot typeRoot = classObject.getITypeRoot();
 		CompilationUnitCache.getInstance().lock(typeRoot);
 		CFG cfg = new CFG(methodObject);
-		final PDG pdg = new PDG(cfg, classObject.getIFile(), classObject.getFieldsAccessedInsideMethod(methodObject), progressMonitor);
-		return pdg;
+        return new PDG(cfg, classObject.getIFile(), classObject.getFieldsAccessedInsideMethod(methodObject), progressMonitor);
 	}
 
 	private IMethod getIMethod(IJavaProject jProject, String typeName, String methodName, String methodSignature, int start, int end)

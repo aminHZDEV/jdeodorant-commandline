@@ -604,7 +604,7 @@ public class DuplicatedCode extends ViewPart {
 	    refactorMenuItem.addSelectionListener(new SelectionListener() {
 			
 			public void widgetSelected(SelectionEvent arg0) {
-				applyRefactoring();
+//				applyRefactoring();
 			}
 			
 			public void widgetDefaultSelected(SelectionEvent arg0) {}
@@ -735,118 +735,118 @@ public class DuplicatedCode extends ViewPart {
 				"You must select two (2) clone instances from the same clone group.");
 	}
 
-	private void applyRefactoring() {
-		try {
-			CloneInstance[] selectedCloneInstances = getSelectedCloneInstances();
-			
-			if (selectedCloneInstances.length == 2) {
-				
-				final CloneInstance instance1 = selectedCloneInstances[0];
-				final CloneInstance instance2 = selectedCloneInstances[1];
-				
-				CompilationUnitCache.getInstance().clearCache();
-				IWorkbench wb = PlatformUI.getWorkbench();
-				IProgressService ps = wb.getProgressService();
-				final IJavaProject importedProject = cloneGroupList.getJavaProject();
-				if(ASTReader.getSystemObject() != null && importedProject.equals(ASTReader.getExaminedProject())) {
-					new ASTReader(importedProject, ASTReader.getSystemObject(), null);
-				}
-				else {
-					ps.busyCursorWhile(new IRunnableWithProgress() {
-						public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-							try {
-								new ASTReader(importedProject, monitor);
-							} catch (CompilationErrorDetectedException e) {
-								Display.getDefault().asyncExec(new Runnable() {
-									public void run() {
-										MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
-												"Compilation errors were detected in the project. Fix the errors before using JDeodorant.");
-									}
-								});
-							}
-						}
-					});
-				}
-				if(ASTReader.getSystemObject() != null) {
-					ps.busyCursorWhile(new IRunnableWithProgress() {
-						public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-							mapper = new CloneInstanceMapper(instance1, instance2, importedProject, monitor);
-						}
-					});
-					if(mapper != null && !mapper.getSubTreeMappers().isEmpty()) {
-						try {
-							for(PDGRegionSubTreeMapper subTreeMapper : mapper.getSubTreeMappers()) {
-								JavaUI.openInEditor(((CompilationUnit)subTreeMapper.getPDG1().getMethod().getMethodDeclaration().getRoot()).getJavaElement());
-								JavaUI.openInEditor(((CompilationUnit)subTreeMapper.getPDG2().getMethod().getMethodDeclaration().getRoot()).getJavaElement());
-							}
-						} catch (PartInitException e) {
-							e.printStackTrace();
-						} catch (JavaModelException e) {
-							e.printStackTrace();
-						}
-						IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-						boolean allowUsageReporting = store.getBoolean(PreferenceConstants.P_ENABLE_USAGE_REPORTING);
-						if(allowUsageReporting) {
-							try {
-								boolean allowSourceCodeReporting = store.getBoolean(PreferenceConstants.P_ENABLE_SOURCE_CODE_REPORTING);
-								String content = URLEncoder.encode("project_name", "UTF-8") + "=" + URLEncoder.encode(selectedProject.getElementName(), "UTF-8");
-								content += "&" + URLEncoder.encode("source_class_name_1", "UTF-8") + "=" + URLEncoder.encode(instance1.getContainingClassFullyQualifiedName(), "UTF-8");
-								content += "&" + URLEncoder.encode("source_class_name_2", "UTF-8") + "=" + URLEncoder.encode(instance2.getContainingClassFullyQualifiedName(), "UTF-8");
-								content += "&" + URLEncoder.encode("source_method_name_1", "UTF-8") + "=" + URLEncoder.encode(instance1.getMethodSignature(), "UTF-8");
-								content += "&" + URLEncoder.encode("source_method_name_2", "UTF-8") + "=" + URLEncoder.encode(instance2.getMethodSignature(), "UTF-8");
-								if(allowSourceCodeReporting) {
-									content += "&" + URLEncoder.encode("clone_fragment_1", "UTF-8") + "=" + URLEncoder.encode(instance1.getOriginalCodeFragment(), "UTF-8");
-									content += "&" + URLEncoder.encode("clone_fragment_2", "UTF-8") + "=" + URLEncoder.encode(instance2.getOriginalCodeFragment(), "UTF-8");
-								}
-								content += "&" + URLEncoder.encode("application_type", "UTF-8") + "=" + URLEncoder.encode("import", "UTF-8");
-								content += "&" + URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(System.getProperty("user.name"), "UTF-8");
-								content += "&" + URLEncoder.encode("tb", "UTF-8") + "=" + URLEncoder.encode("4", "UTF-8");
-								URL url = new URL(Activator.RANK_URL);
-								URLConnection urlConn = url.openConnection();
-								urlConn.setDoInput(true);
-								urlConn.setDoOutput(true);
-								urlConn.setUseCaches(false);
-								urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-								DataOutputStream printout = new DataOutputStream(urlConn.getOutputStream());
-								printout.writeBytes(content);
-								printout.flush();
-								printout.close();
-								DataInputStream input = new DataInputStream(urlConn.getInputStream());
-								input.close();
-							} catch (IOException ioe) {
-								ioe.printStackTrace();
-							}
-						}
-						Refactoring refactoring = new ExtractCloneRefactoring(mapper.getSubTreeMappers());
-						MyRefactoringWizard wizard = new MyRefactoringWizard(refactoring, null);
-						RefactoringWizardOpenOperation op = new RefactoringWizardOpenOperation(wizard);
-						try { 
-							String titleForFailedChecks = ""; //$NON-NLS-1$ 
-							op.run(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), titleForFailedChecks); 
-						} catch(InterruptedException e) {
-							e.printStackTrace();
-						}
-					}
-					else {
-						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
-								"Unfortunately, no refactoring opportunities were found.");
-					}
-					CompilationUnitCache.getInstance().releaseLock();
-				}
-			}
-			else {
-				wrongSelectionMessage();
-			}
-					
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (CompilationErrorDetectedException e) {
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
-					"Compilation errors were detected in the project. Fix the errors before using JDeodorant.");
-		}
-	}
+//	private void applyRefactoring() {
+//		try {
+//			CloneInstance[] selectedCloneInstances = getSelectedCloneInstances();
+//
+//			if (selectedCloneInstances.length == 2) {
+//
+//				final CloneInstance instance1 = selectedCloneInstances[0];
+//				final CloneInstance instance2 = selectedCloneInstances[1];
+//
+//				CompilationUnitCache.getInstance().clearCache();
+//				IWorkbench wb = PlatformUI.getWorkbench();
+//				IProgressService ps = wb.getProgressService();
+//				final IJavaProject importedProject = cloneGroupList.getJavaProject();
+//				if(ASTReader.getSystemObject() != null && importedProject.equals(ASTReader.getExaminedProject())) {
+//					new ASTReader(importedProject, ASTReader.getSystemObject(), null);
+//				}
+//				else {
+//					ps.busyCursorWhile(new IRunnableWithProgress() {
+//						public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+//							try {
+//								new ASTReader(importedProject, monitor);
+//							} catch (CompilationErrorDetectedException e) {
+//								Display.getDefault().asyncExec(new Runnable() {
+//									public void run() {
+//										MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
+//												"Compilation errors were detected in the project. Fix the errors before using JDeodorant.");
+//									}
+//								});
+//							}
+//						}
+//					});
+//				}
+//				if(ASTReader.getSystemObject() != null) {
+//					ps.busyCursorWhile(new IRunnableWithProgress() {
+//						public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+//							mapper = new CloneInstanceMapper(instance1, instance2, importedProject, monitor);
+//						}
+//					});
+//					if(mapper != null && !mapper.getSubTreeMappers().isEmpty()) {
+//						try {
+//							for(PDGRegionSubTreeMapper subTreeMapper : mapper.getSubTreeMappers()) {
+//								JavaUI.openInEditor(((CompilationUnit)subTreeMapper.getPDG1().getMethod().getMethodDeclaration().getRoot()).getJavaElement());
+//								JavaUI.openInEditor(((CompilationUnit)subTreeMapper.getPDG2().getMethod().getMethodDeclaration().getRoot()).getJavaElement());
+//							}
+//						} catch (PartInitException e) {
+//							e.printStackTrace();
+//						} catch (JavaModelException e) {
+//							e.printStackTrace();
+//						}
+//						IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+//						boolean allowUsageReporting = store.getBoolean(PreferenceConstants.P_ENABLE_USAGE_REPORTING);
+//						if(allowUsageReporting) {
+//							try {
+//								boolean allowSourceCodeReporting = store.getBoolean(PreferenceConstants.P_ENABLE_SOURCE_CODE_REPORTING);
+//								String content = URLEncoder.encode("project_name", "UTF-8") + "=" + URLEncoder.encode(selectedProject.getElementName(), "UTF-8");
+//								content += "&" + URLEncoder.encode("source_class_name_1", "UTF-8") + "=" + URLEncoder.encode(instance1.getContainingClassFullyQualifiedName(), "UTF-8");
+//								content += "&" + URLEncoder.encode("source_class_name_2", "UTF-8") + "=" + URLEncoder.encode(instance2.getContainingClassFullyQualifiedName(), "UTF-8");
+//								content += "&" + URLEncoder.encode("source_method_name_1", "UTF-8") + "=" + URLEncoder.encode(instance1.getMethodSignature(), "UTF-8");
+//								content += "&" + URLEncoder.encode("source_method_name_2", "UTF-8") + "=" + URLEncoder.encode(instance2.getMethodSignature(), "UTF-8");
+//								if(allowSourceCodeReporting) {
+//									content += "&" + URLEncoder.encode("clone_fragment_1", "UTF-8") + "=" + URLEncoder.encode(instance1.getOriginalCodeFragment(), "UTF-8");
+//									content += "&" + URLEncoder.encode("clone_fragment_2", "UTF-8") + "=" + URLEncoder.encode(instance2.getOriginalCodeFragment(), "UTF-8");
+//								}
+//								content += "&" + URLEncoder.encode("application_type", "UTF-8") + "=" + URLEncoder.encode("import", "UTF-8");
+//								content += "&" + URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(System.getProperty("user.name"), "UTF-8");
+//								content += "&" + URLEncoder.encode("tb", "UTF-8") + "=" + URLEncoder.encode("4", "UTF-8");
+//								URL url = new URL(Activator.RANK_URL);
+//								URLConnection urlConn = url.openConnection();
+//								urlConn.setDoInput(true);
+//								urlConn.setDoOutput(true);
+//								urlConn.setUseCaches(false);
+//								urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+//								DataOutputStream printout = new DataOutputStream(urlConn.getOutputStream());
+//								printout.writeBytes(content);
+//								printout.flush();
+//								printout.close();
+//								DataInputStream input = new DataInputStream(urlConn.getInputStream());
+//								input.close();
+//							} catch (IOException ioe) {
+//								ioe.printStackTrace();
+//							}
+//						}
+//						Refactoring refactoring = new ExtractCloneRefactoring(mapper.getSubTreeMappers());
+//						MyRefactoringWizard wizard = new MyRefactoringWizard(refactoring, null);
+//						RefactoringWizardOpenOperation op = new RefactoringWizardOpenOperation(wizard);
+//						try {
+//							String titleForFailedChecks = ""; //$NON-NLS-1$
+//							op.run(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), titleForFailedChecks);
+//						} catch(InterruptedException e) {
+//							e.printStackTrace();
+//						}
+//					}
+//					else {
+//						MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
+//								"Unfortunately, no refactoring opportunities were found.");
+//					}
+//					CompilationUnitCache.getInstance().releaseLock();
+//				}
+//			}
+//			else {
+//				wrongSelectionMessage();
+//			}
+//
+//		} catch (InvocationTargetException e) {
+//			e.printStackTrace();
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		} catch (CompilationErrorDetectedException e) {
+//			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
+//					"Compilation errors were detected in the project. Fix the errors before using JDeodorant.");
+//		}
+//	}
 
 	private CloneInstance[] getSelectedCloneInstances() {
 		CloneInstance[] toReturn = new CloneInstance[] {};

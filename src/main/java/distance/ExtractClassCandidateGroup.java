@@ -89,4 +89,6 @@ public class ExtractClassCandidateGroup implements Comparable<ExtractClassCandid
 			return this.source.compareTo(other.source);
 		}
 	}
+
+
 }

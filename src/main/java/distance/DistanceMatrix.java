@@ -43,9 +43,11 @@ public class DistanceMatrix {
         classList = new ArrayList<MyClass>();
         entityMap = new LinkedHashMap<String,Set<String>>();
         classMap = new LinkedHashMap<String,Set<String>>();
-        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		this.maximumNumberOfSourceClassMembersAccessedByMoveMethodCandidate = store.getInt(PreferenceConstants.P_MAXIMUM_NUMBER_OF_SOURCE_CLASS_MEMBERS_ACCESSED_BY_MOVE_METHOD_CANDIDATE);
-		this.maximumNumberOfSourceClassMembersAccessedByExtractClassCandidate = store.getInt(PreferenceConstants.P_MAXIMUM_NUMBER_OF_SOURCE_CLASS_MEMBERS_ACCESSED_BY_EXTRACT_CLASS_CANDIDATE);
+//        IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+//		this.maximumNumberOfSourceClassMembersAccessedByMoveMethodCandidate = store.getInt(PreferenceConstants.P_MAXIMUM_NUMBER_OF_SOURCE_CLASS_MEMBERS_ACCESSED_BY_MOVE_METHOD_CANDIDATE);
+		this.maximumNumberOfSourceClassMembersAccessedByMoveMethodCandidate = 9999;
+//		this.maximumNumberOfSourceClassMembersAccessedByExtractClassCandidate = store.getInt(PreferenceConstants.P_MAXIMUM_NUMBER_OF_SOURCE_CLASS_MEMBERS_ACCESSED_BY_EXTRACT_CLASS_CANDIDATE);
+		this.maximumNumberOfSourceClassMembersAccessedByExtractClassCandidate = 9999;
 		generateDistances();
     }
 
@@ -108,9 +110,8 @@ public class DistanceMatrix {
 	    						boolean parameterIsPassedAsArgument = false;
 	    						List<Expression> invocationArguments = invocation.arguments();
 	    						for(Expression expression : invocationArguments) {
-	    							if(expression instanceof SimpleName) {
-	    								SimpleName argumentName = (SimpleName)expression;
-	    								if(parameter.getSingleVariableDeclaration().resolveBinding().isEqualTo(argumentName.resolveBinding()))
+	    							if(expression instanceof SimpleName argumentName) {
+                                        if(parameter.getSingleVariableDeclaration().resolveBinding().isEqualTo(argumentName.resolveBinding()))
 	    									parameterIsPassedAsArgument = true;
 	    							}
 	    						}
@@ -140,9 +141,8 @@ public class DistanceMatrix {
 	    									for(String s : intersectionWithSourceClass) {
 	    										int entityPosition = entityIndexMap.get(s);
 	    										Entity e = entityList.get(entityPosition);
-	    										if(e instanceof MyMethod) {
-	    											MyMethod myInvokedMethod = (MyMethod)e;
-	    											if(values.contains(myInvokedMethod.getMethodObject().getMethodDeclaration())) {
+	    										if(e instanceof MyMethod myInvokedMethod) {
+                                                    if(values.contains(myInvokedMethod.getMethodObject().getMethodDeclaration())) {
 	    												entitiesToRemoveFromIntersectionWithSourceClass.add(s);
 	    											}
 	    										}
@@ -243,9 +243,8 @@ public class DistanceMatrix {
 										for(String s : intersectionWithSourceClass) {
 											int entityPosition = entityIndexMap.get(s);
 											Entity e = entityList.get(entityPosition);
-											if(e instanceof MyMethod) {
-												MyMethod invokedMethod = (MyMethod)e;
-												if(values.contains(invokedMethod.getMethodObject().getMethodDeclaration())) {
+											if(e instanceof MyMethod invokedMethod) {
+                                                if(values.contains(invokedMethod.getMethodObject().getMethodDeclaration())) {
 													entitiesToRemoveFromIntersectionWithSourceClass.add(s);
 												}
 											}
@@ -282,18 +281,7 @@ public class DistanceMatrix {
 		//ArrayList<String> contains the accessed entities per target class (key)
 		Map<String, ArrayList<String>> accessMap = new LinkedHashMap<String, ArrayList<String>>();
 		for(String e : entitySetI) {
-			String[] tokens = e.split("::");
-			String classOrigin = tokens[0];
-			String entityName = tokens[1];
-			if(accessMap.containsKey(classOrigin)) {
-				ArrayList<String> list = accessMap.get(classOrigin);
-				list.add(entityName);
-			}
-			else {
-				ArrayList<String> list = new ArrayList<String>();
-				list.add(entityName);
-				accessMap.put(classOrigin, list);
-			}
+			mineToken(accessMap, e);
 		}
 		for(String key1 : accessMap.keySet()) {
 			ClassObject classObject = ASTReader.getSystemObject().getClassObject(key1);
@@ -309,7 +297,22 @@ public class DistanceMatrix {
 		return accessMap;
 	}
 
-    public List<ExtractClassCandidateRefactoring> getExtractClassCandidateRefactorings(Set<String> classNamesToBeExamined, IProgressMonitor monitor) {
+	static void mineToken(Map<String, ArrayList<String>> accessMap, String e) {
+		String[] tokens = e.split("::");
+		String classOrigin = tokens[0];
+		String entityName = tokens[1];
+		if(accessMap.containsKey(classOrigin)) {
+			ArrayList<String> list = accessMap.get(classOrigin);
+			list.add(entityName);
+		}
+		else {
+			ArrayList<String> list = new ArrayList<String>();
+			list.add(entityName);
+			accessMap.put(classOrigin, list);
+		}
+	}
+
+	public List<ExtractClassCandidateRefactoring> getExtractClassCandidateRefactorings(Set<String> classNamesToBeExamined, IProgressMonitor monitor) {
     	List<ExtractClassCandidateRefactoring> candidateList = new ArrayList<ExtractClassCandidateRefactoring>();
     	Iterator<MyClass> classIt = system.getClassIterator();
     	ArrayList<MyClass> oldClasses = new ArrayList<MyClass>();
@@ -332,7 +335,8 @@ public class DistanceMatrix {
 				ArrayList<Entity> entities = new ArrayList<Entity>();
 				entities.addAll(sourceClass.getAttributeList());
 				entities.addAll(sourceClass.getMethodList());
-				HashSet<Cluster> clusters = clustering.clustering(entities);
+                assert clustering != null;
+                HashSet<Cluster> clusters = clustering.clustering(entities);
 				for (Cluster cluster : clusters) {
     				ExtractClassCandidateRefactoring candidate = new ExtractClassCandidateRefactoring(system, sourceClass, cluster.getEntities());
     				if (candidate.isApplicable()) {

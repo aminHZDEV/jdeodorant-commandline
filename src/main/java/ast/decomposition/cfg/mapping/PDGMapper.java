@@ -127,46 +127,12 @@ public class PDGMapper {
 			parent = root.getNode(cdtNode.getParent().getNode());
 		}
 		ControlDependenceTreeNode newNode = new ControlDependenceTreeNode(parent, cdtNode.getNode());
-		if(cdtNode.isElseNode()) {
-			newNode.setElseNode(true);
-			ControlDependenceTreeNode newIfParent = root.getNode(cdtNode.getIfParent().getNode());
-			if(newIfParent != null) {
-				newIfParent.setElseIfChild(newNode);
-				newNode.setIfParent(newIfParent);
-			}
-		}
-		else if(cdtNode.getIfParent() != null) {
-			ControlDependenceTreeNode newIfParent = root.getNode(cdtNode.getIfParent().getNode());
-			if(newIfParent != null) {
-				newNode.setIfParentAndElseIfChild(newIfParent);
-			}
-		}
+		CloneInstanceMapper.checkElseNode(cdtNode, root, newNode);
 	}
 
 	private void insertCDTNodeInTreeAfterSibling(ControlDependenceTreeNode cdtNode, ControlDependenceTreeNode previousSibling, ControlDependenceTreeNode root) {
-		ControlDependenceTreeNode parent;
-		if(cdtNode.getParent().isElseNode()) {
-			parent = root.getElseNode(cdtNode.getParent().getIfParent().getNode());
-		}
-		else {
-			parent = root.getNode(cdtNode.getParent().getNode());
-		}
-		ControlDependenceTreeNode newNode = new ControlDependenceTreeNode(parent, previousSibling, cdtNode.getNode());
-		if(cdtNode.isElseNode()) {
-			newNode.setElseNode(true);
-			ControlDependenceTreeNode newIfParent = root.getNode(cdtNode.getIfParent().getNode());
-			if(newIfParent != null) {
-				newIfParent.setElseIfChild(newNode);
-				newNode.setIfParent(newIfParent);
-			}
-		}
-		else if(cdtNode.getIfParent() != null) {
-			ControlDependenceTreeNode newIfParent = root.getNode(cdtNode.getIfParent().getNode());
-			if(newIfParent != null) {
-				newNode.setIfParentAndElseIfChild(newIfParent);
-			}
-		}
-	}
+        CloneInstanceMapper.extractInsertCDTNodeInTreeAfterSibling(cdtNode, previousSibling, root);
+    }
 
 	public List<CompleteSubTreeMatch> getBottomUpSubTreeMatches() {
 		return bottomUpSubTreeMatches;

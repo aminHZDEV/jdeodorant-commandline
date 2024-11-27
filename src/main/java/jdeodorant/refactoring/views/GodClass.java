@@ -764,17 +764,12 @@ public class GodClass extends ViewPart {
 					classObjectsToBeExamined.addAll(systemObject.getClassObjects());
 				}
 				final Set<String> classNamesToBeExamined = new LinkedHashSet<String>();
-				for(ClassObject classObject : classObjectsToBeExamined) {
-					if(!classObject.isEnum() && !classObject.isInterface() && !classObject.isGeneratedByParserGenenator())
-						classNamesToBeExamined.add(classObject.getName());
-				}
-				MySystem system = new MySystem(systemObject, true);
-				final DistanceMatrix distanceMatrix = new DistanceMatrix(system);
-				final List<ExtractClassCandidateRefactoring> extractClassCandidateList = new ArrayList<ExtractClassCandidateRefactoring>();
+//                JdApplication.checkClassObjectsToBeExamined(systemObject, classObjectsToBeExamined, classNamesToBeExamined);
+                final List<ExtractClassCandidateRefactoring> extractClassCandidateList = new ArrayList<ExtractClassCandidateRefactoring>();
 
 				ps.busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						extractClassCandidateList.addAll(distanceMatrix.getExtractClassCandidateRefactorings(classNamesToBeExamined, monitor));
+//						extractClassCandidateList.addAll(distanceMatrix.getExtractClassCandidateRefactorings(classNamesToBeExamined, monitor));
 					}
 				});
 				HashMap<String, ExtractClassCandidateGroup> groupedBySourceClassMap = new HashMap<String, ExtractClassCandidateGroup>();
@@ -807,7 +802,7 @@ public class GodClass extends ViewPart {
 			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
 					"Compilation errors were detected in the project. Fix the errors before using JDeodorant.");
 		}
-		return table;		
+		return table;
 	}
 
 	private ExtractClassCandidateGroup getParentCandidateGroup(String sourceClass) {

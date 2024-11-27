@@ -52,7 +52,7 @@ public class CloneRefactoringAction implements IObjectActionDelegate {
 	private IWorkbenchPart part;
 	private ISelection selection;
 	private PDGMapper mapper;
-	
+
 	public void run(IAction action) {
 		try {
 			CompilationUnitCache.getInstance().clearCache();
@@ -162,9 +162,9 @@ public class CloneRefactoringAction implements IObjectActionDelegate {
 								Refactoring refactoring = new ExtractCloneRefactoring(mapper.getSubTreeMappers());
 								MyRefactoringWizard wizard = new MyRefactoringWizard(refactoring, null);
 								RefactoringWizardOpenOperation op = new RefactoringWizardOpenOperation(wizard);
-								try { 
-									String titleForFailedChecks = ""; //$NON-NLS-1$ 
-									op.run(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), titleForFailedChecks); 
+								try {
+									String titleForFailedChecks = ""; //$NON-NLS-1$
+									op.run(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), titleForFailedChecks);
 								} catch(InterruptedException e) {
 									e.printStackTrace();
 								}

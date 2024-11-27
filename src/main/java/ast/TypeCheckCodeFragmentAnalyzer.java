@@ -1,5 +1,6 @@
 package ast;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -11,7 +12,6 @@ import javax.swing.tree.DefaultMutableTreeNode;
 import ast.util.ExpressionExtractor;
 import ast.util.MethodDeclarationUtility;
 import ast.util.StatementExtractor;
-import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
 import org.eclipse.jdt.core.dom.Expression;
@@ -55,7 +55,7 @@ public class TypeCheckCodeFragmentAnalyzer {
 	private Map<Expression, IfStatementExpressionAnalyzer> complexExpressionMap;
 	
 	public TypeCheckCodeFragmentAnalyzer(TypeCheckElimination typeCheckElimination,
-			TypeDeclaration typeDeclaration, MethodDeclaration typeCheckMethod, IFile iFile) {
+                                         TypeDeclaration typeDeclaration, MethodDeclaration typeCheckMethod, File iFile) {
 		this.typeCheckElimination = typeCheckElimination;
 		this.typeDeclaration = typeDeclaration;
 		this.typeCheckMethod = typeCheckMethod;

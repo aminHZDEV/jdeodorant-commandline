@@ -26,19 +26,8 @@ public abstract class CandidateRefactoring {
 	public String getAnnotationText() {
 		Map<String, ArrayList<String>> accessMap = new LinkedHashMap<String, ArrayList<String>>();
 		for(String entity : getEntitySet()) {
-			String[] tokens = entity.split("::");
-			String classOrigin = tokens[0];
-			String entityName = tokens[1];
-			if(accessMap.containsKey(classOrigin)) {
-				ArrayList<String> list = accessMap.get(classOrigin);
-				list.add(entityName);
-			}
-			else {
-				ArrayList<String> list = new ArrayList<String>();
-				list.add(entityName);
-				accessMap.put(classOrigin, list);
-			}
-		}
+            DistanceMatrix.mineToken(accessMap, entity);
+        }
 		
 		StringBuilder sb = new StringBuilder();
 		Set<String> keySet = accessMap.keySet();

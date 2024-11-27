@@ -237,12 +237,12 @@ public class CodeSmellPackageExplorer extends ViewPart {
 		// Create an information provider for our table viewer
 		IInformationProvider informationProvider = new PackageMapDiagramInformationProvider(diagram);
 		List<ICustomInformationControlCreator> informationControlCreators = new ArrayList<ICustomInformationControlCreator>();
-		if(CODE_SMELL_TYPE != null) {
-			if(CODE_SMELL_TYPE.equals(CodeSmellType.FEATURE_ENVY))
-				informationControlCreators.add(new FeatureEnviedMethodInformationControlCreator());
-			else if(CODE_SMELL_TYPE.equals(CodeSmellType.GOD_CLASS))
-				informationControlCreators.add(new GodClassInformationControlCreator());
-		}
+//		if(CODE_SMELL_TYPE != null) {
+//			if(CODE_SMELL_TYPE.equals(CodeSmellType.FEATURE_ENVY))
+//				informationControlCreators.add(new FeatureEnviedMethodInformationControlCreator());
+//			else if(CODE_SMELL_TYPE.equals(CodeSmellType.GOD_CLASS))
+//				informationControlCreators.add(new GodClassInformationControlCreator());
+//		}
 		Control control =figureCanvas;
 		final InformationControlManager informationControlManager = new InformationControlManager(informationProvider, informationControlCreators, false);
 		informationControlManager.install(control);

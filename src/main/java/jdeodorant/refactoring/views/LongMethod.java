@@ -437,7 +437,7 @@ public class LongMethod extends ViewPart {
 			}
 		});
 		
-		makeActions();
+//		makeActions();
 		hookDoubleClickAction();
 		contributeToActionBars();
 		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(selectionListener);
@@ -474,14 +474,14 @@ public class LongMethod extends ViewPart {
 			public void run() {
 				activeProject = selectedProject;
 				CompilationUnitCache.getInstance().clearCache();
-				sliceGroupTable = getTable();
+//				sliceGroupTable = getTable();
 				treeViewer.setContentProvider(new ViewContentProvider());
 				applyRefactoringAction.setEnabled(true);
 				saveResultsAction.setEnabled(true);
 				//evolutionAnalysisAction.setEnabled(true);
 			}
 		};
-		identifyBadSmellsAction.setToolTipText("Identify Bad Smells");
+//		identifyBadSmellsAction.setToolTipText("Identify Bad Smells");
 		identifyBadSmellsAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
 			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
 		identifyBadSmellsAction.setEnabled(false);
@@ -684,110 +684,110 @@ public class LongMethod extends ViewPart {
 		getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(selectionListener);
 	}
 
-	private ASTSliceGroup[] getTable() {
-		ASTSliceGroup[] table = null;
-		try {
-			IWorkbench wb = PlatformUI.getWorkbench();
-			IProgressService ps = wb.getProgressService();
-			if(ASTReader.getSystemObject() != null && activeProject.equals(ASTReader.getExaminedProject())) {
-				new ASTReader(activeProject, ASTReader.getSystemObject(), null);
-			}
-			else {
-				ps.busyCursorWhile(new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						try {
-							new ASTReader(activeProject, monitor);
-						} catch (CompilationErrorDetectedException e) {
-							Display.getDefault().asyncExec(new Runnable() {
-								public void run() {
-									MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
-											"Compilation errors were detected in the project. Fix the errors before using JDeodorant.");
-								}
-							});
-						}
-					}
-				});
-			}
-			final SystemObject systemObject = ASTReader.getSystemObject();
-			if(systemObject != null) {
-				final Set<ClassObject> classObjectsToBeExamined = new LinkedHashSet<ClassObject>();
-				final Set<AbstractMethodDeclaration> methodObjectsToBeExamined = new LinkedHashSet<AbstractMethodDeclaration>();
-				if(selectedPackageFragmentRoot != null) {
-					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedPackageFragmentRoot));
-				}
-				else if(selectedPackageFragment != null) {
-					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedPackageFragment));
-				}
-				else if(selectedCompilationUnit != null) {
-					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedCompilationUnit));
-				}
-				else if(selectedType != null) {
-					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedType));
-				}
-				else if(selectedMethod != null) {
-					AbstractMethodDeclaration methodObject = systemObject.getMethodObject(selectedMethod);
-					if(methodObject != null) {
-						ClassObject declaringClass = systemObject.getClassObject(methodObject.getClassName());
-						if(declaringClass != null && !declaringClass.isEnum() && !declaringClass.isInterface() && methodObject.getMethodBody() != null)
-							methodObjectsToBeExamined.add(methodObject);
-					}
-				}
-				else {
-					classObjectsToBeExamined.addAll(systemObject.getClassObjects());
-				}
-				final List<ASTSliceGroup> extractedSliceGroups = new ArrayList<ASTSliceGroup>();
-
-				ps.busyCursorWhile(new IRunnableWithProgress() {
-					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-						if(!classObjectsToBeExamined.isEmpty()) {
-							int workSize = 0;
-							for(ClassObject classObject : classObjectsToBeExamined) {
-								workSize += classObject.getNumberOfMethods();
-							}
-							monitor.beginTask("Identification of Extract Method refactoring opportunities", workSize);
-							for(ClassObject classObject : classObjectsToBeExamined) {
-								if(!classObject.isEnum() && !classObject.isInterface() && !classObject.isGeneratedByParserGenenator()) {
-									ListIterator<MethodObject> methodIterator = classObject.getMethodIterator();
-									while(methodIterator.hasNext()) {
-										if(monitor.isCanceled())
-											throw new OperationCanceledException();
-										MethodObject methodObject = methodIterator.next();
-										processMethod(extractedSliceGroups,classObject, methodObject);
-										monitor.worked(1);
-									}
-								}
-							}
-						}
-						else if(!methodObjectsToBeExamined.isEmpty()) {
-							int workSize = methodObjectsToBeExamined.size();
-							monitor.beginTask("Identification of Extract Method refactoring opportunities", workSize);
-							for(AbstractMethodDeclaration methodObject : methodObjectsToBeExamined) {
-								if(monitor.isCanceled())
-									throw new OperationCanceledException();
-								ClassObject classObject = systemObject.getClassObject(methodObject.getClassName());
-								processMethod(extractedSliceGroups, classObject, methodObject);
-								monitor.worked(1);
-							}
-						}
-						monitor.done();
-					}
-				});
-
-				table = new ASTSliceGroup[extractedSliceGroups.size()];
-				for(int i=0; i<extractedSliceGroups.size(); i++) {
-					table[i] = extractedSliceGroups.get(i);
-				}
-			}
-		} catch (InvocationTargetException e) {
-			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		} catch (CompilationErrorDetectedException e) {
-			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
-					"Compilation errors were detected in the project. Fix the errors before using JDeodorant.");
-		}
-		return table;
-	}
+//	private ASTSliceGroup[] getTable() {
+//		ASTSliceGroup[] table = null;
+//		try {
+//			IWorkbench wb = PlatformUI.getWorkbench();
+//			IProgressService ps = wb.getProgressService();
+//			if(ASTReader.getSystemObject() != null && activeProject.equals(ASTReader.getExaminedProject())) {
+//				new ASTReader(activeProject, ASTReader.getSystemObject(), null);
+//			}
+//			else {
+//				ps.busyCursorWhile(new IRunnableWithProgress() {
+//					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+//						try {
+//							new ASTReader(activeProject, monitor);
+//						} catch (CompilationErrorDetectedException e) {
+//							Display.getDefault().asyncExec(new Runnable() {
+//								public void run() {
+//									MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
+//											"Compilation errors were detected in the project. Fix the errors before using JDeodorant.");
+//								}
+//							});
+//						}
+//					}
+//				});
+//			}
+//			final SystemObject systemObject = ASTReader.getSystemObject();
+//			if(systemObject != null) {
+//				final Set<ClassObject> classObjectsToBeExamined = new LinkedHashSet<ClassObject>();
+//				final Set<AbstractMethodDeclaration> methodObjectsToBeExamined = new LinkedHashSet<AbstractMethodDeclaration>();
+//				if(selectedPackageFragmentRoot != null) {
+//					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedPackageFragmentRoot));
+//				}
+//				else if(selectedPackageFragment != null) {
+//					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedPackageFragment));
+//				}
+//				else if(selectedCompilationUnit != null) {
+//					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedCompilationUnit));
+//				}
+//				else if(selectedType != null) {
+//					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedType));
+//				}
+//				else if(selectedMethod != null) {
+//					AbstractMethodDeclaration methodObject = systemObject.getMethodObject(selectedMethod);
+//					if(methodObject != null) {
+//						ClassObject declaringClass = systemObject.getClassObject(methodObject.getClassName());
+//						if(declaringClass != null && !declaringClass.isEnum() && !declaringClass.isInterface() && methodObject.getMethodBody() != null)
+//							methodObjectsToBeExamined.add(methodObject);
+//					}
+//				}
+//				else {
+//					classObjectsToBeExamined.addAll(systemObject.getClassObjects());
+//				}
+//				final List<ASTSliceGroup> extractedSliceGroups = new ArrayList<ASTSliceGroup>();
+//
+//				ps.busyCursorWhile(new IRunnableWithProgress() {
+//					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+//						if(!classObjectsToBeExamined.isEmpty()) {
+//							int workSize = 0;
+//							for(ClassObject classObject : classObjectsToBeExamined) {
+//								workSize += classObject.getNumberOfMethods();
+//							}
+//							monitor.beginTask("Identification of Extract Method refactoring opportunities", workSize);
+//							for(ClassObject classObject : classObjectsToBeExamined) {
+//								if(!classObject.isEnum() && !classObject.isInterface() && !classObject.isGeneratedByParserGenenator()) {
+//									ListIterator<MethodObject> methodIterator = classObject.getMethodIterator();
+//									while(methodIterator.hasNext()) {
+//										if(monitor.isCanceled())
+//											throw new OperationCanceledException();
+//										MethodObject methodObject = methodIterator.next();
+//										processMethod(extractedSliceGroups,classObject, methodObject);
+//										monitor.worked(1);
+//									}
+//								}
+//							}
+//						}
+//						else if(!methodObjectsToBeExamined.isEmpty()) {
+//							int workSize = methodObjectsToBeExamined.size();
+//							monitor.beginTask("Identification of Extract Method refactoring opportunities", workSize);
+//							for(AbstractMethodDeclaration methodObject : methodObjectsToBeExamined) {
+//								if(monitor.isCanceled())
+//									throw new OperationCanceledException();
+//								ClassObject classObject = systemObject.getClassObject(methodObject.getClassName());
+//								processMethod(extractedSliceGroups, classObject, methodObject);
+//								monitor.worked(1);
+//							}
+//						}
+//						monitor.done();
+//					}
+//				});
+//
+//				table = new ASTSliceGroup[extractedSliceGroups.size()];
+//				for(int i=0; i<extractedSliceGroups.size(); i++) {
+//					table[i] = extractedSliceGroups.get(i);
+//				}
+//			}
+//		} catch (InvocationTargetException e) {
+//			e.printStackTrace();
+//		} catch (InterruptedException e) {
+//			e.printStackTrace();
+//		} catch (CompilationErrorDetectedException e) {
+//			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
+//					"Compilation errors were detected in the project. Fix the errors before using JDeodorant.");
+//		}
+//		return table;
+//	}
 
 	private void processMethod(final List<ASTSliceGroup> extractedSliceGroups, ClassObject classObject, AbstractMethodDeclaration methodObject) {
 		if(methodObject.getMethodBody() != null) {
