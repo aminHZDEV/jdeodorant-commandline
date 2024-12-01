@@ -1,7 +1,5 @@
 package ast.decomposition;
 
-import ast.decomposition.cfg.AbstractVariable;
-import ast.decomposition.cfg.PlainVariable;
 import ast.Access;
 import ast.AnonymousClassDeclarationObject;
 import ast.ArrayCreationObject;
@@ -20,6 +18,8 @@ import ast.ParameterObject;
 import ast.SuperFieldInstructionObject;
 import ast.SuperMethodInvocationObject;
 import ast.TypeObject;
+import ast.decomposition.cfg.AbstractVariable;
+import ast.decomposition.cfg.PlainVariable;
 import ast.util.MethodDeclarationUtility;
 
 import java.util.ArrayList;

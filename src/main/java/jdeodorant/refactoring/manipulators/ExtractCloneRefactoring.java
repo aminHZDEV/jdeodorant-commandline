@@ -28,13 +28,11 @@ import ast.decomposition.cfg.mapping.DivideAndConquerMatcher;
 import ast.decomposition.cfg.mapping.NodeMapping;
 import ast.decomposition.cfg.mapping.PDGElseGap;
 import ast.decomposition.cfg.mapping.PDGElseMapping;
-import ast.decomposition.cfg.mapping.PDGNodeBlockGap;
 import ast.decomposition.cfg.mapping.PDGNodeGap;
 import ast.decomposition.cfg.mapping.PDGNodeMapping;
 import ast.decomposition.cfg.mapping.PreconditionExaminer;
 import ast.decomposition.cfg.mapping.StatementCollector;
 import ast.decomposition.cfg.mapping.VariableBindingKeyPair;
-import ast.decomposition.cfg.mapping.VariableBindingPair;
 import ast.decomposition.cfg.mapping.precondition.DualExpressionPreconditionViolation;
 import ast.decomposition.cfg.mapping.precondition.ExpressionPreconditionViolation;
 import ast.decomposition.cfg.mapping.precondition.NotAllPossibleExecutionFlowsEndInReturnPreconditionViolation;
@@ -113,6 +111,7 @@ import org.eclipse.jdt.core.dom.LabeledStatement;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.Name;
 import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.ParameterizedType;
 import org.eclipse.jdt.core.dom.ParenthesizedExpression;
@@ -162,9 +161,6 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 	private static final String GETTER_PREFIX = "get";
 	private static final String SETTER_PREFIX = "set";
 	private static final String ACCESSOR_SUFFIX = "2";
-	private static final String CONSUMER_QUALIFIED_TYPE = "java.util.function.Consumer";
-	private static final String FUNCTION_QUALIFIED_TYPE = "java.util.function.Function";
-	private static final String SUPPLIER_QUALIFIED_TYPE = "java.util.function.Supplier";
 	private List<? extends DivideAndConquerMatcher> mappers;
 	private DivideAndConquerMatcher mapper;
 	private List<CompilationUnit> sourceCompilationUnits;
@@ -189,7 +185,6 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 	private String extractedMethodName;
 	private List<Set<MethodDeclaration>> constructorsToBeCopiedInSubclasses;
 	private CloneInformation cloneInfo;
-	private ExtractCloneRefactoringGapHandler gapHandler;
 	private RefactoringStatus status = new RefactoringStatus();
 	
 	private class CloneInformation {
@@ -223,12 +218,6 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 		else {
 			this.extractedMethodName = this.mapper.getMethodName1();
 		}
-		//gapHandler should be initialized in the constructor for method checkFinalConditions()
-		AbstractMethodDeclaration methodObject1 = this.mapper.getPDG1().getMethod();
-		AbstractMethodDeclaration methodObject2 = this.mapper.getPDG2().getMethod();
-		MethodDeclaration methodDeclaration1 = methodObject1.getMethodDeclaration();
-		MethodDeclaration methodDeclaration2 = methodObject2.getMethodDeclaration();
-		this.gapHandler = new ExtractCloneRefactoringGapHandler(mapper, methodDeclaration1, methodDeclaration2);
 	}
 
 	public List<? extends DivideAndConquerMatcher> getMappers() {
@@ -313,7 +302,6 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 		for(int i=0; i<2; i++) {
 			constructorsToBeCopiedInSubclasses.add(new LinkedHashSet<MethodDeclaration>());
 		}
-		this.gapHandler = new ExtractCloneRefactoringGapHandler(mapper, methodDeclaration1, methodDeclaration2);
 	}
 
 	public Set<IJavaElement> getJavaElementsToOpenInEditor() {
@@ -1067,11 +1055,11 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 										}
 										parameterIndex++;
 									}
-									ListRewrite thrownExceptionsRewrite = sourceRewriter.getListRewrite(newMethodDeclaration, MethodDeclaration.THROWN_EXCEPTION_TYPES_PROPERTY);
-									List<Type> thrownExceptions = methodDeclaration1.thrownExceptionTypes();
-									for(Type thrownException : thrownExceptions) {
+									ListRewrite thrownExceptionsRewrite = sourceRewriter.getListRewrite(newMethodDeclaration, MethodDeclaration.THROWN_EXCEPTIONS_PROPERTY);
+									List<Name> thrownExceptions = methodDeclaration1.thrownExceptions();
+									for(Name thrownException : thrownExceptions) {
 										thrownExceptionsRewrite.insertLast(thrownException, null);
-										typeBindings.add(thrownException.resolveBinding());
+										typeBindings.add(thrownException.resolveTypeBinding());
 									}
 									bodyDeclarationsRewrite.insertLast(newMethodDeclaration, null);
 								}
@@ -1131,7 +1119,7 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 			ArrayList<VariableDeclaration> variableDeclarations = commonPassedParameters.get(parameterName);
 			VariableDeclaration variableDeclaration1 = variableDeclarations.get(0);
 			VariableDeclaration variableDeclaration2 = variableDeclarations.get(1);
-			if(parameterIsUsedByNodesWithoutDifferences(variableDeclaration1, variableDeclaration2) && !gapHandler.parameterIsDeclaredInBlockGap(variableDeclaration1, variableDeclaration2)) {
+			if(parameterIsUsedByNodesWithoutDifferences(variableDeclaration1, variableDeclaration2)) {
 				if(!variableDeclaration1.resolveBinding().isField() || !variableDeclaration2.resolveBinding().isField()) {
 					ITypeBinding typeBinding1 = extractTypeBinding(variableDeclaration1);
 					ITypeBinding typeBinding2 = extractTypeBinding(variableDeclaration2);
@@ -1158,7 +1146,7 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 			PDGNode pdgNode1 = pdgNodeMapping.getNodeG1();
 			AbstractStatement statement1 = pdgNode1.getStatement();
 			PDGBlockNode blockNode1 = mapper.getPDG1().isNestedWithinBlockNode(pdgNode1);
-			if(blockNode1 != null && blockNode1 instanceof PDGTryNode && ((PDGTryNode)blockNode1).hasCatchClause() && (mapper.getRemovableNodesG1().contains(blockNode1) || gapHandler.statementBelongsToBlockGaps(blockNode1.getStatement()))) {
+			if(blockNode1 != null && blockNode1 instanceof PDGTryNode && ((PDGTryNode)blockNode1).hasCatchClause() && mapper.getRemovableNodesG1().contains(blockNode1)) {
 				//do nothing
 			}
 			else {
@@ -1170,14 +1158,12 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 					}
 				}
 			}
-			if(!gapHandler.statementBelongsToBlockGaps(statement1)) {
-				RefactoringUtility.getSimpleTypeBindings(extractTypeBindings(statement1), requiredImportTypeBindings);
-			}
+			RefactoringUtility.getSimpleTypeBindings(extractTypeBindings(statement1), requiredImportTypeBindings);
 			
 			PDGNode pdgNode2 = pdgNodeMapping.getNodeG2();
 			AbstractStatement statement2 = pdgNode2.getStatement();
 			PDGBlockNode blockNode2 = mapper.getPDG2().isNestedWithinBlockNode(pdgNode2);
-			if(blockNode2 != null && blockNode2 instanceof PDGTryNode && ((PDGTryNode)blockNode2).hasCatchClause() && (mapper.getRemovableNodesG2().contains(blockNode2) || gapHandler.statementBelongsToBlockGaps(blockNode2.getStatement()))) {
+			if(blockNode2 != null && blockNode2 instanceof PDGTryNode && ((PDGTryNode)blockNode2).hasCatchClause() && mapper.getRemovableNodesG2().contains(blockNode2)) {
 				//do nothing
 			}
 			else {
@@ -1189,62 +1175,27 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 					}
 				}
 			}
-			if(!gapHandler.statementBelongsToBlockGaps(statement2)) {
-				RefactoringUtility.getSimpleTypeBindings(extractTypeBindings(statement2), requiredImportTypeBindings);
-			}
-		}
-		for(PDGNode pdgNode1 : mapper.getRemainingNodesG1()) {
-			AbstractStatement statement1 = pdgNode1.getStatement();
-			PDGBlockNode blockNode1 = mapper.getPDG1().isNestedWithinBlockNode(pdgNode1);
-			if(blockNode1 != null && blockNode1 instanceof PDGTryNode && gapHandler.statementBelongsToBlockGaps(blockNode1.getStatement())) {
-				//do nothing
-			}
-			else if(gapHandler.statementBelongsToBlockGaps(statement1)) {
-				ThrownExceptionVisitor thrownExceptionVisitor = new ThrownExceptionVisitor();
-				statement1.getStatement().accept(thrownExceptionVisitor);
-				for(ITypeBinding thrownException : thrownExceptionVisitor.getTypeBindings()) {
-					if(pdgNode1.getThrownExceptionTypes().contains(thrownException.getQualifiedName())) {
-						addTypeBinding(thrownException, thrownExceptionTypeBindings);
-					}
-				}
-			}
-		}
-		for(PDGNode pdgNode2 : mapper.getRemainingNodesG2()) {
-			AbstractStatement statement2 = pdgNode2.getStatement();
-			PDGBlockNode blockNode2 = mapper.getPDG2().isNestedWithinBlockNode(pdgNode2);
-			if(blockNode2 != null && blockNode2 instanceof PDGTryNode && gapHandler.statementBelongsToBlockGaps(blockNode2.getStatement())) {
-				//do nothing
-			}
-			else if(gapHandler.statementBelongsToBlockGaps(statement2)) {
-				ThrownExceptionVisitor thrownExceptionVisitor = new ThrownExceptionVisitor();
-				statement2.getStatement().accept(thrownExceptionVisitor);
-				for(ITypeBinding thrownException : thrownExceptionVisitor.getTypeBindings()) {
-					if(pdgNode2.getThrownExceptionTypes().contains(thrownException.getQualifiedName())) {
-						addTypeBinding(thrownException, thrownExceptionTypeBindings);
-					}
-				}
-			}
+			RefactoringUtility.getSimpleTypeBindings(extractTypeBindings(statement2), requiredImportTypeBindings);
 		}
 		
-		ListRewrite thrownExceptionRewrite = sourceRewriter.getListRewrite(newMethodDeclaration, MethodDeclaration.THROWN_EXCEPTION_TYPES_PROPERTY);
-		List<Type> thrownExceptions1 = sourceMethodDeclarations.get(0).thrownExceptionTypes();
-		List<Type> thrownExceptions2 = sourceMethodDeclarations.get(1).thrownExceptionTypes();
-		for(Type thrownException1 : thrownExceptions1) {
-			for(Type thrownException2 : thrownExceptions2) {
-				if(thrownException1.resolveBinding().isEqualTo(thrownException2.resolveBinding()) && thrownExceptionTypeBindings.contains(thrownException1.resolveBinding())) {
+		ListRewrite thrownExceptionRewrite = sourceRewriter.getListRewrite(newMethodDeclaration, MethodDeclaration.THROWN_EXCEPTIONS_PROPERTY);
+		List<Name> thrownExceptions1 = sourceMethodDeclarations.get(0).thrownExceptions();
+		List<Name> thrownExceptions2 = sourceMethodDeclarations.get(1).thrownExceptions();
+		for(Name thrownException1 : thrownExceptions1) {
+			for(Name thrownException2 : thrownExceptions2) {
+				if(thrownException1.resolveTypeBinding().isEqualTo(thrownException2.resolveTypeBinding()) && thrownExceptionTypeBindings.contains(thrownException1.resolveTypeBinding())) {
 					thrownExceptionRewrite.insertLast(thrownException1, null);
 					Set<ITypeBinding> typeBindings = new LinkedHashSet<ITypeBinding>();
-					typeBindings.add(thrownException1.resolveBinding());
+					typeBindings.add(thrownException1.resolveTypeBinding());
 					RefactoringUtility.getSimpleTypeBindings(typeBindings, requiredImportTypeBindings);
-					thrownExceptionTypeBindings.remove(thrownException1.resolveBinding());
+					thrownExceptionTypeBindings.remove(thrownException1.resolveTypeBinding());
 					break;
 				}
 			}
 		}
 		//add remaining thrown exception types that have not been found in the signatures of the method declarations
 		for(ITypeBinding thrownExceptionTypeBinding : thrownExceptionTypeBindings) {
-			Type thrownExceptionType = RefactoringUtility.generateTypeFromTypeBinding(thrownExceptionTypeBinding, ast, sourceRewriter);
-			thrownExceptionRewrite.insertLast(thrownExceptionType, null);
+			thrownExceptionRewrite.insertLast(ast.newSimpleName(thrownExceptionTypeBinding.getName()), null);
 			Set<ITypeBinding> typeBindings = new LinkedHashSet<ITypeBinding>();
 			typeBindings.add(thrownExceptionTypeBinding);
 			RefactoringUtility.getSimpleTypeBindings(typeBindings, requiredImportTypeBindings);
@@ -1316,55 +1267,50 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 		if(existingArgValue > 0) {
 			i = existingArgValue + 1;
 		}
-		for(BindingSignaturePair pair : parameterizedDifferenceMap.keySet()) {
-			ASTNodeDifference difference = parameterizedDifferenceMap.get(pair);
-			if(difference != null) {
-				AbstractExpression expression1 = difference.getExpression1();
-				AbstractExpression expression2 = difference.getExpression2();
-				boolean isReturnedVariable = isReturnedVariable(difference);
-				ITypeBinding typeBinding1 = expression1 != null ? ASTNodeDifference.getParentExpressionOfMethodNameOrTypeName(expression1.getExpression()).resolveTypeBinding()
-						: ASTNodeDifference.getParentExpressionOfMethodNameOrTypeName(expression2.getExpression()).resolveTypeBinding();
-				ITypeBinding typeBinding2 = expression2 != null ? ASTNodeDifference.getParentExpressionOfMethodNameOrTypeName(expression2.getExpression()).resolveTypeBinding()
-						: ASTNodeDifference.getParentExpressionOfMethodNameOrTypeName(expression1.getExpression()).resolveTypeBinding();
-				if(!isReturnedVariable ||
-						(returnedVariables1.size() == 1 && returnedVariables2.size() == 1 && variableBelongsToParameterizedDifferences(returnedVariables1.get(0), returnedVariables2.get(0)) != null)) {
-					ITypeBinding typeBinding = null;
-					if(difference.containsDifferenceType(DifferenceType.SUBCLASS_TYPE_MISMATCH) || difference.containsDifferenceType(DifferenceType.METHOD_INVOCATION_NAME_MISMATCH) ||
-							difference.containsDifferenceType(DifferenceType.ARGUMENT_NUMBER_MISMATCH) || differenceContainsSubDifferenceWithSubclassTypeMismatch(difference)) {
-						typeBinding = PreconditionExaminer.determineType(typeBinding1, typeBinding2);
-					}
-					else {
-						if(expression1 != null && !typeBinding1.getQualifiedName().equals("null")) {
-							if(typeBinding1.getErasure().getQualifiedName().equals("java.lang.Class") && typeBinding2.getErasure().getQualifiedName().equals("java.lang.Class") &&
-									(!typeBinding1.isEqualTo(typeBinding2) || !typeBinding1.getQualifiedName().equals(typeBinding2.getQualifiedName())) ) {
-								typeBinding = typeBinding1.getErasure();
-							}
-							else {
-								typeBinding = typeBinding1;
-							}
+		for(ASTNodeDifference difference : parameterizedDifferenceMap.values()) {
+			AbstractExpression expression1 = difference.getExpression1();
+			AbstractExpression expression2 = difference.getExpression2();
+			boolean isReturnedVariable = isReturnedVariable(difference);
+			ITypeBinding typeBinding1 = expression1 != null ? ASTNodeDifference.getParentExpressionOfMethodNameOrTypeName(expression1.getExpression()).resolveTypeBinding()
+					: ASTNodeDifference.getParentExpressionOfMethodNameOrTypeName(expression2.getExpression()).resolveTypeBinding();
+			ITypeBinding typeBinding2 = expression2 != null ? ASTNodeDifference.getParentExpressionOfMethodNameOrTypeName(expression2.getExpression()).resolveTypeBinding()
+					: ASTNodeDifference.getParentExpressionOfMethodNameOrTypeName(expression1.getExpression()).resolveTypeBinding();
+			if(!isReturnedVariable ||
+					(returnedVariables1.size() == 1 && returnedVariables2.size() == 1 && variableBelongsToParameterizedDifferences(returnedVariables1.get(0), returnedVariables2.get(0)) != null)) {
+				ITypeBinding typeBinding = null;
+				if(difference.containsDifferenceType(DifferenceType.SUBCLASS_TYPE_MISMATCH) || difference.containsDifferenceType(DifferenceType.METHOD_INVOCATION_NAME_MISMATCH) ||
+						difference.containsDifferenceType(DifferenceType.ARGUMENT_NUMBER_MISMATCH) || differenceContainsSubDifferenceWithSubclassTypeMismatch(difference)) {
+					typeBinding = PreconditionExaminer.determineType(typeBinding1, typeBinding2);
+				}
+				else {
+					if(expression1 != null && !typeBinding1.getQualifiedName().equals("null")) {
+						if(typeBinding1.getErasure().getQualifiedName().equals("java.lang.Class") && typeBinding2.getErasure().getQualifiedName().equals("java.lang.Class") &&
+								(!typeBinding1.isEqualTo(typeBinding2) || !typeBinding1.getQualifiedName().equals(typeBinding2.getQualifiedName())) ) {
+							typeBinding = typeBinding1.getErasure();
 						}
 						else {
-							typeBinding = typeBinding2;
+							typeBinding = typeBinding1;
 						}
 					}
-					Type type = null;
-					if(typeBinding.isPrimitive() && (typeBinding1.getQualifiedName().equals("null") || typeBinding2.getQualifiedName().equals("null"))) {
-						type = RefactoringUtility.generateWrapperTypeForPrimitiveTypeBinding(typeBinding, ast);
-					}
 					else {
-						type = RefactoringUtility.generateTypeFromTypeBinding(typeBinding, ast, sourceRewriter);
+						typeBinding = typeBinding2;
 					}
-					Set<ITypeBinding> typeBindings = new LinkedHashSet<ITypeBinding>();
-					typeBindings.add(typeBinding);
-					RefactoringUtility.getSimpleTypeBindings(typeBindings, requiredImportTypeBindings);
-					type = gapHandler.createParameterType(sourceRewriter, ast, bodyDeclarationsRewrite, difference, typeBinding, type, requiredImportTypeBindings, i);
-					i = introduceParameter(sourceRewriter, ast, parameterRewrite, type, i);
 				}
-			}
-			else {
-				PDGNodeBlockGap blockGap = gapHandler.findBlockGapCorrespondingToBindingSignaturePair(pair);
-				Type interfaceType = gapHandler.createParameterForFunctionalInterface(blockGap, sourceRewriter, ast, bodyDeclarationsRewrite, requiredImportTypeBindings, i);
-				i = introduceParameter(sourceRewriter, ast, parameterRewrite, interfaceType, i);
+				Type type = null;
+				if(typeBinding.isPrimitive() && (typeBinding1.getQualifiedName().equals("null") || typeBinding2.getQualifiedName().equals("null"))) {
+					type = RefactoringUtility.generateWrapperTypeForPrimitiveTypeBinding(typeBinding, ast);
+				}
+				else {
+					type = RefactoringUtility.generateTypeFromTypeBinding(typeBinding, ast, sourceRewriter);
+				}
+				Set<ITypeBinding> typeBindings = new LinkedHashSet<ITypeBinding>();
+				typeBindings.add(typeBinding);
+				RefactoringUtility.getSimpleTypeBindings(typeBindings, requiredImportTypeBindings);
+				SingleVariableDeclaration parameter = ast.newSingleVariableDeclaration();
+				sourceRewriter.set(parameter, SingleVariableDeclaration.NAME_PROPERTY, ast.newSimpleName("arg" + i), null);
+				i++;
+				sourceRewriter.set(parameter, SingleVariableDeclaration.TYPE_PROPERTY, type, null);
+				parameterRewrite.insertLast(parameter, null);
 			}
 		}
 		//add parameters for the fields that should be parameterized instead of being pulled up
@@ -1391,15 +1337,6 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 		cloneInfo.requiredImportTypeBindings = requiredImportTypeBindings;
 		cloneInfo.methodBodyRewrite = methodBodyRewrite;
 		cloneInfo.parameterRewrite = parameterRewrite;
-	}
-
-	private int introduceParameter(ASTRewrite sourceRewriter, AST ast, ListRewrite parameterRewrite, Type type, int i) {
-		SingleVariableDeclaration parameter = ast.newSingleVariableDeclaration();
-		sourceRewriter.set(parameter, SingleVariableDeclaration.NAME_PROPERTY, ast.newSimpleName("arg" + i), null);
-		i++;
-		sourceRewriter.set(parameter, SingleVariableDeclaration.TYPE_PROPERTY, type, null);
-		parameterRewrite.insertLast(parameter, null);
-		return i;
 	}
 
 	private boolean containsSuperMethodCall(TypeDeclaration typeDeclaration, IMethodBinding methodBinding) {
@@ -2405,7 +2342,7 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 				VariableDeclaration variableDeclaration1 = variableDeclarations.get(0);
 				//create initializer for passed parameter
 				if(variableDeclaration1.getInitializer() == null && !variableDeclaration1.resolveBinding().isParameter() && !variableDeclaration1.resolveBinding().isField() &&
-						(!variableDeclaration1.resolveBinding().isEffectivelyFinal() || declaredVariablesInRemainingNodesDefinedByMappedNodesG1.contains(variableDeclaration1)) &&
+						declaredVariablesInRemainingNodesDefinedByMappedNodesG1.contains(variableDeclaration1) &&
 						variableDeclaration1 instanceof VariableDeclarationFragment) {
 					ASTRewrite methodBodyRewriter = ASTRewrite.create(ast);
 					Expression initializer = generateDefaultValue(methodBodyRewriter, ast, variableDeclaration1.resolveBinding().getType());
@@ -2423,7 +2360,7 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 				VariableDeclaration variableDeclaration2 = variableDeclarations.get(1);
 				if(!variableDeclaration2.resolveBinding().isEqualTo(variableDeclaration1.resolveBinding())) {
 					if(variableDeclaration2.getInitializer() == null && !variableDeclaration2.resolveBinding().isParameter() && !variableDeclaration2.resolveBinding().isField() &&
-							(!variableDeclaration2.resolveBinding().isEffectivelyFinal() || declaredVariablesInRemainingNodesDefinedByMappedNodesG2.contains(variableDeclaration2)) &&
+							declaredVariablesInRemainingNodesDefinedByMappedNodesG2.contains(variableDeclaration2) &&
 							variableDeclaration2 instanceof VariableDeclarationFragment) {
 						ASTRewrite methodBodyRewriter = ASTRewrite.create(ast);
 						Expression initializer = generateDefaultValue(methodBodyRewriter, ast, variableDeclaration2.resolveBinding().getType());
@@ -2455,15 +2392,6 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 					if(!typeBinding.isNested())
 						importRewrite.addImport(typeBinding);
 				}
-				if(gapHandler.requiresFunctionImport()) {
-					importRewrite.addImport(FUNCTION_QUALIFIED_TYPE);
-				}
-				if(gapHandler.requiresConsumerImport()) {
-					importRewrite.addImport(CONSUMER_QUALIFIED_TYPE);
-				}
-				if(gapHandler.requiresSupplierImport()) {
-					importRewrite.addImport(SUPPLIER_QUALIFIED_TYPE);
-				}
 				
 				TextEdit importEdit = importRewrite.rewriteImports(null);
 				if(importRewrite.getCreatedImports().length > 0) {
@@ -2478,27 +2406,6 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 			if(cloneInfo.document != null) {
 				for(ITypeBinding typeBinding : cloneInfo.requiredImportTypeBindings) {
 					addImportDeclaration(typeBinding, cloneInfo.sourceCompilationUnit, cloneInfo.sourceRewriter);
-				}
-				if(gapHandler.requiresFunctionImport()) {
-					AST ast = cloneInfo.sourceCompilationUnit.getAST();
-					ImportDeclaration importDeclaration = ast.newImportDeclaration();
-					cloneInfo.sourceRewriter.set(importDeclaration, ImportDeclaration.NAME_PROPERTY, ast.newName(FUNCTION_QUALIFIED_TYPE), null);
-					ListRewrite importRewrite = cloneInfo.sourceRewriter.getListRewrite(cloneInfo.sourceCompilationUnit, CompilationUnit.IMPORTS_PROPERTY);
-					importRewrite.insertLast(importDeclaration, null);
-				}
-				if(gapHandler.requiresConsumerImport()) {
-					AST ast = cloneInfo.sourceCompilationUnit.getAST();
-					ImportDeclaration importDeclaration = ast.newImportDeclaration();
-					cloneInfo.sourceRewriter.set(importDeclaration, ImportDeclaration.NAME_PROPERTY, ast.newName(CONSUMER_QUALIFIED_TYPE), null);
-					ListRewrite importRewrite = cloneInfo.sourceRewriter.getListRewrite(cloneInfo.sourceCompilationUnit, CompilationUnit.IMPORTS_PROPERTY);
-					importRewrite.insertLast(importDeclaration, null);
-				}
-				if(gapHandler.requiresSupplierImport()) {
-					AST ast = cloneInfo.sourceCompilationUnit.getAST();
-					ImportDeclaration importDeclaration = ast.newImportDeclaration();
-					cloneInfo.sourceRewriter.set(importDeclaration, ImportDeclaration.NAME_PROPERTY, ast.newName(SUPPLIER_QUALIFIED_TYPE), null);
-					ListRewrite importRewrite = cloneInfo.sourceRewriter.getListRewrite(cloneInfo.sourceCompilationUnit, CompilationUnit.IMPORTS_PROPERTY);
-					importRewrite.insertLast(importDeclaration, null);
 				}
 				TextEdit intermediateEdit = cloneInfo.sourceRewriter.rewriteAST(cloneInfo.document, null);
 				intermediateEdit.apply(cloneInfo.document);
@@ -2770,7 +2677,7 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 			else if(oldStatement instanceof TryStatement) {
 				TryStatement oldTryStatement = (TryStatement)oldStatement;
 				TryStatement newTryStatement = ast.newTryStatement();
-				ListRewrite resourceRewrite = sourceRewriter.getListRewrite(newTryStatement, TryStatement.RESOURCES2_PROPERTY);
+				ListRewrite resourceRewrite = sourceRewriter.getListRewrite(newTryStatement, TryStatement.RESOURCES_PROPERTY);
 				List<VariableDeclarationExpression> resources = oldTryStatement.resources();
 				for(VariableDeclarationExpression expression : resources) {
 					Expression newResourceExpression = (Expression)processASTNodeWithDifferences(ast, sourceRewriter, expression, nodeMapping);
@@ -2950,53 +2857,11 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 				newStatement = newLabeledStatement;
 			}
 		}
-		else if(gapHandler.nodeMappingIsLastInsideBlockGap(node) != null) {
-			PDGNodeBlockGap blockGap = gapHandler.nodeMappingIsLastInsideBlockGap(node);
-			PDGNodeMapping nodeMapping = (PDGNodeMapping) node.getMapping();
-			PDGNode nodeG1 = nodeMapping.getNodeG1();
-			Statement oldStatement = nodeG1.getASTStatement();
-			boolean differenceIsRightHandSideOfAssignmentStatementInBlockGap = false;
-			if(oldStatement instanceof ExpressionStatement) {
-				ExpressionStatement expressionStatement = (ExpressionStatement)oldStatement;
-				if(expressionStatement.getExpression() instanceof Assignment) {
-					Assignment assignment = (Assignment)expressionStatement.getExpression();
-					boolean nodeDifferenceFound = false;
-					for(ASTNodeDifference nodeDifference : nodeMapping.getNodeDifferences()) {
-						if(assignment.getRightHandSide().equals(nodeDifference.getExpression1().getExpression())) {
-							nodeDifferenceFound = true;
-							break;
-						}
-					}
-					if(nodeDifferenceFound && assignment.getLeftHandSide() instanceof SimpleName) {
-						SimpleName leftHandSide = (SimpleName)assignment.getLeftHandSide();
-						IBinding binding = leftHandSide.resolveBinding();
-						if(binding.getKind() == IBinding.VARIABLE) {
-							IVariableBinding variableBinding = (IVariableBinding)binding;
-							VariableBindingPair returnedVariableBindingPair = blockGap.getReturnedVariableBinding();
-							IVariableBinding returnedVariableBinding = returnedVariableBindingPair.getBinding1();
-							if(variableBinding.isEqualTo(returnedVariableBinding)) {
-								differenceIsRightHandSideOfAssignmentStatementInBlockGap = true;
-							}
-						}
-					}
-				}
-			}
-			if(differenceIsRightHandSideOfAssignmentStatementInBlockGap) {
-				newStatement = (Statement)processASTNodeWithDifferences(ast, sourceRewriter, oldStatement, nodeMapping);
-			}
-			else {
-				newStatement = createStatementReplacingBlockGap(sourceRewriter, ast, blockGap);
-			}
-		}
 		else if(processableGapNode(node)) {
 			PDGNodeGap nodeGap = (PDGNodeGap) node.getMapping();
 			PDGNode nodeG1 = nodeGap.getNodeG1();
 			Statement oldStatement = nodeG1.getASTStatement();
 			newStatement = (Statement)processASTNodeWithDifferences(ast, sourceRewriter, oldStatement, nodeGap);
-		}
-		else if(gapHandler.nodeGapIsLastInsideBlockGap(node) != null) {
-			PDGNodeBlockGap blockGap = gapHandler.nodeGapIsLastInsideBlockGap(node);
-			newStatement = createStatementReplacingBlockGap(sourceRewriter, ast, blockGap);
 		}
 		return newStatement;
 	}
@@ -3030,32 +2895,12 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 		}
 	}
 
-	private Statement createStatementReplacingBlockGap(ASTRewrite sourceRewriter, AST ast, PDGNodeBlockGap blockGap) {
-		Expression argument;
-		int existingArgValue = findExistingParametersWithArgName();
-		int i = 0;
-		if(existingArgValue > 0) {
-			i = existingArgValue + 1;
-		}
-		BindingSignaturePair bindingSignaturePair = new BindingSignaturePair(blockGap.getNodesG1(), blockGap.getNodesG2());
-		if(parameterizedDifferenceMap.containsKey(bindingSignaturePair)) {
-			List<BindingSignaturePair> list = new ArrayList<BindingSignaturePair>(parameterizedDifferenceMap.keySet());
-			int index = list.indexOf(bindingSignaturePair);
-			argument = ast.newSimpleName("arg" + (i + index));
-		}
-		else {
-			argument = ast.newSimpleName("arg" + (i + parameterizedDifferenceMap.size()));
-			parameterizedDifferenceMap.put(bindingSignaturePair, null);
-		}
-		return gapHandler.createStatementReplacingBlockGap(sourceRewriter, ast, blockGap, argument);
-	}
-
 	private boolean processableNode(CloneStructureNode child) {
-		return processableMappedNode(child) || gapHandler.nodeMappingIsLastInsideBlockGap(child) != null || processableGapNode(child) || gapHandler.nodeGapIsLastInsideBlockGap(child) != null;
+		return processableMappedNode(child)  || processableGapNode(child);
 	}
 
 	private boolean processableMappedNode(CloneStructureNode child) {
-		return child.getMapping() instanceof PDGNodeMapping && !gapHandler.statementBelongsToBlockGaps(((PDGNodeMapping)child.getMapping()).getNodeG1().getStatement());
+		return child.getMapping() instanceof PDGNodeMapping;
 	}
 
 	private boolean processableGapNode(CloneStructureNode child) {
@@ -3354,7 +3199,6 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 			Set<VariableBindingKeyPair> commonPassedParameterBindingKeys = mapper.getCommonPassedParameters().keySet();
 			Set<VariableBindingKeyPair> declaredLocalVariableBindingKeysWithinAnonymousClass = mapper.getDeclaredLocalVariablesInMappedNodesWithinAnonymousClass();
 			Set<VariableBindingKeyPair> declaredLocalVariableBindingKeys = mapper.getDeclaredLocalVariablesInMappedNodes().keySet();
-			Set<VariableBindingKeyPair> localVariableBindingKeysReturnedByBlockGaps = mapper.getLocalVariablesReturnedByBlockGaps();
 			Set<String> declaredLocalVariableBindingKeysInAdditionallyMatchedNodes1 = mapper.getDeclaredLocalVariableBindingKeysInAdditionallyMatchedNodesG1();
 			Set<String> declaredLocalVariableBindingKeysInAdditionallyMatchedNodes2 = mapper.getDeclaredLocalVariableBindingKeysInAdditionallyMatchedNodesG2();
 			ASTNode astNode = preprocessASTNode(oldASTNode, ast, sourceRewriter);
@@ -3380,7 +3224,6 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 						VariableBindingKeyPair keyPair = new VariableBindingKeyPair(binding.getKey(), binding2.getKey());
 						if(parameterBindingKeys.contains(keyPair) || commonPassedParameterBindingKeys.contains(keyPair) ||
 								declaredLocalVariableBindingKeys.contains(keyPair) || declaredLocalVariableBindingKeysWithinAnonymousClass.contains(keyPair) ||
-								localVariableBindingKeysReturnedByBlockGaps.contains(keyPair) ||
 								declaredLocalVariableBindingKeysInAdditionallyMatchedNodes1.contains(binding.getKey()) ||
 								declaredLocalVariableBindingKeysInAdditionallyMatchedNodes2.contains(binding2.getKey()))
 							isCommonParameter = true;
@@ -3395,7 +3238,6 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 						VariableBindingKeyPair keyPair = new VariableBindingKeyPair(binding.getKey(), binding2.getKey());
 						if(parameterBindingKeys.contains(keyPair) || commonPassedParameterBindingKeys.contains(keyPair) ||
 								declaredLocalVariableBindingKeys.contains(keyPair) || declaredLocalVariableBindingKeysWithinAnonymousClass.contains(keyPair) ||
-								localVariableBindingKeysReturnedByBlockGaps.contains(keyPair) ||
 								declaredLocalVariableBindingKeysInAdditionallyMatchedNodes1.contains(binding.getKey()) ||
 								declaredLocalVariableBindingKeysInAdditionallyMatchedNodes2.contains(binding2.getKey()))
 							isCommonParameter = true;
@@ -3503,7 +3345,7 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 							}
 							boolean expressionIsFieldToBePulledUp = expression1IsFieldToBePulledUp && expression2IsFieldToBePulledUp;
 							if(!expressionIsFieldToBePulledUp) {
-								Expression argument = createArgument(ast, sourceRewriter, difference);
+								Expression argument = createArgument(ast, difference);
 								if(oldASTNode.equals(oldExpression)) {
 									return argument;
 								}
@@ -3964,27 +3806,23 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 		return null;
 	}
 
-	private Expression createArgument(AST ast, ASTRewrite sourceRewriter, ASTNodeDifference argumentDifference) {
+	private Expression createArgument(AST ast, ASTNodeDifference argumentDifference) {
 		Expression argument;
 		int existingArgValue = findExistingParametersWithArgName();
 		int i = 0;
 		if(existingArgValue > 0) {
 			i = existingArgValue + 1;
 		}
-		BindingSignaturePair bindingSignaturePair = argumentDifference.getBindingSignaturePair();
-		if(gapHandler.differenceBelongsToExpressionGaps(argumentDifference)) {
-			bindingSignaturePair.setGap(true);
-		}
-		if(parameterizedDifferenceMap.containsKey(bindingSignaturePair)) {
+		if(parameterizedDifferenceMap.containsKey(argumentDifference.getBindingSignaturePair())) {
 			List<BindingSignaturePair> list = new ArrayList<BindingSignaturePair>(parameterizedDifferenceMap.keySet());
-			int index = list.indexOf(bindingSignaturePair);
+			int index = list.indexOf(argumentDifference.getBindingSignaturePair());
 			argument = ast.newSimpleName("arg" + (i + index));
 		}
 		else {
 			argument = ast.newSimpleName("arg" + (i + parameterizedDifferenceMap.size()));
-			parameterizedDifferenceMap.put(bindingSignaturePair, argumentDifference);
+			parameterizedDifferenceMap.put(argumentDifference.getBindingSignaturePair(), argumentDifference);
 		}
-		return gapHandler.createArgument(sourceRewriter, ast, argumentDifference, argument);
+		return argument;
 	}
 
 	private MethodInvocation generateSetterMethodInvocation(AST ast, ASTRewrite sourceRewriter,
@@ -4001,7 +3839,7 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 			}
 			else {
 				ASTNodeDifference invokerDifference = new ASTNodeDifference(invoker1, invoker2);
-				invoker = createArgument(ast, sourceRewriter, invokerDifference);
+				invoker = createArgument(ast, invokerDifference);
 			}
 		}
 		else if(invoker1 == null && invoker2 != null) {
@@ -4011,7 +3849,7 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 			}
 			else {
 				ASTNodeDifference invokerDifference = new ASTNodeDifference(invoker1, invoker2);
-				invoker = createArgument(ast, sourceRewriter, invokerDifference);
+				invoker = createArgument(ast, invokerDifference);
 			}
 		}
 		else if(!nodeDifference.getInvokerDifferences().isEmpty()) {
@@ -4064,7 +3902,7 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 					replacement = generateGetterMethodInvocation(ast, sourceRewriter, (FieldAccessReplacedWithGetterInvocationDifference) argumentDifference);
 				}
 				else {
-					replacement = createArgument(ast, sourceRewriter, argumentDifference);
+					replacement = createArgument(ast, argumentDifference);
 				}
 				replaceExpression(sourceRewriter, entireExpression1, newArgument, oldExpression, replacement);
 			}
@@ -4075,7 +3913,7 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 				Expression expression1 = argumentDifference.getExpression1().getExpression();
 				Expression expression2 = argumentDifference.getExpression2().getExpression();
 				if(expression1.equals(entireExpression1) && expression2.equals(entireExpression2)) {
-					argument = createArgument(ast, sourceRewriter, argumentDifference);
+					argument = createArgument(ast, argumentDifference);
 					break;
 				}
 			}
@@ -4097,7 +3935,7 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 			}
 			else {
 				ASTNodeDifference invokerDifference = new ASTNodeDifference(invoker1, invoker2);
-				invoker = createArgument(ast, sourceRewriter, invokerDifference);
+				invoker = createArgument(ast, invokerDifference);
 			}
 		}
 		else if(invoker1 == null && invoker2 != null) {
@@ -4107,7 +3945,7 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 			}
 			else {
 				ASTNodeDifference invokerDifference = new ASTNodeDifference(invoker1, invoker2);
-				invoker = createArgument(ast, sourceRewriter, invokerDifference);
+				invoker = createArgument(ast, invokerDifference);
 			}
 		}
 		else if(!nodeDifference.getInvokerDifferences().isEmpty()) {
@@ -4586,7 +4424,7 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 			Set<VariableDeclaration> declaredVariablesInRemainingNodesDefinedByMappedNodes = index == 0 ? mapper.getDeclaredVariablesInRemainingNodesDefinedByMappedNodesG1() :
 				mapper.getDeclaredVariablesInRemainingNodesDefinedByMappedNodesG2();
 			if(variableDeclaration.getInitializer() == null && !variableDeclaration.resolveBinding().isParameter() && !variableDeclaration.resolveBinding().isField() &&
-					(!variableDeclaration.resolveBinding().isEffectivelyFinal() || declaredVariablesInRemainingNodesDefinedByMappedNodes.contains(variableDeclaration)) &&
+					declaredVariablesInRemainingNodesDefinedByMappedNodes.contains(variableDeclaration) &&
 					variableDeclaration instanceof VariableDeclarationFragment) {
 				if(!sourceMethodDeclarations.get(0).equals(sourceMethodDeclarations.get(1))) {
 					Expression initializer = generateDefaultValue(methodBodyRewriter, ast, variableDeclaration.resolveBinding().getType());
@@ -4594,53 +4432,46 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 				}
 			}
 		}
-		for(BindingSignaturePair pair : parameterizedDifferenceMap.keySet()) {
-			ASTNodeDifference difference = parameterizedDifferenceMap.get(pair);
-			if(difference != null) {
-				List<Expression> expressions = new ArrayList<Expression>();
-				if(difference.getExpression1() != null) {
-					Expression expression1 = difference.getExpression1().getExpression();
-					expression1 = ASTNodeDifference.getParentExpressionOfMethodNameOrTypeName(expression1);
-					expressions.add(expression1);
-				}
-				else {
-					expressions.add(null);
-				}
-				if(difference.getExpression2() != null) {
-					Expression expression2 = difference.getExpression2().getExpression();
-					expression2 = ASTNodeDifference.getParentExpressionOfMethodNameOrTypeName(expression2);
-					expressions.add(expression2);
-				}
-				else {
-					expressions.add(null);
-				}
-				Expression expression = expressions.get(index);
-				boolean isReturnedVariable = isReturnedVariable(difference);
-				List<VariableDeclaration> returnedVariables1 = this.returnedVariables.get(0);
-				List<VariableDeclaration> returnedVariables2 = this.returnedVariables.get(1);
-				if(!isReturnedVariable ||
-						(returnedVariables1.size() == 1 && returnedVariables2.size() == 1 && variableBelongsToParameterizedDifferences(returnedVariables1.get(0), returnedVariables2.get(0)) != null)) {
-					if(expression != null) {
-						if(difference.containsDifferenceType(DifferenceType.IF_ELSE_SYMMETRICAL_MATCH) && index == 1 && !gapHandler.differenceBelongsToExpressionGaps(difference)) {
-							ParenthesizedExpression parenthesizedExpression = ast.newParenthesizedExpression();
-							methodBodyRewriter.set(parenthesizedExpression, ParenthesizedExpression.EXPRESSION_PROPERTY, expression, null);
-							PrefixExpression prefixExpression = ast.newPrefixExpression();
-							methodBodyRewriter.set(prefixExpression, PrefixExpression.OPERAND_PROPERTY, parenthesizedExpression, null);
-							methodBodyRewriter.set(prefixExpression, PrefixExpression.OPERATOR_PROPERTY, PrefixExpression.Operator.NOT, null);
-							argumentsRewrite.insertLast(prefixExpression, null);
-						}
-						else {
-							gapHandler.insertArgumentInCallSite(methodBodyRewriter, ast, argumentsRewrite, returnedVariables, difference, expression, index);
-						}
-					}
-					else {
-						argumentsRewrite.insertLast(ast.newThisExpression(), null);
-					}
-				}
+		for(ASTNodeDifference difference : parameterizedDifferenceMap.values()) {
+			List<Expression> expressions = new ArrayList<Expression>();
+			if(difference.getExpression1() != null) {
+				Expression expression1 = difference.getExpression1().getExpression();
+				expression1 = ASTNodeDifference.getParentExpressionOfMethodNameOrTypeName(expression1);
+				expressions.add(expression1);
 			}
 			else {
-				PDGNodeBlockGap blockGap = gapHandler.findBlockGapCorrespondingToBindingSignaturePair(pair);
-				gapHandler.createLambdaExpressionForBlockGap(blockGap, methodBodyRewriter, ast, argumentsRewrite, returnedVariables, index);
+				expressions.add(null);
+			}
+			if(difference.getExpression2() != null) {
+				Expression expression2 = difference.getExpression2().getExpression();
+				expression2 = ASTNodeDifference.getParentExpressionOfMethodNameOrTypeName(expression2);
+				expressions.add(expression2);
+			}
+			else {
+				expressions.add(null);
+			}
+			Expression expression = expressions.get(index);
+			boolean isReturnedVariable = isReturnedVariable(difference);
+			List<VariableDeclaration> returnedVariables1 = this.returnedVariables.get(0);
+			List<VariableDeclaration> returnedVariables2 = this.returnedVariables.get(1);
+			if(!isReturnedVariable ||
+					(returnedVariables1.size() == 1 && returnedVariables2.size() == 1 && variableBelongsToParameterizedDifferences(returnedVariables1.get(0), returnedVariables2.get(0)) != null)) {
+				if(expression != null) {
+					if(difference.containsDifferenceType(DifferenceType.IF_ELSE_SYMMETRICAL_MATCH) && index == 1) {
+						ParenthesizedExpression parenthesizedExpression = ast.newParenthesizedExpression();
+						methodBodyRewriter.set(parenthesizedExpression, ParenthesizedExpression.EXPRESSION_PROPERTY, expression, null);
+						PrefixExpression prefixExpression = ast.newPrefixExpression();
+						methodBodyRewriter.set(prefixExpression, PrefixExpression.OPERAND_PROPERTY, parenthesizedExpression, null);
+						methodBodyRewriter.set(prefixExpression, PrefixExpression.OPERATOR_PROPERTY, PrefixExpression.Operator.NOT, null);
+						argumentsRewrite.insertLast(prefixExpression, null);
+					}
+					else {
+						argumentsRewrite.insertLast(expression, null);
+					}
+				}
+				else {
+					argumentsRewrite.insertLast(ast.newThisExpression(), null);
+				}
 			}
 		}
 		Set<VariableDeclaration> accessedLocalFields = null;
@@ -4743,28 +4574,26 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 		List<Statement> statementsToBeMovedBefore = new ArrayList<Statement>();
 		List<Statement> statementsToBeMovedAfter = new ArrayList<Statement>();
 		for(PDGNode remainingNode : remainingMovableNodes) {
-			if(!gapHandler.statementBelongsToBlockGaps(remainingNode.getStatement())) {
-				CloneStructureNode remainingCloneStructureNode = null;
-				if(index == 0)
-					remainingCloneStructureNode = root.findNodeG1(remainingNode);
-				else
-					remainingCloneStructureNode = root.findNodeG2(remainingNode);
-				if(!processedCloneStructureGapNodes.contains(remainingCloneStructureNode.getParent())) {
-					Statement statement = processCloneStructureGapNode(remainingCloneStructureNode, ast, methodBodyRewriter, index);
-					if(remainingNodesMovableBefore.contains(remainingNode) && remainingNode.getId() > removableNodes.first().getId()) {
-						statementsToBeMovedBefore.add(statement);
-						methodBodyRewriter.remove(remainingNode.getASTStatement(), null);
-					}
-					else if(remainingNodesMovableAfter.contains(remainingNode)) {
-						statementsToBeMovedAfter.add(statement);
-						methodBodyRewriter.remove(remainingNode.getASTStatement(), null);
-					}
+			CloneStructureNode remainingCloneStructureNode = null;
+			if(index == 0)
+				remainingCloneStructureNode = root.findNodeG1(remainingNode);
+			else
+				remainingCloneStructureNode = root.findNodeG2(remainingNode);
+			if(!processedCloneStructureGapNodes.contains(remainingCloneStructureNode.getParent())) {
+				Statement statement = processCloneStructureGapNode(remainingCloneStructureNode, ast, methodBodyRewriter, index);
+				if(remainingNodesMovableBefore.contains(remainingNode) && remainingNode.getId() > removableNodes.first().getId()) {
+					statementsToBeMovedBefore.add(statement);
+					methodBodyRewriter.remove(remainingNode.getASTStatement(), null);
 				}
-				processedCloneStructureGapNodes.add(remainingCloneStructureNode);
-				for(CloneStructureNode child : remainingCloneStructureNode.getChildren()) {
-					if(child.getMapping() instanceof PDGElseGap)
-						processedCloneStructureGapNodes.add(child);
+				else if(remainingNodesMovableAfter.contains(remainingNode)) {
+					statementsToBeMovedAfter.add(statement);
+					methodBodyRewriter.remove(remainingNode.getASTStatement(), null);
 				}
+			}
+			processedCloneStructureGapNodes.add(remainingCloneStructureNode);
+			for(CloneStructureNode child : remainingCloneStructureNode.getChildren()) {
+				if(child.getMapping() instanceof PDGElseGap)
+					processedCloneStructureGapNodes.add(child);
 			}
 		}
 		Statement extractedMethodInvocationStatement = null;
@@ -4870,7 +4699,6 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 		for(Statement movedBefore : statementsToBeMovedBefore) {
 			blockRewrite.insertBefore(movedBefore, extractedMethodInvocationStatement, null);
 		}
-		gapHandler.createFinalVariablesForTheNonEffectivelyFinalVariables(methodBodyRewriter, ast, blockRewrite, extractedMethodInvocationStatement, index);
 		for(int i=statementsToBeMovedAfter.size()-1; i>=0; i--) {
 			Statement movedAfter = statementsToBeMovedAfter.get(i);
 			blockRewrite.insertAfter(movedAfter, extractedMethodInvocationStatement, null);
@@ -5033,23 +4861,13 @@ public class ExtractCloneRefactoring extends ExtractMethodFragmentRefactoring {
 			for(PreconditionViolation violation : mapper.getPreconditionViolations()) {
 				if(violation instanceof StatementPreconditionViolation) {
 					StatementPreconditionViolation statementViolation = (StatementPreconditionViolation)violation;
-					AbstractStatement abstractStatement = statementViolation.getStatement();
-					if(gapHandler.statementBelongsToBlockGaps(abstractStatement)) {
-						continue;
-					}
-					Statement statement = abstractStatement.getStatement();
+					Statement statement = statementViolation.getStatement().getStatement();
 					CompilationUnit cu = (CompilationUnit)statement.getRoot();
 					RefactoringStatusContext context = JavaStatusContext.create(cu.getTypeRoot(), statement);
 					status.merge(RefactoringStatus.createErrorStatus(violation.getViolation(), context));
 				}
 				else if(violation instanceof ExpressionPreconditionViolation) {
 					ExpressionPreconditionViolation expressionViolation = (ExpressionPreconditionViolation)violation;
-					ASTNodeDifference difference = gapHandler.findDifferenceCorrespondingToPreconditionViolation(expressionViolation);
-					if(difference != null && ! difference.containsDifferenceType(DifferenceType.VARIABLE_TYPE_MISMATCH)) {
-						if(gapHandler.differenceBelongsToExpressionGaps(difference) || gapHandler.differenceBelongsToBlockGaps(difference)) {
-							continue;
-						}
-					}
 					Expression expression = expressionViolation.getExpression().getExpression();
 					expression = ASTNodeDifference.getParentExpressionOfMethodNameOrTypeName(expression);
 					CompilationUnit cu = (CompilationUnit)expression.getRoot();

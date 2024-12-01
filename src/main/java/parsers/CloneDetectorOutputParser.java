@@ -19,6 +19,8 @@ import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.NodeFinder;
 
+import parsers.ResourceInfo.ICompilationUnitNotFoundException;
+
 public abstract class CloneDetectorOutputParser {
 	
 	private final String toolOutputFilePath;
@@ -180,7 +182,7 @@ public abstract class CloneDetectorOutputParser {
 	
 	protected CloneInstance getCloneInstance(String filePath, int cloneInstanceID, boolean isAbsoluteFilePath, 
 			int startLine, int startColumn, int endLine, int endColumn) 
-			throws JavaModelException, ResourceInfo.ICompilationUnitNotFoundException {
+			throws JavaModelException, ICompilationUnitNotFoundException {
 		ResourceInfo resourceInfo = ResourceInfo.getResourceInfo(this.getIJavaProject(), filePath, isAbsoluteFilePath);
 		CloneInstanceLocationInfo locationInfo = new CloneInstanceLocationInfo(resourceInfo.getFullPath(), startLine, startColumn, endLine, endColumn);
 		CloneInstance cloneInstance = getCloneInstance(cloneInstanceID, resourceInfo, locationInfo);
@@ -189,7 +191,7 @@ public abstract class CloneDetectorOutputParser {
 	
 	protected CloneInstance getCloneInstance(String filePath, int cloneInstanceIndex, boolean isAbsoluteFilePath, 
 			int startOffset, int endOffset) 
-			throws JavaModelException, ResourceInfo.ICompilationUnitNotFoundException {
+			throws JavaModelException, ICompilationUnitNotFoundException {
 		ResourceInfo resourceInfo = ResourceInfo.getResourceInfo(this.getIJavaProject(), filePath, isAbsoluteFilePath);
 		CloneInstanceLocationInfo locationInfo = new CloneInstanceLocationInfo(resourceInfo.getFullPath(), startOffset, endOffset);
 		CloneInstance cloneInstance = getCloneInstance(cloneInstanceIndex, resourceInfo, locationInfo);

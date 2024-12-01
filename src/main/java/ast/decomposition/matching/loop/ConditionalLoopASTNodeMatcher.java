@@ -36,7 +36,7 @@ public class ConditionalLoopASTNodeMatcher extends ASTNodeMatcher {
 			boolean typeMatch = typeBindingMatch(node.resolveTypeBinding(), getTypeBinding(other));
 			if (!(other instanceof InfixExpression)) {
 				if(typeMatch) {
-					Difference diff = new Difference(node.toString(),other.toString(), DifferenceType.TYPE_COMPATIBLE_REPLACEMENT);
+					Difference diff = new Difference(node.toString(),other.toString(),DifferenceType.TYPE_COMPATIBLE_REPLACEMENT);
 					astNodeDifference.addDifference(diff);
 				}
 				else {

@@ -38,7 +38,7 @@ public class ExtractClassCandidateGroup implements Comparable<ExtractClassCandid
 
 	public void groupConcepts() {
 		ArrayList<ExtractClassCandidateRefactoring> tempCandidates = new ArrayList<ExtractClassCandidateRefactoring>(candidates);
-		tempCandidates.sort(new ClusterSizeComparator());
+		Collections.sort(tempCandidates, new ClusterSizeComparator());
 		while (!tempCandidates.isEmpty()) {
 			Set<Entity> conceptEntities = new HashSet<Entity>(tempCandidates.get(0).getExtractedEntities());
 			Set<Integer> indexSet = new LinkedHashSet<Integer>();
@@ -89,6 +89,4 @@ public class ExtractClassCandidateGroup implements Comparable<ExtractClassCandid
 			return this.source.compareTo(other.source);
 		}
 	}
-
-
 }

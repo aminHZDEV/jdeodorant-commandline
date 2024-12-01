@@ -18,7 +18,6 @@ import java.util.TreeSet;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.Statement;
 
 public class PDGRegionSubTreeMapper extends DivideAndConquerMatcher {
@@ -26,12 +25,12 @@ public class PDGRegionSubTreeMapper extends DivideAndConquerMatcher {
 	private List<ASTNode> cloneFragmentASTNodes2;
 	
 	public PDGRegionSubTreeMapper(PDG pdg1, PDG pdg2,
-								  CompilationUnit iCompilationUnit1, CompilationUnit iCompilationUnit2,
-								  ControlDependenceTreeNode controlDependenceSubTreePDG1,
-								  ControlDependenceTreeNode controlDependenceSubTreePDG2,
-								  List<ASTNode> ASTNodes1,
-								  List<ASTNode> ASTNodes2,
-								  boolean fullTreeMatch, IProgressMonitor monitor) {
+			ICompilationUnit iCompilationUnit1, ICompilationUnit iCompilationUnit2,
+			ControlDependenceTreeNode controlDependenceSubTreePDG1,
+			ControlDependenceTreeNode controlDependenceSubTreePDG2,
+			List<ASTNode> ASTNodes1,
+			List<ASTNode> ASTNodes2,
+			boolean fullTreeMatch, IProgressMonitor monitor) {
 		super(pdg1, pdg2, iCompilationUnit1, iCompilationUnit2, controlDependenceSubTreePDG1, controlDependenceSubTreePDG2, fullTreeMatch, monitor);
 		this.cloneFragmentASTNodes1 = ASTNodes1;
 		this.cloneFragmentASTNodes2 = ASTNodes2;

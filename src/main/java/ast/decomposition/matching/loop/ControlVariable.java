@@ -100,7 +100,7 @@ public class ControlVariable extends AbstractControlVariable
 		while (it.hasNext())
 		{
 			ASTNode currentNode          = it.next();
-			Assignment.Operator operator = null;
+			Operator operator = null;
 			Expression rightHandSide     = null;
 			Integer updateValue          = null;
 			if (currentNode instanceof Assignment)
@@ -110,7 +110,7 @@ public class ControlVariable extends AbstractControlVariable
 				rightHandSide         = assignment.getRightHandSide();
 			}
 			// if the currentNode is a variable declaration or an ASSIGN Assignment
-			if (currentNode instanceof VariableDeclaration || (operator != null && operator == Assignment.Operator.ASSIGN))
+			if (currentNode instanceof VariableDeclaration || (operator != null && operator == Operator.ASSIGN))
 			{
 				// take the rightHandSide of either
 				Expression expression = null;
@@ -255,18 +255,18 @@ public class ControlVariable extends AbstractControlVariable
 			else if (currentNode instanceof Assignment)
 			{
 				Assignment assignment = (Assignment) currentNode;
-				Assignment.Operator operator = assignment.getOperator();
-				if (operator == Assignment.Operator.ASSIGN)
+				Operator operator = assignment.getOperator();
+				if (operator == Operator.ASSIGN)
 				{
 					contributingModifiers = new ArrayList<ASTNode>();
 					contributingModifiers.add(currentNode);
 					currentNodeAdded = true;
 					noModifierInLowerScope = true;
 				}
-				else if (operator == Assignment.Operator.PLUS_ASSIGN ||
-						operator == Assignment.Operator.MINUS_ASSIGN ||
-						operator == Assignment.Operator.TIMES_ASSIGN ||
-						operator == Assignment.Operator.DIVIDE_ASSIGN)
+				else if (operator == Operator.PLUS_ASSIGN ||
+						operator == Operator.MINUS_ASSIGN ||
+						operator == Operator.TIMES_ASSIGN ||
+						operator == Operator.DIVIDE_ASSIGN)
 				{
 					contributingModifiers.add(currentNode);
 					currentNodeAdded = true;
@@ -432,7 +432,7 @@ public class ControlVariable extends AbstractControlVariable
 				rightHandSide         = assignment.getRightHandSide();
 			}
 			// if the currentNode is a variable declaration or an ASSIGN Assignment
-			if (initializer instanceof VariableDeclaration || (operator != null && operator == Assignment.Operator.ASSIGN))
+			if (initializer instanceof VariableDeclaration || (operator != null && operator == Operator.ASSIGN))
 			{
 				// take the rightHandSide of either
 				Expression expression = null;

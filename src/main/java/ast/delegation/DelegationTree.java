@@ -1,12 +1,9 @@
 package ast.delegation;
 
-import ast.MethodInvocationObject;
-import ast.MethodObject;
-import ast.SystemObject;
+import ast.*;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 import javax.swing.tree.TreeNode;
-
 import java.util.Enumeration;
 import java.util.List;
 import java.util.ArrayList;

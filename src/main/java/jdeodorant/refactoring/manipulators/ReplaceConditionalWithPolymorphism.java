@@ -55,7 +55,6 @@ import org.eclipse.jdt.core.dom.ReturnStatement;
 import org.eclipse.jdt.core.dom.SimpleName;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 import org.eclipse.jdt.core.dom.Statement;
-import org.eclipse.jdt.core.dom.SuperMethodInvocation;
 import org.eclipse.jdt.core.dom.Type;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
@@ -138,7 +137,7 @@ public class ReplaceConditionalWithPolymorphism extends PolymorphismRefactoring 
 			else if(typeMethodInvocation != null)
 				sourceRewriter.set(abstractMethodInvocation, MethodInvocation.EXPRESSION_PROPERTY, typeMethodInvocation, null);
 			ListRewrite methodInvocationArgumentsRewrite = sourceRewriter.getListRewrite(abstractMethodInvocation, MethodInvocation.ARGUMENTS_PROPERTY);
-			if(returnedVariable != null && !typeCheckElimination.returnedVariableDeclaredAndReturnedInBranches()) {
+			if(returnedVariable != null) {
 				if(returnedVariable instanceof SingleVariableDeclaration) {
 					SingleVariableDeclaration singleVariableDeclaration = (SingleVariableDeclaration)returnedVariable;
 					methodInvocationArgumentsRewrite.insertLast(singleVariableDeclaration.getName(), null);
@@ -162,7 +161,7 @@ public class ReplaceConditionalWithPolymorphism extends PolymorphismRefactoring 
 				methodInvocationArgumentsRewrite.insertLast(clientAST.newThisExpression(), null);
 				setPublicModifierToSourceTypeDeclaration();
 			}
-			if(returnedVariable != null && !typeCheckElimination.returnedVariableReturnedInBranches()) {
+			if(returnedVariable != null) {
 				Assignment assignment = clientAST.newAssignment();
 				sourceRewriter.set(assignment, Assignment.OPERATOR_PROPERTY, Assignment.Operator.ASSIGN, null);
 				sourceRewriter.set(assignment, Assignment.LEFT_HAND_SIDE_PROPERTY, returnedVariable.getName(), null);
@@ -264,7 +263,7 @@ public class ReplaceConditionalWithPolymorphism extends PolymorphismRefactoring 
 				rootContainer = (IContainer)rootContainer.getParent();
 		}
 		String abstractClassFullyQualifiedName = typeCheckElimination.getAbstractClassName();
-		IFile abstractClassFile = getFile(abstractClassFullyQualifiedName);
+		IFile abstractClassFile = getFile(rootContainer, abstractClassFullyQualifiedName);
 		
 		ICompilationUnit abstractICompilationUnit = null;
 		CompilationUnit abstractCompilationUnit = null;
@@ -389,7 +388,7 @@ public class ReplaceConditionalWithPolymorphism extends PolymorphismRefactoring 
 			abstractMethodModifiersRewrite.insertLast(abstractAST.newModifier(Modifier.ModifierKeyword.PUBLIC_KEYWORD), null);
 			abstractMethodModifiersRewrite.insertLast(abstractAST.newModifier(Modifier.ModifierKeyword.ABSTRACT_KEYWORD), null);
 			ListRewrite abstractMethodParametersRewrite = abstractRewriter.getListRewrite(abstractMethodDeclaration, MethodDeclaration.PARAMETERS_PROPERTY);
-			if(returnedVariable != null && !typeCheckElimination.returnedVariableDeclaredAndReturnedInBranches()) {
+			if(returnedVariable != null) {
 				if(returnedVariable instanceof SingleVariableDeclaration) {
 					SingleVariableDeclaration singleVariableDeclaration = (SingleVariableDeclaration)returnedVariable;
 					abstractMethodParametersRewrite.insertLast(singleVariableDeclaration, null);
@@ -459,9 +458,9 @@ public class ReplaceConditionalWithPolymorphism extends PolymorphismRefactoring 
 				abstractMethodParametersRewrite.insertLast(parameter, null);
 			}
 
-			ListRewrite abstractMethodThrownExceptionsRewrite = abstractRewriter.getListRewrite(abstractMethodDeclaration, MethodDeclaration.THROWN_EXCEPTION_TYPES_PROPERTY);
+			ListRewrite abstractMethodThrownExceptionsRewrite = abstractRewriter.getListRewrite(abstractMethodDeclaration, MethodDeclaration.THROWN_EXCEPTIONS_PROPERTY);
 			for(ITypeBinding typeBinding : thrownExceptions) {
-				abstractMethodThrownExceptionsRewrite.insertLast(RefactoringUtility.generateTypeFromTypeBinding(typeBinding, abstractAST, abstractRewriter), null);
+				abstractMethodThrownExceptionsRewrite.insertLast(abstractAST.newSimpleName(typeBinding.getName()), null);
 			}
 
 			abstractBodyRewrite.insertLast(abstractMethodDeclaration, null);
@@ -496,7 +495,7 @@ public class ReplaceConditionalWithPolymorphism extends PolymorphismRefactoring 
 			else {
 				statements = typeCheckElimination.getDefaultCaseStatements();
 			}
-			IFile subclassFile = getFile(subclassNames.get(i));
+			IFile subclassFile = getFile(rootContainer, subclassNames.get(i));
 			ICompilationUnit subclassICompilationUnit = null;
 			CompilationUnit subclassCompilationUnit = null;
 			AST subclassAST = null;
@@ -519,14 +518,12 @@ public class ReplaceConditionalWithPolymorphism extends PolymorphismRefactoring 
 			}
 			else {
 				IJavaElement javaElement = JavaCore.create(contextContainer);
-				if(javaElement != null && javaElement instanceof IPackageFragment) {
-					IPackageFragment packageFragment = (IPackageFragment)javaElement;
-					try {
+				if(javaElement instanceof IPackageFragment packageFragment) {
+                    try {
 						IJavaElement[] children = packageFragment.getChildren();
 						for(IJavaElement child : children) {
-							if(child instanceof ICompilationUnit) {
-								ICompilationUnit childCompilationUnit = (ICompilationUnit)child;
-								IType[] types = childCompilationUnit.getTypes();
+							if(child instanceof ICompilationUnit childCompilationUnit) {
+                                IType[] types = childCompilationUnit.getTypes();
 								for(IType type : types) {
 									String qualifiedName = packageFragment.getElementName() + "." + type.getElementName();
 									if(qualifiedName.equals(subclassNames.get(i))) {
@@ -559,9 +556,8 @@ public class ReplaceConditionalWithPolymorphism extends PolymorphismRefactoring 
 			TypeDeclaration subclassTypeDeclaration = null;
 			List<AbstractTypeDeclaration> subclassAbstractTypeDeclarations = subclassCompilationUnit.types();
 			for(AbstractTypeDeclaration abstractTypeDeclaration : subclassAbstractTypeDeclarations) {
-				if(abstractTypeDeclaration instanceof TypeDeclaration) {
-					TypeDeclaration topLevelTypeDeclaration = (TypeDeclaration)abstractTypeDeclaration;
-					List<TypeDeclaration> typeDeclarations = new ArrayList<TypeDeclaration>();
+				if(abstractTypeDeclaration instanceof TypeDeclaration topLevelTypeDeclaration) {
+                    List<TypeDeclaration> typeDeclarations = new ArrayList<TypeDeclaration>();
 	        		typeDeclarations.add(topLevelTypeDeclaration);
 	        		typeDeclarations.addAll(getRecursivelyInnerTypes(topLevelTypeDeclaration));
 	        		for(TypeDeclaration typeDeclaration : typeDeclarations) {
@@ -583,15 +579,12 @@ public class ReplaceConditionalWithPolymorphism extends PolymorphismRefactoring 
 			else {
 				if(returnedVariable != null) {
 					Type returnType = null;
-					if(returnedVariable instanceof SingleVariableDeclaration) {
-						SingleVariableDeclaration singleVariableDeclaration = (SingleVariableDeclaration)returnedVariable;
-						returnType = singleVariableDeclaration.getType();
+					if(returnedVariable instanceof SingleVariableDeclaration singleVariableDeclaration) {
+                        returnType = singleVariableDeclaration.getType();
 					}
-					else if(returnedVariable instanceof VariableDeclarationFragment) {
-						VariableDeclarationFragment variableDeclarationFragment = (VariableDeclarationFragment)returnedVariable;
-						if(variableDeclarationFragment.getParent() instanceof VariableDeclarationStatement) {
-							VariableDeclarationStatement variableDeclarationStatement = (VariableDeclarationStatement)variableDeclarationFragment.getParent();
-							returnType = variableDeclarationStatement.getType();
+					else if(returnedVariable instanceof VariableDeclarationFragment variableDeclarationFragment) {
+                        if(variableDeclarationFragment.getParent() instanceof VariableDeclarationStatement variableDeclarationStatement) {
+                            returnType = variableDeclarationStatement.getType();
 						}
 						else if(variableDeclarationFragment.getParent() instanceof VariableDeclarationExpression) {
 							VariableDeclarationExpression variableDeclarationExpression = (VariableDeclarationExpression)variableDeclarationFragment.getParent();
@@ -611,7 +604,7 @@ public class ReplaceConditionalWithPolymorphism extends PolymorphismRefactoring 
 			ListRewrite concreteMethodModifiersRewrite = subclassRewriter.getListRewrite(concreteMethodDeclaration, MethodDeclaration.MODIFIERS2_PROPERTY);
 			concreteMethodModifiersRewrite.insertLast(subclassAST.newModifier(Modifier.ModifierKeyword.PUBLIC_KEYWORD), null);
 			ListRewrite concreteMethodParametersRewrite = subclassRewriter.getListRewrite(concreteMethodDeclaration, MethodDeclaration.PARAMETERS_PROPERTY);
-			if(returnedVariable != null && !typeCheckElimination.returnedVariableDeclaredAndReturnedInBranches()) {
+			if(returnedVariable != null) {
 				if(returnedVariable instanceof SingleVariableDeclaration) {
 					SingleVariableDeclaration singleVariableDeclaration = (SingleVariableDeclaration)returnedVariable;
 					concreteMethodParametersRewrite.insertLast(singleVariableDeclaration, null);
@@ -680,9 +673,9 @@ public class ReplaceConditionalWithPolymorphism extends PolymorphismRefactoring 
 				concreteMethodParametersRewrite.insertLast(parameter, null);
 			}
 			
-			ListRewrite concreteMethodThrownExceptionsRewrite = subclassRewriter.getListRewrite(concreteMethodDeclaration, MethodDeclaration.THROWN_EXCEPTION_TYPES_PROPERTY);
+			ListRewrite concreteMethodThrownExceptionsRewrite = subclassRewriter.getListRewrite(concreteMethodDeclaration, MethodDeclaration.THROWN_EXCEPTIONS_PROPERTY);
 			for(ITypeBinding typeBinding : thrownExceptions) {
-				concreteMethodThrownExceptionsRewrite.insertLast(RefactoringUtility.generateTypeFromTypeBinding(typeBinding, subclassAST, subclassRewriter), null);
+				concreteMethodThrownExceptionsRewrite.insertLast(subclassAST.newSimpleName(typeBinding.getName()), null);
 			}
 
 			Block concreteMethodBody = subclassAST.newBlock();
@@ -706,41 +699,6 @@ public class ReplaceConditionalWithPolymorphism extends PolymorphismRefactoring 
 				Block ifStatementBody = subclassAST.newBlock();
 				ifStatementBodyRewrite = subclassRewriter.getListRewrite(ifStatementBody, Block.STATEMENTS_PROPERTY);
 				subclassRewriter.set(enclosingIfStatement, IfStatement.THEN_STATEMENT_PROPERTY, ifStatementBody, null);
-				if(!typeCheckElimination.getDefaultCaseStatements().isEmpty()) {
-					Block elseStatementBody = subclassAST.newBlock();
-					ListRewrite elseStatementBodyRewrite = subclassRewriter.getListRewrite(elseStatementBody, Block.STATEMENTS_PROPERTY);
-					SuperMethodInvocation superMethodInvocation = subclassAST.newSuperMethodInvocation();
-					subclassRewriter.set(superMethodInvocation, SuperMethodInvocation.NAME_PROPERTY, subclassAST.newSimpleName(typeCheckElimination.getAbstractMethodName()), null);
-					ListRewrite superMethodInvocationArgumentRewrite = subclassRewriter.getListRewrite(superMethodInvocation, SuperMethodInvocation.ARGUMENTS_PROPERTY);
-					if(returnedVariable != null && !typeCheckElimination.returnedVariableDeclaredAndReturnedInBranches()) {
-						superMethodInvocationArgumentRewrite.insertLast(returnedVariable.getName(), null);
-					}
-					for(SingleVariableDeclaration abstractMethodParameter : typeCheckElimination.getAccessedParameters()) {
-						if(!abstractMethodParameter.equals(returnedVariable) && !abstractMethodParameter.equals(typeVariable)) {
-							superMethodInvocationArgumentRewrite.insertLast(abstractMethodParameter.getName(), null);
-						}
-					}
-					for(VariableDeclaration fragment : typeCheckElimination.getAccessedLocalVariables()) {
-						if(!fragment.equals(returnedVariable) && !fragment.equals(typeVariable)) {
-							superMethodInvocationArgumentRewrite.insertLast(fragment.getName(), null);
-						}
-					}
-					if(sourceTypeRequiredForExtraction()) {
-						String parameterName = sourceTypeDeclaration.getName().getIdentifier();
-						parameterName = parameterName.substring(0,1).toLowerCase() + parameterName.substring(1,parameterName.length());
-						superMethodInvocationArgumentRewrite.insertLast(subclassAST.newSimpleName(parameterName), null);
-					}
-					if(returnedVariable != null) {
-						ReturnStatement superMethodInvocationReturnStatement = subclassAST.newReturnStatement();
-						subclassRewriter.set(superMethodInvocationReturnStatement, ReturnStatement.EXPRESSION_PROPERTY, superMethodInvocation, null);
-						elseStatementBodyRewrite.insertLast(superMethodInvocationReturnStatement, null);
-					}
-					else {
-						ExpressionStatement superMethodInvocationExpressionStatement = subclassAST.newExpressionStatement(superMethodInvocation);
-						elseStatementBodyRewrite.insertLast(superMethodInvocationExpressionStatement, null);
-					}
-					subclassRewriter.set(enclosingIfStatement, IfStatement.ELSE_STATEMENT_PROPERTY, elseStatementBody, null);
-				}
 				concreteMethodBodyRewrite.insertLast(enclosingIfStatement, null);
 			}
 			SimpleName subclassCastInvoker = null;
@@ -824,7 +782,7 @@ public class ReplaceConditionalWithPolymorphism extends PolymorphismRefactoring 
 						concreteMethodBodyRewrite.insertLast(newStatement, null);
 				}
 			}
-			if(returnedVariable != null && !typeCheckElimination.returnedVariableReturnedInBranches()) {
+			if(returnedVariable != null) {
 				ReturnStatement returnStatement = subclassAST.newReturnStatement();
 				subclassRewriter.set(returnStatement, ReturnStatement.EXPRESSION_PROPERTY, returnedVariable.getName(), null);
 				concreteMethodBodyRewrite.insertLast(returnStatement, null);

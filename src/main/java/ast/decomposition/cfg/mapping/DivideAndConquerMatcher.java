@@ -37,7 +37,6 @@ import java.util.TreeSet;
 
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
-import org.eclipse.jdt.core.dom.CompilationUnit;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.SwitchStatement;
 import org.eclipse.jdt.core.dom.VariableDeclaration;
@@ -45,24 +44,24 @@ import org.eclipse.jdt.core.dom.VariableDeclaration;
 public abstract class DivideAndConquerMatcher {
 
 	//if true full tree match is performed, otherwise subtree match is performed
-	private final boolean fullTreeMatch;
-	private final IProgressMonitor monitor;
-	private final PDG pdg1;
-	private final PDG pdg2;
-	private final CompilationUnit iCompilationUnit1;
-	private final CompilationUnit iCompilationUnit2;
-	private final ControlDependenceTreeNode controlDependenceTreePDG1;
-	private final ControlDependenceTreeNode controlDependenceTreePDG2;
-	private final TreeSet<PDGNode> allNodesInSubTreePDG1;
-	private final TreeSet<PDGNode> allNodesInSubTreePDG2;
+	private boolean fullTreeMatch;
+	private IProgressMonitor monitor;
+	private PDG pdg1;
+	private PDG pdg2;
+	private ICompilationUnit iCompilationUnit1;
+	private ICompilationUnit iCompilationUnit2;
+	private ControlDependenceTreeNode controlDependenceTreePDG1;
+	private ControlDependenceTreeNode controlDependenceTreePDG2;
+	private TreeSet<PDGNode> allNodesInSubTreePDG1;
+	private TreeSet<PDGNode> allNodesInSubTreePDG2;
 	private CloneStructureNode root;
 	private MappingState finalState;
 	protected PreconditionExaminer preconditionExaminer;
 	
 	public DivideAndConquerMatcher(PDG pdg1, PDG pdg2,
-								   CompilationUnit iCompilationUnit1, CompilationUnit iCompilationUnit2,
-								   ControlDependenceTreeNode controlDependenceTreePDG1, ControlDependenceTreeNode controlDependenceTreePDG2,
-								   boolean fullTreeMatch, IProgressMonitor monitor) {
+			ICompilationUnit iCompilationUnit1, ICompilationUnit iCompilationUnit2,
+			ControlDependenceTreeNode controlDependenceTreePDG1, ControlDependenceTreeNode controlDependenceTreePDG2,
+			boolean fullTreeMatch, IProgressMonitor monitor) {
 		this.pdg1 = pdg1;
 		this.pdg2 = pdg2;
 		this.iCompilationUnit1 = iCompilationUnit1;
@@ -273,18 +272,6 @@ public abstract class DivideAndConquerMatcher {
 
 	public boolean isTemplateMethodApplicable() {
 		return preconditionExaminer.isTemplateMethodApplicable();
-	}
-
-	public List<PDGExpressionGap> getRefactorableExpressionGaps() {
-		return preconditionExaminer.getRefactorableExpressionGaps();
-	}
-
-	public List<PDGNodeBlockGap> getRefactorableBlockGaps() {
-		return preconditionExaminer.getRefactorableBlockGaps();
-	}
-
-	public Set<VariableBindingKeyPair> getLocalVariablesReturnedByBlockGaps() {
-		return preconditionExaminer.getLocalVariablesReturnedByBlockGaps();
 	}
 
 	protected abstract Set<PDGNode> getNodesInRegion1(PDG pdg, PDGNode controlPredicate, Set<PDGNode> controlPredicateNodesInCurrentLevel,

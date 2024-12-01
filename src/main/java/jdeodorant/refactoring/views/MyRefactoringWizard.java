@@ -1,5 +1,12 @@
 package jdeodorant.refactoring.views;
 
+import jdeodorant.refactoring.manipulators.ExtractClassRefactoring;
+import jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
+import jdeodorant.refactoring.manipulators.ExtractMethodRefactoring;
+import jdeodorant.refactoring.manipulators.MoveMethodRefactoring;
+import jdeodorant.refactoring.manipulators.ReplaceConditionalWithPolymorphism;
+import jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithStateStrategy;
+
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -13,15 +20,6 @@ import org.eclipse.swt.SWT;
 import org.eclipse.swt.graphics.Font;
 import org.eclipse.swt.graphics.FontData;
 import org.eclipse.ui.PartInitException;
-
-import jdeodorant.refactoring.manipulators.ExtractClassRefactoring;
-import jdeodorant.refactoring.manipulators.ExtractCloneRefactoring;
-import jdeodorant.refactoring.manipulators.ExtractMethodRefactoring;
-import jdeodorant.refactoring.manipulators.MoveMethodRefactoring;
-import jdeodorant.refactoring.manipulators.PolymorphismRefactoring;
-import jdeodorant.refactoring.manipulators.ReplaceConditionalWithPolymorphism;
-import jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithStateStrategy;
-import jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithSubclass;
 
 public class MyRefactoringWizard extends RefactoringWizard {
 	
@@ -52,8 +50,6 @@ public class MyRefactoringWizard extends RefactoringWizard {
 		}
 		else if(refactoring instanceof ExtractCloneRefactoring) {
 			addPage(new CloneDiffWizardPage((ExtractCloneRefactoring)refactoring));
-		} else if(refactoring instanceof ReplaceTypeCodeWithSubclass) {
-			addPage(new ReplaceTypeCodeWithSubclassInputPage((ReplaceTypeCodeWithSubclass)refactoring)); // temp
 		}
 	}
 	
@@ -64,7 +60,7 @@ public class MyRefactoringWizard extends RefactoringWizard {
 			action.setEnabled(false);
 		Set<IJavaElement> javaElementsToOpenInEditor = new LinkedHashSet<IJavaElement>();
 		if(refactoring instanceof ReplaceTypeCodeWithStateStrategy) {
-			javaElementsToOpenInEditor.addAll(((PolymorphismRefactoring)refactoring).getJavaElementsToOpenInEditor());
+			javaElementsToOpenInEditor.addAll(((ReplaceTypeCodeWithStateStrategy)refactoring).getJavaElementsToOpenInEditor());
 		}
 		else if(refactoring instanceof ReplaceConditionalWithPolymorphism) {
 			javaElementsToOpenInEditor.addAll(((ReplaceConditionalWithPolymorphism)refactoring).getJavaElementsToOpenInEditor());

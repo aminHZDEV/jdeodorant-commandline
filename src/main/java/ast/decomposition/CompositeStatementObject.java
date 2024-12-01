@@ -1,6 +1,5 @@
 package ast.decomposition;
 
-import ast.decomposition.cfg.PlainVariable;
 import ast.AnonymousClassDeclarationObject;
 import ast.ArrayCreationObject;
 import ast.ClassInstanceCreationObject;
@@ -12,6 +11,7 @@ import ast.LocalVariableInstructionObject;
 import ast.MethodInvocationObject;
 import ast.SuperFieldInstructionObject;
 import ast.SuperMethodInvocationObject;
+import ast.decomposition.cfg.PlainVariable;
 
 import java.util.ArrayList;
 import java.util.LinkedHashMap;

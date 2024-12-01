@@ -149,7 +149,6 @@ public class PreconditionExaminer {
 	private MappingState finalState;
 	private TreeSet<PDGNode> allNodesInSubTreePDG1;
 	private TreeSet<PDGNode> allNodesInSubTreePDG2;
-	private LambdaExpressionPreconditionExaminer lambdaExpressionPreconditionExaminer;
 	private CloneRefactoringType cloneRefactoringType;
 	private Set<PlainVariable> declaredVariablesInRemainingNodesDefinedByMappedNodesG1;
 	private Set<PlainVariable> declaredVariablesInRemainingNodesDefinedByMappedNodesG2;
@@ -329,78 +328,15 @@ public class PreconditionExaminer {
 					directlyAccessedLocalMethodsG1, indirectlyAccessedLocalMethodsG1, expressions1, fieldAccessReplacedWithGetterExpressions1, fieldAssignmentReplacedWithSetterExpressions1, this.iCompilationUnit1);
 			findLocallyAccessedFields(pdg2, mappedNodesG2, commonSuperclass, directlyAccessedLocalFieldsG2, indirectlyAccessedLocalFieldsG2, directlyModifiedLocalFieldsG2, indirectlyModifiedLocalFieldsG2,
 					directlyAccessedLocalMethodsG2, indirectlyAccessedLocalMethodsG2, expressions2, fieldAccessReplacedWithGetterExpressions2, fieldAssignmentReplacedWithSetterExpressions2, this.iCompilationUnit2);
+			this.variablesToBeReturnedG1 = variablesToBeReturned(pdg1, getRemovableNodesG1());
+			this.variablesToBeReturnedG2 = variablesToBeReturned(pdg2, getRemovableNodesG2());
 			checkCloneStructureNodeForPreconditions(getCloneStructureRoot());
 			processNonMappedNodesMovableBeforeAndAfter();
-			this.lambdaExpressionPreconditionExaminer = new LambdaExpressionPreconditionExaminer(getCloneStructureRoot(), getMaximumStateWithMinimumDifferences(), getCommonPassedParameters(), nonMappedNodesG1, nonMappedNodesG2);
-			Set<PDGNode> remainingMovableNodesG1 = new TreeSet<PDGNode>();
-			remainingMovableNodesG1.addAll(nonMappedPDGNodesG1MovableBefore);
-			remainingMovableNodesG1.addAll(nonMappedPDGNodesG1MovableAfter);
-			remainingMovableNodesG1.addAll(nonMappedPDGNodesG1MovableBeforeAndAfter);
-			
-			Set<PDGNode> remainingMovableNodesG2 = new TreeSet<PDGNode>();
-			remainingMovableNodesG2.addAll(nonMappedPDGNodesG2MovableBefore);
-			remainingMovableNodesG2.addAll(nonMappedPDGNodesG2MovableAfter);
-			remainingMovableNodesG2.addAll(nonMappedPDGNodesG2MovableBeforeAndAfter);
-			//discard the block gaps in which all nodes can be moved before or after the clone fragments, and are directly nested under cloneStructureRoot
-			List<PDGNodeBlockGap> discardedBlockGaps = new ArrayList<PDGNodeBlockGap>();
-			for(PDGNodeBlockGap blockGap : lambdaExpressionPreconditionExaminer.getRefactorableBlockGaps()) {
-				if(remainingMovableNodesG1.containsAll(blockGap.getNodesG1()) && remainingMovableNodesG2.containsAll(blockGap.getNodesG2()) && blockGap.getParent().equals(cloneStructureRoot)) {
-					discardedBlockGaps.add(blockGap);
-				}
-				if(blockGap.getNodesG1().containsAll(allNodesInSubTreePDG1) && blockGap.getNodesG2().containsAll(allNodesInSubTreePDG2)) {
-					//the block gap contains the entire clone fragments
-					discardedBlockGaps.add(blockGap);
-				}
-			}
-			lambdaExpressionPreconditionExaminer.discardBlockGaps(discardedBlockGaps);
-			Set<PDGNode> nodesInBlockGapsG1 = new TreeSet<PDGNode>();
-			Set<PDGNode> nodesInBlockGapsG2 = new TreeSet<PDGNode>();
-			for(PDGNodeBlockGap blockGap : getRefactorableBlockGaps()) {
-				nodesInBlockGapsG1.addAll(blockGap.getNodesG1());
-				nodesInBlockGapsG2.addAll(blockGap.getNodesG2());
-			}
-			Set<PDGNode> allMappedNodesG1 = new TreeSet<PDGNode>(mappedNodesG1);
-			allMappedNodesG1.addAll(nodesInBlockGapsG1);
-			Set<PDGNode> allMappedNodesG2 = new TreeSet<PDGNode>(mappedNodesG2);
-			allMappedNodesG2.addAll(nodesInBlockGapsG2);
-			//Set<PDGNode> allNonMappedNodesG1 = new TreeSet<PDGNode>(nonMappedNodesG1);
-			//allNonMappedNodesG1.removeAll(nodesInBlockGapsG1);
-			//Set<PDGNode> allNonMappedNodesG2 = new TreeSet<PDGNode>(nonMappedNodesG2);
-			//allNonMappedNodesG2.removeAll(nodesInBlockGapsG2);
-			this.variablesToBeReturnedG1 = variablesToBeReturned(pdg1, allMappedNodesG1);
-			this.variablesToBeReturnedG2 = variablesToBeReturned(pdg2, allMappedNodesG2);
 			checkPreconditionsAboutReturnedVariables();
 			checkIfAllPossibleExecutionFlowsEndInReturn();
 			this.cloneRefactoringType = computeRefactoringType();
-			this.declaredVariablesInRemainingNodesDefinedByMappedNodesG1 = findDeclaredVariablesInRemainingNodesDefinedByMappedNodes(pdg1, allMappedNodesG1);
-			this.declaredVariablesInRemainingNodesDefinedByMappedNodesG2 = findDeclaredVariablesInRemainingNodesDefinedByMappedNodes(pdg2, allMappedNodesG2);
-		}
-	}
-
-	public List<PDGExpressionGap> getRefactorableExpressionGaps() {
-		if(lambdaExpressionPreconditionExaminer != null) {
-			return lambdaExpressionPreconditionExaminer.getRefactorableExpressionGaps();
-		}
-		else {
-			return new ArrayList<PDGExpressionGap>();
-		}
-	}
-
-	public List<PDGNodeBlockGap> getRefactorableBlockGaps() {
-		if(lambdaExpressionPreconditionExaminer != null) {
-			return lambdaExpressionPreconditionExaminer.getRefactorableBlockGaps();
-		}
-		else {
-			return new ArrayList<PDGNodeBlockGap>();
-		}
-	}
-
-	public Set<VariableBindingKeyPair> getLocalVariablesReturnedByBlockGaps() {
-		if(lambdaExpressionPreconditionExaminer != null) {
-			return lambdaExpressionPreconditionExaminer.getLocalVariablesReturnedByBlockGaps();
-		}
-		else {
-			return new LinkedHashSet<VariableBindingKeyPair>();
+			this.declaredVariablesInRemainingNodesDefinedByMappedNodesG1 = findDeclaredVariablesInRemainingNodesDefinedByMappedNodes(pdg1, getRemovableNodesG1());
+			this.declaredVariablesInRemainingNodesDefinedByMappedNodesG2 = findDeclaredVariablesInRemainingNodesDefinedByMappedNodes(pdg2, getRemovableNodesG2());
 		}
 	}
 
@@ -622,7 +558,7 @@ public class PreconditionExaminer {
 							if((variable2.getVariableName().equals(variable1.getVariableName()) ||
 									variable1.getVariableName().equals(renamedVariableName)) &&
 									(variable2.getVariableType().equals(variable1.getVariableType()) ||
-											commonSuperType(variableBinding1, variableBinding2))) {
+											variableBinding1 != null && variableBinding2 != null && ASTNodeMatcher.commonSuperType(variableBinding1.getType(), variableBinding2.getType()) != null)) {
 								sortedVariables2.add(variable2);
 								break;
 							}
@@ -669,45 +605,6 @@ public class PreconditionExaminer {
 				}
 			}
 		}
-	}
-
-	private boolean commonSuperType(IVariableBinding variableBinding1, IVariableBinding variableBinding2) {
-		if(variableBinding1 != null && variableBinding2 != null) {
-			ITypeBinding typeBinding1 = variableBinding1.getType();
-			ITypeBinding typeBinding2 = variableBinding2.getType();
-			ITypeBinding commonSuperTypeBinding = ASTNodeMatcher.commonSuperType(typeBinding1, typeBinding2);
-			if(commonSuperTypeBinding != null) {
-				return true;
-			}
-			else if(typeBinding1.getQualifiedName().equals("java.lang.Number") && isNumberPrimitiveType(typeBinding2)) {
-				return true;
-			}
-			else if(isNumberPrimitiveType(typeBinding1) && typeBinding2.getQualifiedName().equals("java.lang.Number")) {
-				return true;
-			}
-			else if(typeBinding1.getName().equals("float") && typeBinding2.getName().equals("double")) {
-				return true;
-			}
-			else if(typeBinding1.getName().equals("double") && typeBinding2.getName().equals("float")) {
-				return true;
-			}
-			else if(typeBinding1.getName().equals("int") && typeBinding2.getName().equals("byte")) {
-				return true;
-			}
-			else if(typeBinding1.getName().equals("byte") && typeBinding2.getName().equals("int")) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-	private static boolean isNumberPrimitiveType(ITypeBinding typeBinding) {
-		if(typeBinding.isPrimitive()) {
-			String name = typeBinding.getQualifiedName();
-			if(name.equals("byte") || name.equals("double") || name.equals("float") || name.equals("int") || name.equals("long") || name.equals("short"))
-				return true;
-		}
-		return false;
 	}
 
 	private VariableBindingKeyPair commonPassedParametersAlreadyContainOneOfTheKeys(VariableBindingKeyPair keyPair) {

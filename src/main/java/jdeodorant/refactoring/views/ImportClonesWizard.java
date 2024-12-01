@@ -3,7 +3,6 @@ package jdeodorant.refactoring.views;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
-import jdeodorant.refactoring.Activator;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.IStatus;
 import org.eclipse.core.runtime.MultiStatus;
@@ -21,6 +20,7 @@ import parsers.CloneDetectorType;
 import parsers.CloneGroupList;
 import parsers.InvalidInputFileException;
 import parsers.ResourceInfo.ICompilationUnitNotFoundException;
+import jdeodorant.refactoring.Activator;
 
 public class ImportClonesWizard extends Wizard {
 	private IJavaProject javaProject;

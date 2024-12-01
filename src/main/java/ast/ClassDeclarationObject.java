@@ -3,13 +3,13 @@ package ast;
 import ast.decomposition.CatchClauseObject;
 import ast.decomposition.TryStatementObject;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ITypeRoot;
 
 public abstract class ClassDeclarationObject {
@@ -26,7 +26,7 @@ public abstract class ClassDeclarationObject {
 
 	public abstract ITypeRoot getITypeRoot();
 	public abstract ClassObject getClassObject();
-	public abstract File getIFile();
+	public abstract IFile getIFile();
 	public abstract TypeObject getSuperclass();
 
 	public boolean addMethod(MethodObject method) {

@@ -21,20 +21,20 @@ import org.eclipse.jdt.core.dom.Type;
 public class IfStatementExpressionAnalyzer {
 	//parent nodes are CONDITIONAL_AND (&&), CONDITIONAL_OR (||) infix operators, while leaf nodes are expressions
 	private DefaultMutableTreeNode root;
-	private Expression completeExpression;
+	private final Expression completeExpression;
 	//contains the expressions corresponding to each candidate type variable
-	private Map<SimpleName, Expression> typeVariableExpressionMap;
+	private final Map<SimpleName, Expression> typeVariableExpressionMap;
 	//contains the static fields corresponding to each candidate type variable
-	private Map<SimpleName, ArrayList<SimpleName>> typeVariableStaticFieldMap;
+	private final Map<SimpleName, ArrayList<SimpleName>> typeVariableStaticFieldMap;
 	//contains the subclass types corresponding to each candidate type variable
-	private Map<SimpleName, ArrayList<Type>> typeVariableSubclassMap;
+	private final Map<SimpleName, ArrayList<Type>> typeVariableSubclassMap;
 	
 	//contains the expressions corresponding to each candidate type method invocation
-	private Map<MethodInvocation, Expression> typeMethodInvocationExpressionMap;
+	private final Map<MethodInvocation, Expression> typeMethodInvocationExpressionMap;
 	//contains the static fields corresponding to each candidate type method invocation
-	private Map<MethodInvocation, ArrayList<SimpleName>> typeMethodInvocationStaticFieldMap;
+	private final Map<MethodInvocation, ArrayList<SimpleName>> typeMethodInvocationStaticFieldMap;
 	//contains the subclass types corresponding to each candidate type method invocation
-	private Map<MethodInvocation, ArrayList<Type>> typeMethodInvocationSubclassMap;
+	private final Map<MethodInvocation, ArrayList<Type>> typeMethodInvocationSubclassMap;
 	
 	public IfStatementExpressionAnalyzer(Expression completeExpression) {
 		this.root = new DefaultMutableTreeNode();
@@ -55,8 +55,8 @@ public class IfStatementExpressionAnalyzer {
 	public Set<SimpleName> getTargetVariables() {
 		Set<SimpleName> targetVariables = new LinkedHashSet<SimpleName>();
 		for(SimpleName targetVariable : typeVariableExpressionMap.keySet()) {
-			if(typeVariableStaticFieldMap.keySet().contains(targetVariable) ||
-					typeVariableSubclassMap.keySet().contains(targetVariable))
+			if(typeVariableStaticFieldMap.containsKey(targetVariable) ||
+					typeVariableSubclassMap.containsKey(targetVariable))
 				targetVariables.add(targetVariable);
 		}
 		return targetVariables;
@@ -107,8 +107,8 @@ public class IfStatementExpressionAnalyzer {
 	public Set<MethodInvocation> getTargetMethodInvocations() {
 		Set<MethodInvocation> targetMethodInvocations = new LinkedHashSet<MethodInvocation>();
 		for(MethodInvocation targetMethodInvocation : typeMethodInvocationExpressionMap.keySet()) {
-			if(typeMethodInvocationStaticFieldMap.keySet().contains(targetMethodInvocation) ||
-					typeMethodInvocationSubclassMap.keySet().contains(targetMethodInvocation))
+			if(typeMethodInvocationStaticFieldMap.containsKey(targetMethodInvocation) ||
+					typeMethodInvocationSubclassMap.containsKey(targetMethodInvocation))
 				targetMethodInvocations.add(targetMethodInvocation);
 		}
 		return targetMethodInvocations;

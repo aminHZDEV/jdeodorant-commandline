@@ -3,11 +3,11 @@ package ast;
 import ast.decomposition.MethodBodyObject;
 import jdeodorant.refactoring.manipulators.TypeCheckElimination;
 
-import java.io.File;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.ListIterator;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.dom.AbstractTypeDeclaration;
 import org.eclipse.jdt.core.dom.EnumDeclaration;
@@ -15,10 +15,10 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 public class ClassObject extends ClassDeclarationObject {
 
-	private final List<ConstructorObject> constructorList;
-	private final List<EnumConstantDeclarationObject> enumConstantDeclarationList;
+	private List<ConstructorObject> constructorList;
+	private List<EnumConstantDeclarationObject> enumConstantDeclarationList;
 	private TypeObject superclass;
-	private final List<TypeObject> interfaceList;
+	private List<TypeObject> interfaceList;
 	private boolean _abstract;
     private boolean _interface;
     private boolean _static;
@@ -26,7 +26,7 @@ public class ClassObject extends ClassDeclarationObject {
     private Access access;
     //private TypeDeclaration typeDeclaration;
     private ASTInformation typeDeclaration;
-    private File iFile;
+    private IFile iFile;
 
     public ClassObject() {
 		this.constructorList = new ArrayList<ConstructorObject>();
@@ -76,59 +76,63 @@ public class ClassObject extends ClassDeclarationObject {
     	return typeDeclaration.getITypeRoot();
     }
 
-    public File getIFile() {
+    public IFile getIFile() {
 		return iFile;
 	}
 
-	public void setIFile(File file) {
+	public void setIFile(IFile file) {
 		iFile = file;
 	}
 
 	public boolean isFriend(String className) {
-		if (superclass != null) {
-			if (superclass.getClassType().equals(className))
+		if(superclass != null) {
+			if(superclass.getClassType().equals(className))
 				return true;
 		}
-		for (TypeObject interfaceType : interfaceList) {
-			if (interfaceType.getClassType().equals(className))
+		for(TypeObject interfaceType : interfaceList) {
+			if(interfaceType.getClassType().equals(className))
 				return true;
 		}
-		for (FieldObject field : fieldList) {
+		for(FieldObject field : fieldList) {
 			TypeObject fieldType = field.getType();
-			if (checkFriendship(fieldType, className))
+			if(checkFriendship(fieldType, className))
 				return true;
 		}
-		for (ConstructorObject constructor : constructorList) {
-			if (checkParameterIterator(className, constructor.getParameterListIterator(), constructor.getCreations(), null))  // Changed method to null or proper context
-				return true;
+		for(ConstructorObject constructor : constructorList) {
+			ListIterator<ParameterObject> parameterIterator = constructor.getParameterListIterator();
+			while(parameterIterator.hasNext()) {
+				ParameterObject parameter = parameterIterator.next();
+				TypeObject parameterType = parameter.getType();
+				if(checkFriendship(parameterType, className))
+					return true;
+			}
+			for(CreationObject creation : constructor.getCreations()) {
+				TypeObject creationType = creation.getType();
+				if(checkFriendship(creationType, className))
+					return true;
+			}
 		}
-		for (MethodObject method : methodList) {
+		for(MethodObject method : methodList) {
 			TypeObject returnType = method.getReturnType();
-			if (checkFriendship(returnType, className))
+			if(checkFriendship(returnType, className))
 				return true;
-			if (checkParameterIterator(className, method.getParameterListIterator(), method.getCreations(), method)) // Now passing the current method
-				return true;
+			ListIterator<ParameterObject> parameterIterator = method.getParameterListIterator();
+			while(parameterIterator.hasNext()) {
+				ParameterObject parameter = parameterIterator.next();
+				TypeObject parameterType = parameter.getType();
+				if(checkFriendship(parameterType, className))
+					return true;
+			}
+			for(CreationObject creation : method.getCreations()) {
+				TypeObject creationType = creation.getType();
+				if(checkFriendship(creationType, className))
+					return true;
+			}
 		}
-		if (superclass != null) {
+		if(superclass != null) {
 			ClassObject superclassObject = ASTReader.getSystemObject().getClassObject(superclass.getClassType());
-			if (superclassObject != null)
+			if(superclassObject != null)
 				return superclassObject.isFriend(className);
-		}
-		return false;
-	}
-
-
-	private boolean checkParameterIterator(String className, ListIterator<ParameterObject> parameterListIterator, List<CreationObject> creations, MethodObject method) {
-        while(parameterListIterator.hasNext()) {
-			ParameterObject parameter = parameterListIterator.next();
-			TypeObject parameterType = parameter.getType();
-			if(checkFriendship(parameterType, className))
-				return true;
-		}
-		for(CreationObject creation : creations) {
-			TypeObject creationType = creation.getType();
-			if(checkFriendship(creationType, className))
-				return true;
 		}
 		return false;
 	}
@@ -136,8 +140,10 @@ public class ClassObject extends ClassDeclarationObject {
 	private boolean checkFriendship(TypeObject type, String className) {
 		if(type.getClassType().equals(className))
 			return true;
-        return type.getGenericType() != null && type.getGenericType().contains(className);
-    }
+		if(type.getGenericType() != null && type.getGenericType().contains(className))
+			return true;
+		return false;
+	}
 
     public List<TypeCheckElimination> generateTypeCheckEliminations() {
     	List<TypeCheckElimination> typeCheckEliminations = new ArrayList<TypeCheckElimination>();
@@ -148,11 +154,11 @@ public class ClassObject extends ClassDeclarationObject {
     				List<TypeCheckElimination> list = methodBodyObject.generateTypeCheckEliminations();
     				for(TypeCheckElimination typeCheckElimination : list) {
     					if(!typeCheckElimination.allTypeCheckBranchesAreEmpty()) {
+    						//TypeCheckCodeFragmentAnalyzer analyzer = new TypeCheckCodeFragmentAnalyzer(typeCheckElimination, typeDeclaration, methodObject.getMethodDeclaration());
     						TypeCheckCodeFragmentAnalyzer analyzer = new TypeCheckCodeFragmentAnalyzer(typeCheckElimination, (TypeDeclaration)getAbstractTypeDeclaration(),
     								methodObject.getMethodDeclaration(), iFile);
     						if((typeCheckElimination.getTypeField() != null || typeCheckElimination.getTypeLocalVariable() != null || typeCheckElimination.getTypeMethodInvocation() != null) &&
     								typeCheckElimination.allTypeCheckingsContainStaticFieldOrSubclassType() && typeCheckElimination.isApplicable()) {
-    							typeCheckElimination.setClassObject(this);
     							typeCheckEliminations.add(typeCheckElimination);
     						}
     					}

@@ -1,6 +1,5 @@
 package jdeodorant.refactoring.manipulators;
 
-import ast.ASTReader;
 import ast.util.ExpressionExtractor;
 import ast.util.MethodDeclarationUtility;
 
@@ -9,7 +8,6 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -20,7 +18,6 @@ import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.IJavaElement;
-import org.eclipse.jdt.core.IPackageFragmentRoot;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jdt.core.dom.AST;
 import org.eclipse.jdt.core.dom.Assignment;
@@ -36,12 +33,10 @@ import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
-import org.eclipse.jdt.core.dom.ImportDeclaration;
 import org.eclipse.jdt.core.dom.InfixExpression;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Modifier;
-import org.eclipse.jdt.core.dom.PackageDeclaration;
 import org.eclipse.jdt.core.dom.PostfixExpression;
 import org.eclipse.jdt.core.dom.PrefixExpression;
 import org.eclipse.jdt.core.dom.PrimitiveType;
@@ -706,21 +701,11 @@ public abstract class PolymorphismRefactoring extends Refactoring {
 							subclassRewriter.set(methodInvocation, MethodInvocation.EXPRESSION_PROPERTY, subclassAST.newSimpleName(invokerName), null);
 							if(newSimpleName.getParent() instanceof FieldAccess) {
 								FieldAccess fieldAccess = (FieldAccess)newSimpleName.getParent();
-								if(newSimpleName.equals(fieldAccess.getName())) {
-									subclassRewriter.replace(fieldAccess, methodInvocation, null);
-								}
-								else {
-									subclassRewriter.set(fieldAccess, FieldAccess.EXPRESSION_PROPERTY, methodInvocation, null);
-								}
+								subclassRewriter.replace(fieldAccess, methodInvocation, null);
 							}
 							else if(newSimpleName.getParent() instanceof QualifiedName) {
 								QualifiedName qualifiedName = (QualifiedName)newSimpleName.getParent();
-								if(newSimpleName.equals(qualifiedName.getName())) {
-									subclassRewriter.replace(qualifiedName, methodInvocation, null);
-								}
-								else {
-									subclassRewriter.set(qualifiedName, QualifiedName.QUALIFIER_PROPERTY, methodInvocation, null);
-								}
+								subclassRewriter.replace(qualifiedName, methodInvocation, null);
 							}
 							else {
 								subclassRewriter.replace(newSimpleName, methodInvocation, null);
@@ -819,24 +804,7 @@ public abstract class PolymorphismRefactoring extends Refactoring {
 		return null;
 	}
 
-	protected IFile getFile(String fullyQualifiedClassName) {
-		try {
-			IPackageFragmentRoot[] rootContainers = ASTReader.getExaminedProject().getAllPackageFragmentRoots();
-			for(IPackageFragmentRoot fragmentRoot : rootContainers) {
-				if(fragmentRoot.getKind() == IPackageFragmentRoot.K_SOURCE) {
-					IFile file = getFile((IContainer)fragmentRoot.getResource(), fullyQualifiedClassName);
-					if(file != null) {
-						return file;
-					}
-				}
-			}
-		} catch (JavaModelException e) {
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	private IFile getFile(IContainer rootContainer, String fullyQualifiedClassName) {
+	protected IFile getFile(IContainer rootContainer, String fullyQualifiedClassName) {
 		String[] subPackages = fullyQualifiedClassName.split("\\.");
 		IContainer classContainer = rootContainer;
 		IFile classFile = null;
@@ -1131,53 +1099,5 @@ public abstract class PolymorphismRefactoring extends Refactoring {
 			returnedExpression = ast.newNullLiteral();
 		}
 		return returnedExpression;
-	}
-
-	protected String generateSubclassName(SimpleName variable) {
-		String subclassName = "";
-		StringTokenizer tokenizer = new StringTokenizer(variable.getIdentifier(),"_");
-		while(tokenizer.hasMoreTokens()) {
-			String tempName = tokenizer.nextToken().toLowerCase().toString();
-			subclassName += tempName.subSequence(0, 1).toString().toUpperCase() + 
-			tempName.subSequence(1, tempName.length()).toString();
-		}
-		return subclassName;
-	}
-
-	protected void addImportDeclaration(ITypeBinding typeBinding, CompilationUnit targetCompilationUnit, ASTRewrite targetRewriter) {
-		String qualifiedName = typeBinding.getQualifiedName();
-		String qualifiedPackageName = "";
-		if(qualifiedName.contains("."))
-			qualifiedPackageName = qualifiedName.substring(0,qualifiedName.lastIndexOf("."));
-		PackageDeclaration sourcePackageDeclaration = sourceCompilationUnit.getPackage();
-		String sourcePackageDeclarationName = "";
-		if(sourcePackageDeclaration != null)
-			sourcePackageDeclarationName = sourcePackageDeclaration.getName().getFullyQualifiedName();     
-		if(!qualifiedPackageName.equals("") && !qualifiedPackageName.equals("java.lang") &&
-				!qualifiedPackageName.equals(sourcePackageDeclarationName) && !typeBinding.isNested()) {
-			List<ImportDeclaration> importDeclarationList = targetCompilationUnit.imports();
-			boolean found = false;
-			for(ImportDeclaration importDeclaration : importDeclarationList) {
-				if(!importDeclaration.isOnDemand()) {
-					if(qualifiedName.equals(importDeclaration.getName().getFullyQualifiedName())) {
-						found = true;
-						break;
-					}
-				}
-				else {
-					if(qualifiedPackageName.equals(importDeclaration.getName().getFullyQualifiedName())) {
-						found = true;
-						break;
-					}
-				}
-			}
-			if(!found) {
-				AST ast = targetCompilationUnit.getAST();
-				ImportDeclaration importDeclaration = ast.newImportDeclaration();
-				targetRewriter.set(importDeclaration, ImportDeclaration.NAME_PROPERTY, ast.newName(qualifiedName), null);
-				ListRewrite importRewrite = targetRewriter.getListRewrite(targetCompilationUnit, CompilationUnit.IMPORTS_PROPERTY);
-				importRewrite.insertLast(importDeclaration, null);
-			}
-		}
 	}
 }

@@ -227,7 +227,7 @@ public class GodClass extends ViewPart {
 				ExtractClassCandidateRefactoring candidate1 = (ExtractClassCandidateRefactoring)obj1;
 				ExtractClassCandidateRefactoring candidate2 = (ExtractClassCandidateRefactoring)obj2;
 				return candidate1.compareTo(candidate2);
-			} 
+			}
 			else if(obj1 instanceof ExtractedConcept
 					&& obj2 instanceof ExtractedConcept) {
 				ExtractedConcept concept1 = (ExtractedConcept)obj1;
@@ -327,7 +327,7 @@ public class GodClass extends ViewPart {
 		new TreeColumn(treeViewer.getTree(), SWT.LEFT).setText("Extractable Concept");
 		new TreeColumn(treeViewer.getTree(), SWT.LEFT).setText("Source/Extracted accessed members");
 		new TreeColumn(treeViewer.getTree(), SWT.LEFT).setText("Rate it!");
-		
+
 		treeViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				treeViewer.getTree().setMenu(null);
@@ -342,7 +342,7 @@ public class GodClass extends ViewPart {
 				}
 			}
 		});
-		
+
 		treeViewer.expandAll();
 
 		for (int i = 0, n = treeViewer.getTree().getColumnCount(); i < n; i++) {
@@ -636,10 +636,10 @@ public class GodClass extends ViewPart {
 							e.printStackTrace();
 						}
 						MyRefactoringWizard wizard = new MyRefactoringWizard(refactoring, applyRefactoringAction);
-						RefactoringWizardOpenOperation op = new RefactoringWizardOpenOperation(wizard); 
-						try { 
-							String titleForFailedChecks = ""; //$NON-NLS-1$ 
-							op.run(getSite().getShell(), titleForFailedChecks); 
+						RefactoringWizardOpenOperation op = new RefactoringWizardOpenOperation(wizard);
+						try {
+							String titleForFailedChecks = ""; //$NON-NLS-1$
+							op.run(getSite().getShell(), titleForFailedChecks);
 						} catch(InterruptedException e) {
 							e.printStackTrace();
 						}
@@ -764,12 +764,17 @@ public class GodClass extends ViewPart {
 					classObjectsToBeExamined.addAll(systemObject.getClassObjects());
 				}
 				final Set<String> classNamesToBeExamined = new LinkedHashSet<String>();
-//                JdApplication.checkClassObjectsToBeExamined(systemObject, classObjectsToBeExamined, classNamesToBeExamined);
-                final List<ExtractClassCandidateRefactoring> extractClassCandidateList = new ArrayList<ExtractClassCandidateRefactoring>();
+				for(ClassObject classObject : classObjectsToBeExamined) {
+					if(!classObject.isEnum() && !classObject.isInterface() && !classObject.isGeneratedByParserGenenator())
+						classNamesToBeExamined.add(classObject.getName());
+				}
+				MySystem system = new MySystem(systemObject, true);
+				final DistanceMatrix distanceMatrix = new DistanceMatrix(system);
+				final List<ExtractClassCandidateRefactoring> extractClassCandidateList = new ArrayList<ExtractClassCandidateRefactoring>();
 
 				ps.busyCursorWhile(new IRunnableWithProgress() {
 					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-//						extractClassCandidateList.addAll(distanceMatrix.getExtractClassCandidateRefactorings(classNamesToBeExamined, monitor));
+						extractClassCandidateList.addAll(distanceMatrix.getExtractClassCandidateRefactorings(classNamesToBeExamined, monitor));
 					}
 				});
 				HashMap<String, ExtractClassCandidateGroup> groupedBySourceClassMap = new HashMap<String, ExtractClassCandidateGroup>();
@@ -897,7 +902,7 @@ public class GodClass extends ViewPart {
 			}
 		}
 	}
-	
+
 	private void setSelectedLineWithinCandidateGroup(Tree tree, TreeItem candidateGroupTreeItem, CandidateRefactoring candidateRefactoring) {
 		for(int i=0; i<candidateGroupTreeItem.getItemCount(); i++){
 			TreeItem conceptTreeItem = candidateGroupTreeItem.getItem(i);

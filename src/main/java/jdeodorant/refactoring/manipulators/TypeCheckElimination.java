@@ -1,9 +1,12 @@
 package jdeodorant.refactoring.manipulators;
 
+import ast.decomposition.CompositeStatementObject;
+import ast.inheritance.InheritanceTree;
+import ast.util.ExpressionExtractor;
+import ast.util.MethodDeclarationUtility;
+import ast.util.StatementExtractor;
+
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -29,7 +32,6 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.IVariableBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.Modifier;
 import org.eclipse.jdt.core.dom.PostfixExpression;
 import org.eclipse.jdt.core.dom.PrefixExpression;
 import org.eclipse.jdt.core.dom.QualifiedName;
@@ -48,23 +50,14 @@ import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
-import ast.ClassObject;
-import ast.decomposition.CompositeStatementObject;
-import ast.inheritance.InheritanceTree;
-import ast.util.ExpressionExtractor;
-import ast.util.MethodDeclarationUtility;
-import ast.util.StatementExtractor;
-
 public class TypeCheckElimination implements Comparable<TypeCheckElimination> {
 	private Map<Expression, ArrayList<Statement>> typeCheckMap;
 	private ArrayList<Statement> defaultCaseStatements;
 	private Map<Expression, List<SimpleName>> staticFieldMap;
 	private Map<Expression, List<Type>> subclassTypeMap;
-	private Map<VariableDeclarationFragment, Set<Expression>> assignedFieldsToValuesMap;
 	private VariableDeclarationFragment typeField;
 	private MethodDeclaration typeFieldGetterMethod;
 	private MethodDeclaration typeFieldSetterMethod;
-	private MethodDeclaration typeFieldConstructorMethod;
 	private Statement typeCheckCodeFragment;
 	private CompositeStatementObject typeCheckCompositeStatement;
 	private MethodDeclaration typeCheckMethod;
@@ -95,10 +88,6 @@ public class TypeCheckElimination implements Comparable<TypeCheckElimination> {
 	private int groupSizeAtClassLevel;
 	private double averageNumberOfStatements;
 	private Integer userRate;
-	
-	public Map<SimpleName, LinkedHashSet<VariableDeclarationFragment>> staticFieldToUsedPrivateFieldsMap; // key = typeCheck Field, value => fields that are used inside the typechecking branch that of the typeCheck
-	public Map<SimpleName, LinkedHashSet<MethodDeclaration>> staticFieldToUsedMethodsMap;
-	private ClassObject classObject;
 	
 	public TypeCheckElimination() {
 		this.typeCheckMap = new LinkedHashMap<Expression, ArrayList<Statement>>();
@@ -132,9 +121,6 @@ public class TypeCheckElimination implements Comparable<TypeCheckElimination> {
 		this.staticFieldSubclassTypeMap = new LinkedHashMap<SimpleName, String>();
 		this.remainingIfStatementExpressionMap = new LinkedHashMap<Expression, DefaultMutableTreeNode>();
 		this.abstractMethodName = null;
-		this.assignedFieldsToValuesMap = new LinkedHashMap<VariableDeclarationFragment, Set<Expression>>();
-		this.staticFieldToUsedPrivateFieldsMap = new HashMap<SimpleName, LinkedHashSet<VariableDeclarationFragment>>();
-		this.staticFieldToUsedMethodsMap = new HashMap<SimpleName, LinkedHashSet<MethodDeclaration>>();
 	}
 	
 	public void addTypeCheck(Expression expression, Statement statement) {
@@ -172,17 +158,6 @@ public class TypeCheckElimination implements Comparable<TypeCheckElimination> {
 		subclassTypeMap.put(expression, subclassTypeGroup);
 	}
 	
-	public Map<VariableDeclarationFragment, Set<Expression>> getAssignedFieldsToValuesMap() {
-		return assignedFieldsToValuesMap;
-	}
-
-	public void addAssignedFieldsAndValues(VariableDeclarationFragment field, Expression value) {
-		if (!assignedFieldsToValuesMap.containsKey(field)) {
-			assignedFieldsToValuesMap.put(field, new HashSet<Expression>());
-		}
-		assignedFieldsToValuesMap.get(field).add(value);
-	}
-	
 	public void addRemainingIfStatementExpression(Expression expression, DefaultMutableTreeNode root) {
 		remainingIfStatementExpressionMap.put(expression, root);
 	}
@@ -193,97 +168,6 @@ public class TypeCheckElimination implements Comparable<TypeCheckElimination> {
 	
 	public void addAccessedField(VariableDeclarationFragment fragment) {
 		accessedFields.add(fragment);
-	}
-	
-	public void addFieldToUsedFieldsMap(VariableDeclarationFragment fragment, Statement statement) {
-		for (Expression exp : typeCheckMap.keySet()) {
-			Set<Statement> statementsSet = new HashSet<Statement>(typeCheckMap.get(exp));
-            if (statementsSet.contains(statement)) {
-                List<SimpleName> typeCheckFields = staticFieldMap.get(exp);
-                for (SimpleName typeCheckfield : typeCheckFields) {
-                	if (!staticFieldToUsedPrivateFieldsMap.containsKey(typeCheckfield)) {
-                		staticFieldToUsedPrivateFieldsMap.put(typeCheckfield, new LinkedHashSet<VariableDeclarationFragment>());
-                	}
-                	
-                	if (isVariableDeclarationFragmentPrivateField(fragment)) {
-                		staticFieldToUsedPrivateFieldsMap.get(typeCheckfield).add(fragment);        		
-                	}
-                }
-            }
-        }	
-	}
-	
-	public void addFieldToUsedFieldsMap(VariableDeclarationFragment fragment, Expression expression) {
-		List<SimpleName> typeCheckFields = staticFieldMap.get(expression);
-        for (SimpleName typeCheckfield : typeCheckFields) {
-        	if (!staticFieldToUsedPrivateFieldsMap.containsKey(typeCheckfield)) {
-        		staticFieldToUsedPrivateFieldsMap.put(typeCheckfield, new LinkedHashSet<VariableDeclarationFragment>());
-        	}
-        	
-        	if (isVariableDeclarationFragmentPrivateField(fragment)) {
-        		staticFieldToUsedPrivateFieldsMap.get(typeCheckfield).add(fragment);        		
-        	}
-        }
-	}
-	
-	private boolean isVariableDeclarationFragmentPrivateField(VariableDeclarationFragment fragment) {
-	    if (fragment.getParent() instanceof FieldDeclaration) {
-	        FieldDeclaration fieldDeclaration = (FieldDeclaration) fragment.getParent();
-	        return Modifier.isPrivate(fieldDeclaration.getModifiers());
-	    }
-	    return false;
-	}
-	
-	public void addMethodToUsedMethodsMap(MethodDeclaration method, Statement statement) {
-		for (Expression exp: typeCheckMap.keySet()) {
-			List<Statement> stmnts = typeCheckMap.get(exp);
-			if (stmnts != null && stmnts.contains(statement)) {
-				for (SimpleName sn : staticFieldMap.get(exp) ) {
-					if (!staticFieldToUsedMethodsMap.containsKey(sn)) {
-						staticFieldToUsedMethodsMap.put(sn, new LinkedHashSet<MethodDeclaration>());				
-					}
-					staticFieldToUsedMethodsMap.get(sn).add(method);
-				}
-			}
-		}
-	}
-	
-	public LinkedHashSet<MethodDeclaration> getMethodsUsedInsideStaticFieldBranch(SimpleName staticField){
-		if (staticFieldToUsedMethodsMap.containsKey(staticField)) {
-			return staticFieldToUsedMethodsMap.get(staticField);
-		} else {
-			return new LinkedHashSet<MethodDeclaration>();
-		}
-	}
-	
-	public Set<VariableDeclarationFragment> getCommonFieldsUsedInTypeCheckingBranches(){
-		Set<VariableDeclarationFragment> commonFields = null;
-		for (LinkedHashSet<VariableDeclarationFragment> fields : staticFieldToUsedPrivateFieldsMap.values()) {
-            if (commonFields == null) {
-            	commonFields = new LinkedHashSet<VariableDeclarationFragment>(fields);
-            } else {
-            	commonFields.retainAll(fields);
-            }
-        }
-        
-		return commonFields;
-	}
-	
-	// temp
-	public Set<VariableDeclarationFragment> getFieldsUsedInTypeCheckingBranches(SimpleName staticField){
-		if  (staticFieldToUsedPrivateFieldsMap.containsKey(staticField)) {
-			return staticFieldToUsedPrivateFieldsMap.get(staticField);			
-		} else {
-			return new LinkedHashSet<VariableDeclarationFragment>(); 
-		}
-	}
-	
-	public Set<VariableDeclarationFragment> getFieldsUsedInTypeCheckingBranches(){
-		Set<VariableDeclarationFragment> fields = new HashSet<VariableDeclarationFragment>();
-		for (SimpleName tcf : staticFieldToUsedPrivateFieldsMap.keySet()) {
-			fields.addAll(staticFieldToUsedPrivateFieldsMap.get(tcf));
-		}
-		return fields;
 	}
 	
 	public void addAssignedField(VariableDeclarationFragment fragment) {
@@ -449,14 +333,6 @@ public class TypeCheckElimination implements Comparable<TypeCheckElimination> {
 	public void setTypeFieldSetterMethod(MethodDeclaration typeFieldSetterMethod) {
 		this.typeFieldSetterMethod = typeFieldSetterMethod;
 	}
-	
-	public void setTypeFieldConsturctorMethod(MethodDeclaration typeFieldConstructorMethod) {
-		this.typeFieldConstructorMethod = typeFieldConstructorMethod;
-	}
-	
-	public MethodDeclaration getTypeFieldConsturctorMethod() {
-		return typeFieldConstructorMethod;
-	}
 
 	public Statement getTypeCheckCodeFragment() {
 		return typeCheckCodeFragment;
@@ -542,14 +418,6 @@ public class TypeCheckElimination implements Comparable<TypeCheckElimination> {
 	public void putStaticFieldSubclassTypeMapping(SimpleName staticField, String subclassType) {
 		staticFieldSubclassTypeMap.put(staticField, subclassType);
 	}
-	
-	public ClassObject getClassObject() {
-		return classObject;
-	}
-
-	public void setClassObject(ClassObject classObject) {
-		this.classObject = classObject;
-	}
 
 	public boolean allTypeCheckingsContainStaticFieldOrSubclassType() {
 		return (typeCheckMap.keySet().size() > 1 || (typeCheckMap.keySet().size() == 1 && !defaultCaseStatements.isEmpty())) && 
@@ -558,24 +426,12 @@ public class TypeCheckElimination implements Comparable<TypeCheckElimination> {
 	
 	public boolean isApplicable() {
 		if(!containsLocalVariableAssignment() && !containsBranchingStatement() && !containsSuperMethodInvocation() && !containsSuperFieldAccess() &&
-				!isSubclassTypeAnInterface() && !returnStatementAfterTypeCheckCodeFragment() && !typeCheckClassPartOfExistingInheritanceTree())
+				!isSubclassTypeAnInterface() && !returnStatementAfterTypeCheckCodeFragment())
 			return true;
 		else
 			return false;
 	}
 	
-	private boolean typeCheckClassPartOfExistingInheritanceTree() {
-		Collection<List<Type>> subTypeCollection = subclassTypeMap.values();
-		for(List<Type> subTypes : subTypeCollection) {
-			for(Type subType : subTypes) {
-				if(subType.resolveBinding().isEqualTo(typeCheckClass.resolveBinding())) {
-					return true;
-				}
-			}
-		}
-		return false;
-	}
-
 	private boolean isSubclassTypeAnInterface() {
 		for(List<Type> subTypes : subclassTypeMap.values()) {
 			for(Type subType : subTypes) {
@@ -867,103 +723,6 @@ public class TypeCheckElimination implements Comparable<TypeCheckElimination> {
 		return typeCheckMethod.parameters();
 	}
 	
-	private Map<ReturnStatement, VariableDeclaration> getTypeCheckMethodReturnedVariableMap() {
-		Map<ReturnStatement, VariableDeclaration> map = new LinkedHashMap<ReturnStatement, VariableDeclaration>();
-		StatementExtractor statementExtractor = new StatementExtractor();
-		ExpressionExtractor expressionExtractor = new ExpressionExtractor();
-		List<Statement> typeCheckCodeFragmentReturnStatements = statementExtractor.getReturnStatements(typeCheckCodeFragment);
-		List<Statement> variableDeclarationStatements = statementExtractor.getVariableDeclarationStatements(typeCheckMethod.getBody());
-		List<Expression> variableDeclarationExpressions = expressionExtractor.getVariableDeclarationExpressions(typeCheckMethod.getBody());
-		for(Statement statement : typeCheckCodeFragmentReturnStatements) {
-			ReturnStatement returnStatement = (ReturnStatement)statement;
-			if(returnStatement.getExpression() instanceof SimpleName) {
-				SimpleName returnExpression = (SimpleName)returnStatement.getExpression();
-				List<SingleVariableDeclaration> parameters = typeCheckMethod.parameters();
-				for(SingleVariableDeclaration parameter : parameters) {
-					if(parameter.resolveBinding().isEqualTo(returnExpression.resolveBinding())) {
-						map.put(returnStatement, parameter);
-					}
-				}
-				for(Statement vdStatement : variableDeclarationStatements) {
-					VariableDeclarationStatement variableDeclarationStatement = (VariableDeclarationStatement)vdStatement;
-					List<VariableDeclarationFragment> fragments = variableDeclarationStatement.fragments();
-					for(VariableDeclarationFragment fragment : fragments) {
-						if(fragment.resolveBinding().isEqualTo(returnExpression.resolveBinding())) {
-							map.put(returnStatement, fragment);
-						}
-					}
-				}
-				for(Expression expression : variableDeclarationExpressions) {
-					VariableDeclarationExpression variableDeclarationExpression = (VariableDeclarationExpression)expression;
-					List<VariableDeclarationFragment> fragments = variableDeclarationExpression.fragments();
-					for(VariableDeclarationFragment fragment : fragments) {
-						if(fragment.resolveBinding().isEqualTo(returnExpression.resolveBinding())) {
-							map.put(returnStatement, fragment);
-						}
-					}
-				}
-			}
-		}
-		return map;
-	}
-	
-	public boolean returnedVariableReturnedInBranches() {
-		Map<ReturnStatement, VariableDeclaration> map = getTypeCheckMethodReturnedVariableMap();
-		int returnedInBranchCounter = 0;
-		for(ReturnStatement key : map.keySet()) {
-			for(Expression expression : typeCheckMap.keySet()) {
-				ArrayList<Statement> branchStatements = typeCheckMap.get(expression);
-				if(branchStatements.contains(key)) {
-					returnedInBranchCounter++;
-				}
-			}
-			if(defaultCaseStatements.contains(key)) {
-				returnedInBranchCounter++;
-			}
-		}
-		return map.size() == returnedInBranchCounter;
-	}
-
-	public boolean returnedVariableDeclaredAndReturnedInBranches() {
-		Map<ReturnStatement, VariableDeclaration> map = getTypeCheckMethodReturnedVariableMap();
-		int returnedInBranchCounter = 0;
-		int declaredInBranchCounter = 0;
-		for(ReturnStatement key : map.keySet()) {
-			for(Expression expression : typeCheckMap.keySet()) {
-				ArrayList<Statement> branchStatements = typeCheckMap.get(expression);
-				if(branchStatements.contains(key)) {
-					returnedInBranchCounter++;
-				}
-				for(Statement statement : branchStatements) {
-					if(statement instanceof VariableDeclarationStatement) {
-						VariableDeclarationStatement variableDeclarationStatement = (VariableDeclarationStatement)statement;
-						List<VariableDeclarationFragment> fragments = variableDeclarationStatement.fragments();
-						for(VariableDeclarationFragment fragment : fragments) {
-							if(fragment.equals(map.get(key))) {
-								declaredInBranchCounter++;
-							}
-						}
-					}
-				}
-			}
-			if(defaultCaseStatements.contains(key)) {
-				returnedInBranchCounter++;
-			}
-			for(Statement statement : defaultCaseStatements) {
-				if(statement instanceof VariableDeclarationStatement) {
-					VariableDeclarationStatement variableDeclarationStatement = (VariableDeclarationStatement)statement;
-					List<VariableDeclarationFragment> fragments = variableDeclarationStatement.fragments();
-					for(VariableDeclarationFragment fragment : fragments) {
-						if(fragment.equals(map.get(key))) {
-							declaredInBranchCounter++;
-						}
-					}
-				}
-			}
-		}
-		return map.size() == returnedInBranchCounter && map.size() == declaredInBranchCounter;
-	}
-
 	public VariableDeclaration getTypeCheckMethodReturnedVariable() {
 		StatementExtractor statementExtractor = new StatementExtractor();
 		ExpressionExtractor expressionExtractor = new ExpressionExtractor();
@@ -1528,45 +1287,5 @@ public class TypeCheckElimination implements Comparable<TypeCheckElimination> {
 			return 1;
 		
 		return refactoringName1.compareTo(refactoringName2);
-	}
-	
-	public boolean isTypeFieldAssignedStateValues() {
-		if (!assignedFieldsToValuesMap.containsKey(typeField)) {
-			return false;
-		}
-		List<SimpleName> states = getStaticFields();
-		Set<String> statesNames = new HashSet<String>();
-		for (SimpleName st : states) 
-			statesNames.add(st.getIdentifier());
-		
-		for (Expression assignedExpression : assignedFieldsToValuesMap.get(typeField)) {
-			if (assignedExpression instanceof SimpleName) {	// temp
-				SimpleName assignedName = (SimpleName) assignedExpression;
-				if (!statesNames.contains(assignedName.getIdentifier())) {
-					return false;
-				}
-			} else if (assignedExpression instanceof QualifiedName) {
-				QualifiedName assignedName = (QualifiedName) assignedExpression;
-				if (!statesNames.contains(assignedName.getName().getIdentifier())) {
-					return false;
-				}
-			}
-		}
-		return true;
-	}
-	
-	public String getApplicableRefactoringName() {
-		if (getExistingInheritanceTree() != null) {
-			return "Replace Conditional with Polymorphism";
-		} else if (!assignedFields.contains(typeField) && getTypeFieldSetterMethod() == null &&
-				(getTypeFieldConsturctorMethod() != null && typeField.getInitializer() == null) || (getTypeFieldConsturctorMethod() == null && typeField.getInitializer() != null) ) {
-			return "Replace Typecode with Subclass";
-//		} else if (isTypeFieldAssignedStateValues()) {
-//			return "Replace Typecode with State";
-//		} else if (getTypeFieldSetterMethod() != null) {
-//			return "Replace Typecode with Strategy";
-		} else {
-			return "Replace Typecode with State/Strategy";
-		}
 	}
 }

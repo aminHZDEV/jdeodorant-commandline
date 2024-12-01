@@ -1,5 +1,10 @@
 package ast.util.math;
 
+import static ast.util.math.DoubleArray.deleteColumns;
+import static ast.util.math.DoubleArray.deleteRows;
+import static ast.util.math.DoubleArray.insertColumns;
+import static ast.util.math.DoubleArray.insertRows;
+
 import distance.Entity;
 
 import java.util.ArrayList;
@@ -69,11 +74,11 @@ public class Hierarchical extends Clustering {
 						}
 					}
 				}
-				distanceMatrix = DoubleArray.deleteRows(distanceMatrix, minRow, minCol);
-				distanceMatrix = DoubleArray.deleteColumns(distanceMatrix, minCol);
-				distanceMatrix = DoubleArray.insertRows(distanceMatrix, minRow, newDistances);
-				distanceMatrix = DoubleArray.deleteColumns(distanceMatrix, minRow);
-				distanceMatrix = DoubleArray.insertColumns(distanceMatrix, minRow, newDistances);
+				distanceMatrix = deleteRows(distanceMatrix, minRow, minCol);
+				distanceMatrix = deleteColumns(distanceMatrix, minCol);
+				distanceMatrix = insertRows(distanceMatrix, minRow, newDistances);
+				distanceMatrix = deleteColumns(distanceMatrix, minRow);
+				distanceMatrix = insertColumns(distanceMatrix, minRow, newDistances);
 				clusters.remove(minCol);
 			}
 			else {
@@ -108,11 +113,11 @@ public class Hierarchical extends Clustering {
 					}
 					
 				}
-				distanceMatrix = DoubleArray.deleteRows(distanceMatrix, minRow, minCol);
-				distanceMatrix = DoubleArray.deleteColumns(distanceMatrix, minRow);
-				distanceMatrix = DoubleArray.insertRows(distanceMatrix, minCol, newDistances);
-				distanceMatrix = DoubleArray.deleteColumns(distanceMatrix, minCol);
-				distanceMatrix = DoubleArray.insertColumns(distanceMatrix, minCol, newDistances);
+				distanceMatrix = deleteRows(distanceMatrix, minRow, minCol);
+				distanceMatrix = deleteColumns(distanceMatrix, minRow);
+				distanceMatrix = insertRows(distanceMatrix, minCol, newDistances);
+				distanceMatrix = deleteColumns(distanceMatrix, minCol);
+				distanceMatrix = insertColumns(distanceMatrix, minCol, newDistances);
 				clusters.remove(minRow);
 			}
 			clusterSet.removeAll(clustersNotPresentable);

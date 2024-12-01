@@ -6,12 +6,10 @@ import ast.ClassObject;
 import ast.CompilationErrorDetectedException;
 import ast.CompilationUnitCache;
 import ast.SystemObject;
-import ast.delegation.DelegationDetection;
 import jdeodorant.preferences.PreferenceConstants;
 import jdeodorant.refactoring.Activator;
 import jdeodorant.refactoring.manipulators.ReplaceConditionalWithPolymorphism;
 import jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithStateStrategy;
-import jdeodorant.refactoring.manipulators.ReplaceTypeCodeWithSubclass;
 import jdeodorant.refactoring.manipulators.TypeCheckElimination;
 import jdeodorant.refactoring.manipulators.TypeCheckEliminationGroup;
 
@@ -160,7 +158,10 @@ public class TypeChecking extends ViewPart {
 				TypeCheckElimination typeCheckElimination = (TypeCheckElimination)obj;
 				switch(index) {
 				case 0:
-					return typeCheckElimination.getApplicableRefactoringName();
+					if(typeCheckElimination.getExistingInheritanceTree() == null)
+						return "Replace Type Code with State/Strategy";
+					else
+						return "Replace Conditional with Polymorphism";
 				case 1:
 					return typeCheckElimination.toString();
 				case 2:
@@ -426,7 +427,7 @@ public class TypeChecking extends ViewPart {
 			}
 		});
 		
-//		makeActions();
+		makeActions();
 		hookDoubleClickAction();
 		contributeToActionBars();
 		getSite().getWorkbenchWindow().getSelectionService().addSelectionListener(selectionListener);
@@ -460,223 +461,218 @@ public class TypeChecking extends ViewPart {
 		//manager.add(evolutionAnalysisAction);
 	}
 
-//	private void makeActions() {
-//		identifyBadSmellsAction = new Action() {
-//			public void run() {
-//				activeProject = selectedProject;
-//				CompilationUnitCache.getInstance().clearCache();
-//				typeCheckEliminationGroupTable = getTable();
-//				treeViewer.setContentProvider(new ViewContentProvider());
-//				applyRefactoringAction.setEnabled(true);
-//				renameMethodAction.setEnabled(true);
-//				saveResultsAction.setEnabled(true);
-//				//evolutionAnalysisAction.setEnabled(true);
-//			}
-//		};
-//		identifyBadSmellsAction.setToolTipText("Identify Bad Smells");
-//		identifyBadSmellsAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-//			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
-//		identifyBadSmellsAction.setEnabled(false);
-//
-//		saveResultsAction = new Action() {
-//			public void run() {
-//				saveResults();
-//			}
-//		};
-//		saveResultsAction.setToolTipText("Save Results");
-//		saveResultsAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-//			getImageDescriptor(ISharedImages.IMG_ETOOL_SAVE_EDIT));
-//		saveResultsAction.setEnabled(false);
-//
-//		/*evolutionAnalysisAction = new Action() {
-//			public void run() {
-//				typeCheckingEvolution = null;
-//				IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
-//				if(selection.getFirstElement() instanceof TypeCheckElimination) {
-//					final TypeCheckElimination typeCheckElimination = (TypeCheckElimination)selection.getFirstElement();
-//					try {
-//						IWorkbench wb = PlatformUI.getWorkbench();
-//						IProgressService ps = wb.getProgressService();
-//						ps.busyCursorWhile(new IRunnableWithProgress() {
-//							public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-//								ProjectEvolution projectEvolution = new ProjectEvolution(selectedProject);
-//								if(projectEvolution.getProjectEntries().size() > 1) {
-//									typeCheckingEvolution = new TypeCheckingEvolution(projectEvolution, typeCheckElimination, monitor);
-//								}
-//							}
-//						});
-//						if(typeCheckingEvolution != null) {
-//							EvolutionDialog dialog = new EvolutionDialog(getSite().getWorkbenchWindow(), typeCheckingEvolution, "Type Checking Evolution", false);
-//							dialog.open();
-//						}
-//						else
-//							MessageDialog.openInformation(getSite().getShell(), "Type Checking Evolution",
-//									"Type Checking evolution analysis cannot be performed, since only a single version of the examined project is loaded in the workspace.");
-//					} catch (InvocationTargetException e) {
-//						e.printStackTrace();
-//					} catch (InterruptedException e) {
-//						e.printStackTrace();
-//					}
-//				}
-//			}
-//		};
-//		evolutionAnalysisAction.setToolTipText("Evolution Analysis");
-//		evolutionAnalysisAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-//			getImageDescriptor(ISharedImages.IMG_OBJ_ELEMENT));
-//		evolutionAnalysisAction.setEnabled(false);*/
-//
-//		applyRefactoringAction = new Action() {
-//			public void run() {
-//				IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
-//				if(selection != null && selection.getFirstElement() instanceof TypeCheckElimination) {
-//					TypeCheckElimination typeCheckElimination = (TypeCheckElimination)selection.getFirstElement();
-//					TypeDeclaration sourceTypeDeclaration = typeCheckElimination.getTypeCheckClass();
-//					CompilationUnit sourceCompilationUnit = (CompilationUnit)sourceTypeDeclaration.getRoot();
-//					IFile sourceFile = typeCheckElimination.getTypeCheckIFile();
-//					IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-//					boolean allowUsageReporting = store.getBoolean(PreferenceConstants.P_ENABLE_USAGE_REPORTING);
-//					if(allowUsageReporting) {
-//						Tree tree = treeViewer.getTree();
-//						int groupPosition = -1;
-//						int totalGroups = tree.getItemCount();
-//						int groupSizeAtSystemLevel = 0;
-//						for(int i=0; i<tree.getItemCount(); i++) {
-//							TreeItem treeItem = tree.getItem(i);
-//							TypeCheckEliminationGroup group = (TypeCheckEliminationGroup)treeItem.getData();
-//							if(group.getCandidates().contains(typeCheckElimination)) {
-//								groupPosition = i;
-//								groupSizeAtSystemLevel = group.getGroupSizeAtSystemLevel();
-//								break;
-//							}
-//						}
-//						try {
-//							boolean allowSourceCodeReporting = store.getBoolean(PreferenceConstants.P_ENABLE_SOURCE_CODE_REPORTING);
-//							String declaringClass = typeCheckElimination.getTypeCheckClass().resolveBinding().getQualifiedName();
-//							String methodName = typeCheckElimination.getTypeCheckMethod().resolveBinding().toString();
-//							String sourceMethodName = declaringClass + "::" + methodName;
-//							String content = URLEncoder.encode("project_name", "UTF-8") + "=" + URLEncoder.encode(activeProject.getElementName(), "UTF-8");
-//							content += "&" + URLEncoder.encode("source_method_name", "UTF-8") + "=" + URLEncoder.encode(sourceMethodName, "UTF-8");
-//							content += "&" + URLEncoder.encode("system_level_occurrences", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(groupSizeAtSystemLevel), "UTF-8");
-//							content += "&" + URLEncoder.encode("class_level_occurrences", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(typeCheckElimination.getGroupSizeAtClassLevel()), "UTF-8");
-//							content += "&" + URLEncoder.encode("average_statements_per_branch", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(typeCheckElimination.getAverageNumberOfStatements()), "UTF-8");
-//							content += "&" + URLEncoder.encode("branches", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(typeCheckElimination.getTypeCheckExpressions().size()), "UTF-8");
-//							int totalNumberOfStates = -1;
-//							if(typeCheckElimination.getExistingInheritanceTree() == null && typeCheckElimination.getInheritanceTreeMatchingWithStaticTypes() == null)
-//								totalNumberOfStates = typeCheckElimination.getStaticFields().size() + typeCheckElimination.getAdditionalStaticFields().size();
-//							content += "&" + URLEncoder.encode("total_states", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(totalNumberOfStates), "UTF-8");
-//							content += "&" + URLEncoder.encode("ranking_position", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(groupPosition), "UTF-8");
-//							content += "&" + URLEncoder.encode("total_opportunities", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(totalGroups), "UTF-8");
-//							if(allowSourceCodeReporting)
-//								content += "&" + URLEncoder.encode("conditional_code_fragment", "UTF-8") + "=" + URLEncoder.encode(typeCheckElimination.getTypeCheckCodeFragment().toString(), "UTF-8");
-//							content += "&" + URLEncoder.encode("application", "UTF-8") + "=" + URLEncoder.encode(String.valueOf("1"), "UTF-8");
-//							content += "&" + URLEncoder.encode("application_selected_name", "UTF-8") + "=" + URLEncoder.encode(typeCheckElimination.getAbstractMethodName(), "UTF-8");
-//							content += "&" + URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(System.getProperty("user.name"), "UTF-8");
-//							content += "&" + URLEncoder.encode("tb", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8");
-//							URL url = new URL(Activator.RANK_URL);
-//							URLConnection urlConn = url.openConnection();
-//							urlConn.setDoInput(true);
-//							urlConn.setDoOutput(true);
-//							urlConn.setUseCaches(false);
-//							urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-//							DataOutputStream printout = new DataOutputStream(urlConn.getOutputStream());
-//							printout.writeBytes(content);
-//							printout.flush();
-//							printout.close();
-//							DataInputStream input = new DataInputStream(urlConn.getInputStream());
-//							input.close();
-//						} catch (IOException ioe) {
-//							ioe.printStackTrace();
-//						}
-//					}
-//					Refactoring refactoring = null;
-//					String refactoringName = typeCheckElimination.getApplicableRefactoringName();
-//					if (refactoringName.equals("Replace Conditional with Polymorphism")){
-//						refactoring = new ReplaceConditionalWithPolymorphism(sourceFile, sourceCompilationUnit, sourceTypeDeclaration, typeCheckElimination);
-//					} else if (refactoringName.equals("Replace Typecode with State/Strategy") || refactoringName.equals("Replace Typecode with Strategy")  || refactoringName.equals("Replace Typecode with State")) {
-//						refactoring = new ReplaceTypeCodeWithStateStrategy(sourceFile, sourceCompilationUnit, sourceTypeDeclaration, typeCheckElimination);
-//					} else if (refactoringName.equals("Replace Typecode with Subclass")) {
-//						DelegationDetection dd = new DelegationDetection(ASTReader.getSystemObject());
-////						DelegationTree dt = new DelegationTree(ASTReader.getSystemObject(), null);
-//						refactoring = new ReplaceTypeCodeWithSubclass(sourceFile, sourceCompilationUnit, sourceTypeDeclaration, typeCheckElimination);
-////						refactoring = null;
-//					}
-//					try {
-//						IJavaElement sourceJavaElement = JavaCore.create(sourceFile);
-//						JavaUI.openInEditor(sourceJavaElement);
-//					} catch (PartInitException e) {
-//						e.printStackTrace();
-//					} catch (JavaModelException e) {
-//						e.printStackTrace();
-//					}
-//					MyRefactoringWizard wizard = new MyRefactoringWizard(refactoring, applyRefactoringAction);
-//					RefactoringWizardOpenOperation op = new RefactoringWizardOpenOperation(wizard);
-//					try {
-//						String titleForFailedChecks = ""; //$NON-NLS-1$
-//						op.run(getSite().getShell(), titleForFailedChecks);
-//					} catch(InterruptedException e) {
-//						e.printStackTrace();
-//					}
-//				}
-//			}
-//		};
-//		applyRefactoringAction.setToolTipText("Apply Refactoring");
-//		applyRefactoringAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-//				getImageDescriptor(ISharedImages.IMG_DEF_VIEW));
-//		applyRefactoringAction.setEnabled(false);
-//
-//		renameMethodAction = new Action() {
-//			public void run() {
-//				IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
-//				if(selection != null && selection.getFirstElement() instanceof TypeCheckElimination) {
-//					TypeCheckElimination entry = (TypeCheckElimination)selection.getFirstElement();
-//					String methodName = entry.getAbstractMethodName();
-//					IInputValidator methodNameValidator = new MethodNameValidator();
-//					InputDialog dialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Rename Method", "Please enter a new name", methodName, methodNameValidator);
-//					dialog.open();
-//					if(dialog.getValue() != null) {
-//						entry.setAbstractMethodName(dialog.getValue());
-//						treeViewer.refresh();
-//					}
-//				}
-//			}
-//		};
-//		renameMethodAction.setToolTipText("Rename Abstract Method");
-//		renameMethodAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
-//				getImageDescriptor(ISharedImages.IMG_OBJ_FILE));
-//		renameMethodAction.setEnabled(false);
-//
-//		doubleClickAction = new Action() {
-//			public void run() {
-//				IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
-//				if(selection.getFirstElement() instanceof TypeCheckElimination) {
-//					TypeCheckElimination typeCheckElimination = (TypeCheckElimination)selection.getFirstElement();
-//					IFile sourceFile = typeCheckElimination.getTypeCheckIFile();
-//					String typeCheckMethodName = typeCheckElimination.toString();
-//					Statement typeCheckCodeFragment = typeCheckElimination.getTypeCheckCodeFragment();
-//					try {
-//						IJavaElement sourceJavaElement = JavaCore.create(sourceFile);
-//						ITextEditor sourceEditor = (ITextEditor)JavaUI.openInEditor(sourceJavaElement);
-//						AnnotationModel annotationModel = (AnnotationModel)sourceEditor.getDocumentProvider().getAnnotationModel(sourceEditor.getEditorInput());
-//						Iterator<Annotation> annotationIterator = annotationModel.getAnnotationIterator();
-//						while(annotationIterator.hasNext()) {
-//							Annotation currentAnnotation = annotationIterator.next();
-//							if(currentAnnotation.getType().equals(SliceAnnotation.EXTRACTION)) {
-//								annotationModel.removeAnnotation(currentAnnotation);
-//							}
-//						}
-//						SliceAnnotation annotation = new SliceAnnotation(SliceAnnotation.EXTRACTION, typeCheckMethodName);
-//						Position position = new Position(typeCheckCodeFragment.getStartPosition(), typeCheckCodeFragment.getLength());
-//						annotationModel.addAnnotation(annotation, position);
-//						sourceEditor.setHighlightRange(typeCheckCodeFragment.getStartPosition(), typeCheckCodeFragment.getLength(), true);
-//					} catch (PartInitException e) {
-//						e.printStackTrace();
-//					} catch (JavaModelException e) {
-//						e.printStackTrace();
-//					}
-//				}
-//			}
-//		};
-//	}
+	private void makeActions() {
+		identifyBadSmellsAction = new Action() {
+			public void run() {
+				activeProject = selectedProject;
+				CompilationUnitCache.getInstance().clearCache();
+				typeCheckEliminationGroupTable = getTable();
+				treeViewer.setContentProvider(new ViewContentProvider());
+				applyRefactoringAction.setEnabled(true);
+				renameMethodAction.setEnabled(true);
+				saveResultsAction.setEnabled(true);
+				//evolutionAnalysisAction.setEnabled(true);
+			}
+		};
+		identifyBadSmellsAction.setToolTipText("Identify Bad Smells");
+		identifyBadSmellsAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+			getImageDescriptor(ISharedImages.IMG_OBJS_INFO_TSK));
+		identifyBadSmellsAction.setEnabled(false);
+
+		saveResultsAction = new Action() {
+			public void run() {
+				saveResults();
+			}
+		};
+		saveResultsAction.setToolTipText("Save Results");
+		saveResultsAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+			getImageDescriptor(ISharedImages.IMG_ETOOL_SAVE_EDIT));
+		saveResultsAction.setEnabled(false);
+		
+		/*evolutionAnalysisAction = new Action() {
+			public void run() {
+				typeCheckingEvolution = null;
+				IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
+				if(selection.getFirstElement() instanceof TypeCheckElimination) {
+					final TypeCheckElimination typeCheckElimination = (TypeCheckElimination)selection.getFirstElement();
+					try {
+						IWorkbench wb = PlatformUI.getWorkbench();
+						IProgressService ps = wb.getProgressService();
+						ps.busyCursorWhile(new IRunnableWithProgress() {
+							public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+								ProjectEvolution projectEvolution = new ProjectEvolution(selectedProject);
+								if(projectEvolution.getProjectEntries().size() > 1) {
+									typeCheckingEvolution = new TypeCheckingEvolution(projectEvolution, typeCheckElimination, monitor);
+								}
+							}
+						});
+						if(typeCheckingEvolution != null) {
+							EvolutionDialog dialog = new EvolutionDialog(getSite().getWorkbenchWindow(), typeCheckingEvolution, "Type Checking Evolution", false);
+							dialog.open();
+						}
+						else
+							MessageDialog.openInformation(getSite().getShell(), "Type Checking Evolution",
+									"Type Checking evolution analysis cannot be performed, since only a single version of the examined project is loaded in the workspace.");
+					} catch (InvocationTargetException e) {
+						e.printStackTrace();
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+		evolutionAnalysisAction.setToolTipText("Evolution Analysis");
+		evolutionAnalysisAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+			getImageDescriptor(ISharedImages.IMG_OBJ_ELEMENT));
+		evolutionAnalysisAction.setEnabled(false);*/
+		
+		applyRefactoringAction = new Action() {
+			public void run() {
+				IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
+				if(selection != null && selection.getFirstElement() instanceof TypeCheckElimination) {
+					TypeCheckElimination typeCheckElimination = (TypeCheckElimination)selection.getFirstElement();
+					TypeDeclaration sourceTypeDeclaration = typeCheckElimination.getTypeCheckClass();
+					CompilationUnit sourceCompilationUnit = (CompilationUnit)sourceTypeDeclaration.getRoot();
+					IFile sourceFile = typeCheckElimination.getTypeCheckIFile();
+					IPreferenceStore store = Activator.getDefault().getPreferenceStore();
+					boolean allowUsageReporting = store.getBoolean(PreferenceConstants.P_ENABLE_USAGE_REPORTING);
+					if(allowUsageReporting) {
+						Tree tree = treeViewer.getTree();
+						int groupPosition = -1;
+						int totalGroups = tree.getItemCount();
+						int groupSizeAtSystemLevel = 0;
+						for(int i=0; i<tree.getItemCount(); i++) {
+							TreeItem treeItem = tree.getItem(i);
+							TypeCheckEliminationGroup group = (TypeCheckEliminationGroup)treeItem.getData();
+							if(group.getCandidates().contains(typeCheckElimination)) {
+								groupPosition = i;
+								groupSizeAtSystemLevel = group.getGroupSizeAtSystemLevel();
+								break;
+							}
+						}
+						try {
+							boolean allowSourceCodeReporting = store.getBoolean(PreferenceConstants.P_ENABLE_SOURCE_CODE_REPORTING);
+							String declaringClass = typeCheckElimination.getTypeCheckClass().resolveBinding().getQualifiedName();
+							String methodName = typeCheckElimination.getTypeCheckMethod().resolveBinding().toString();
+							String sourceMethodName = declaringClass + "::" + methodName;
+							String content = URLEncoder.encode("project_name", "UTF-8") + "=" + URLEncoder.encode(activeProject.getElementName(), "UTF-8");
+							content += "&" + URLEncoder.encode("source_method_name", "UTF-8") + "=" + URLEncoder.encode(sourceMethodName, "UTF-8");
+							content += "&" + URLEncoder.encode("system_level_occurrences", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(groupSizeAtSystemLevel), "UTF-8");
+							content += "&" + URLEncoder.encode("class_level_occurrences", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(typeCheckElimination.getGroupSizeAtClassLevel()), "UTF-8");
+							content += "&" + URLEncoder.encode("average_statements_per_branch", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(typeCheckElimination.getAverageNumberOfStatements()), "UTF-8");
+							content += "&" + URLEncoder.encode("branches", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(typeCheckElimination.getTypeCheckExpressions().size()), "UTF-8");
+							int totalNumberOfStates = -1;
+							if(typeCheckElimination.getExistingInheritanceTree() == null && typeCheckElimination.getInheritanceTreeMatchingWithStaticTypes() == null)
+								totalNumberOfStates = typeCheckElimination.getStaticFields().size() + typeCheckElimination.getAdditionalStaticFields().size();
+							content += "&" + URLEncoder.encode("total_states", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(totalNumberOfStates), "UTF-8");
+							content += "&" + URLEncoder.encode("ranking_position", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(groupPosition), "UTF-8");
+							content += "&" + URLEncoder.encode("total_opportunities", "UTF-8") + "=" + URLEncoder.encode(String.valueOf(totalGroups), "UTF-8");
+							if(allowSourceCodeReporting)
+								content += "&" + URLEncoder.encode("conditional_code_fragment", "UTF-8") + "=" + URLEncoder.encode(typeCheckElimination.getTypeCheckCodeFragment().toString(), "UTF-8");
+							content += "&" + URLEncoder.encode("application", "UTF-8") + "=" + URLEncoder.encode(String.valueOf("1"), "UTF-8");
+							content += "&" + URLEncoder.encode("application_selected_name", "UTF-8") + "=" + URLEncoder.encode(typeCheckElimination.getAbstractMethodName(), "UTF-8");
+							content += "&" + URLEncoder.encode("username", "UTF-8") + "=" + URLEncoder.encode(System.getProperty("user.name"), "UTF-8");
+							content += "&" + URLEncoder.encode("tb", "UTF-8") + "=" + URLEncoder.encode("1", "UTF-8");
+							URL url = new URL(Activator.RANK_URL);
+							URLConnection urlConn = url.openConnection();
+							urlConn.setDoInput(true);
+							urlConn.setDoOutput(true);
+							urlConn.setUseCaches(false);
+							urlConn.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
+							DataOutputStream printout = new DataOutputStream(urlConn.getOutputStream());
+							printout.writeBytes(content);
+							printout.flush();
+							printout.close();
+							DataInputStream input = new DataInputStream(urlConn.getInputStream());
+							input.close();
+						} catch (IOException ioe) {
+							ioe.printStackTrace();
+						}
+					}
+					Refactoring refactoring = null;
+					if(typeCheckElimination.getExistingInheritanceTree() == null) {
+						refactoring = new ReplaceTypeCodeWithStateStrategy(sourceFile, sourceCompilationUnit, sourceTypeDeclaration, typeCheckElimination);
+					}
+					else {
+						refactoring = new ReplaceConditionalWithPolymorphism(sourceFile, sourceCompilationUnit, sourceTypeDeclaration, typeCheckElimination);
+					}
+					try {
+						IJavaElement sourceJavaElement = JavaCore.create(sourceFile);
+						JavaUI.openInEditor(sourceJavaElement);
+					} catch (PartInitException e) {
+						e.printStackTrace();
+					} catch (JavaModelException e) {
+						e.printStackTrace();
+					}
+					MyRefactoringWizard wizard = new MyRefactoringWizard(refactoring, applyRefactoringAction);
+					RefactoringWizardOpenOperation op = new RefactoringWizardOpenOperation(wizard); 
+					try { 
+						String titleForFailedChecks = ""; //$NON-NLS-1$ 
+						op.run(getSite().getShell(), titleForFailedChecks); 
+					} catch(InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+		applyRefactoringAction.setToolTipText("Apply Refactoring");
+		applyRefactoringAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+				getImageDescriptor(ISharedImages.IMG_DEF_VIEW));
+		applyRefactoringAction.setEnabled(false);
+		
+		renameMethodAction = new Action() {
+			public void run() {
+				IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
+				if(selection != null && selection.getFirstElement() instanceof TypeCheckElimination) {
+					TypeCheckElimination entry = (TypeCheckElimination)selection.getFirstElement();
+					String methodName = entry.getAbstractMethodName();
+					IInputValidator methodNameValidator = new MethodNameValidator();
+					InputDialog dialog = new InputDialog(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), "Rename Method", "Please enter a new name", methodName, methodNameValidator);
+					dialog.open();
+					if(dialog.getValue() != null) {
+						entry.setAbstractMethodName(dialog.getValue());
+						treeViewer.refresh();
+					}
+				}
+			}
+		};
+		renameMethodAction.setToolTipText("Rename Abstract Method");
+		renameMethodAction.setImageDescriptor(PlatformUI.getWorkbench().getSharedImages().
+				getImageDescriptor(ISharedImages.IMG_OBJ_FILE));
+		renameMethodAction.setEnabled(false);
+		
+		doubleClickAction = new Action() {
+			public void run() {
+				IStructuredSelection selection = (IStructuredSelection)treeViewer.getSelection();
+				if(selection.getFirstElement() instanceof TypeCheckElimination) {
+					TypeCheckElimination typeCheckElimination = (TypeCheckElimination)selection.getFirstElement();
+					IFile sourceFile = typeCheckElimination.getTypeCheckIFile();
+					String typeCheckMethodName = typeCheckElimination.toString();
+					Statement typeCheckCodeFragment = typeCheckElimination.getTypeCheckCodeFragment();
+					try {
+						IJavaElement sourceJavaElement = JavaCore.create(sourceFile);
+						ITextEditor sourceEditor = (ITextEditor)JavaUI.openInEditor(sourceJavaElement);
+						AnnotationModel annotationModel = (AnnotationModel)sourceEditor.getDocumentProvider().getAnnotationModel(sourceEditor.getEditorInput());
+						Iterator<Annotation> annotationIterator = annotationModel.getAnnotationIterator();
+						while(annotationIterator.hasNext()) {
+							Annotation currentAnnotation = annotationIterator.next();
+							if(currentAnnotation.getType().equals(SliceAnnotation.EXTRACTION)) {
+								annotationModel.removeAnnotation(currentAnnotation);
+							}
+						}
+						SliceAnnotation annotation = new SliceAnnotation(SliceAnnotation.EXTRACTION, typeCheckMethodName);
+						Position position = new Position(typeCheckCodeFragment.getStartPosition(), typeCheckCodeFragment.getLength());
+						annotationModel.addAnnotation(annotation, position);
+						sourceEditor.setHighlightRange(typeCheckCodeFragment.getStartPosition(), typeCheckCodeFragment.getLength(), true);
+					} catch (PartInitException e) {
+						e.printStackTrace();
+					} catch (JavaModelException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+		};
+	}
 
 	private void hookDoubleClickAction() {
 		treeViewer.addDoubleClickListener(new IDoubleClickListener() {
@@ -698,80 +694,78 @@ public class TypeChecking extends ViewPart {
 		getSite().getWorkbenchWindow().getSelectionService().removeSelectionListener(selectionListener);
 	}
 
-//	private TypeCheckEliminationGroup[] getTable() {
-//		TypeCheckEliminationGroup[] table = null;
-//		try {
-//			IWorkbench wb = PlatformUI.getWorkbench();
-//			IProgressService ps = wb.getProgressService();
-//			if(ASTReader.getSystemObject() != null && activeProject.equals(ASTReader.getExaminedProject())) {
-//				new ASTReader(activeProject, ASTReader.getSystemObject(), null);
-//			}
-//			else {
-//				ps.busyCursorWhile(new IRunnableWithProgress() {
-//					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-//						try {
-//							new ASTReader(activeProject, monitor);
-//						} catch (CompilationErrorDetectedException e) {
-//							Display.getDefault().asyncExec(new Runnable() {
-//								public void run() {
-//									MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
-//											"Compilation errors were detected in the project. Fix the errors before using JDeodorant.");
-//								}
-//							});
-//						}
-//					}
-//				});
-//			}
-//			final SystemObject systemObject = ASTReader.getSystemObject();
-//			if(systemObject != null) {
-//				Set<ClassObject> classObjectsToBeExamined = new LinkedHashSet<ClassObject>();
-//				if(selectedPackageFragmentRoot != null) {
-//					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedPackageFragmentRoot));
-//				}
-//				else if(selectedPackageFragment != null) {
-//					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedPackageFragment));
-//				}
-//				else if(selectedCompilationUnit != null) {
-//					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedCompilationUnit));
-//				}
-//				else if(selectedType != null) {
-//					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedType));
-//				}
-//				else {
-//					classObjectsToBeExamined.addAll(systemObject.getClassObjects());
-//				}
-//				final Set<ClassObject> filteredClassObjectsToBeExamined = new LinkedHashSet<ClassObject>();
-//				for(ClassObject classObject : classObjectsToBeExamined) {
-//					if(!classObject.isEnum() && !classObject.isInterface() && !classObject.isGeneratedByParserGenenator()) {
-//						filteredClassObjectsToBeExamined.add(classObject);
-//					}
-//				}
-//				final List<TypeCheckEliminationGroup> typeCheckEliminationGroups = new ArrayList<TypeCheckEliminationGroup>();
-//				ps.busyCursorWhile(new IRunnableWithProgress() {
-//					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
-//						typeCheckEliminationGroups.addAll(systemObject.generateTypeCheckEliminations(filteredClassObjectsToBeExamined, monitor));
-//					}
-//				});
-//
-//
-//
-//				table = new TypeCheckEliminationGroup[typeCheckEliminationGroups.size()];
-//				int i = 0;
-//				for(TypeCheckEliminationGroup typeCheckEliminationGroup : typeCheckEliminationGroups) {
-//					table[i] = typeCheckEliminationGroup;
-//					i++;
-//				}
-//			}
-//		} catch (InvocationTargetException e) {
-//			e.printStackTrace();
-//		} catch (InterruptedException e) {
-//			e.printStackTrace();
-//		} catch (CompilationErrorDetectedException e) {
-//			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
-//					"Compilation errors were detected in the project. Fix the errors before using JDeodorant.");
-//		}
-//		return table;
-//	}
+	private TypeCheckEliminationGroup[] getTable() {
+		TypeCheckEliminationGroup[] table = null;
+		try {
+			IWorkbench wb = PlatformUI.getWorkbench();
+			IProgressService ps = wb.getProgressService();
+			if(ASTReader.getSystemObject() != null && activeProject.equals(ASTReader.getExaminedProject())) {
+				new ASTReader(activeProject, ASTReader.getSystemObject(), null);
+			}
+			else {
+				ps.busyCursorWhile(new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						try {
+							new ASTReader(activeProject, monitor);
+						} catch (CompilationErrorDetectedException e) {
+							Display.getDefault().asyncExec(new Runnable() {
+								public void run() {
+									MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
+											"Compilation errors were detected in the project. Fix the errors before using JDeodorant.");
+								}
+							});
+						}
+					}
+				});
+			}
+			final SystemObject systemObject = ASTReader.getSystemObject();
+			if(systemObject != null) {
+				Set<ClassObject> classObjectsToBeExamined = new LinkedHashSet<ClassObject>();
+				if(selectedPackageFragmentRoot != null) {
+					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedPackageFragmentRoot));
+				}
+				else if(selectedPackageFragment != null) {
+					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedPackageFragment));
+				}
+				else if(selectedCompilationUnit != null) {
+					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedCompilationUnit));
+				}
+				else if(selectedType != null) {
+					classObjectsToBeExamined.addAll(systemObject.getClassObjects(selectedType));
+				}
+				else {
+					classObjectsToBeExamined.addAll(systemObject.getClassObjects());
+				}
+				final Set<ClassObject> filteredClassObjectsToBeExamined = new LinkedHashSet<ClassObject>();
+				for(ClassObject classObject : classObjectsToBeExamined) {
+					if(!classObject.isEnum() && !classObject.isInterface() && !classObject.isGeneratedByParserGenenator()) {
+						filteredClassObjectsToBeExamined.add(classObject);
+					}
+				}
+				final List<TypeCheckEliminationGroup> typeCheckEliminationGroups = new ArrayList<TypeCheckEliminationGroup>();
+				ps.busyCursorWhile(new IRunnableWithProgress() {
+					public void run(IProgressMonitor monitor) throws InvocationTargetException, InterruptedException {
+						typeCheckEliminationGroups.addAll(systemObject.generateTypeCheckEliminations(filteredClassObjectsToBeExamined, monitor));
+					}
+				});
+
+				table = new TypeCheckEliminationGroup[typeCheckEliminationGroups.size()];
+				int i = 0;
+				for(TypeCheckEliminationGroup typeCheckEliminationGroup : typeCheckEliminationGroups) {
+					table[i] = typeCheckEliminationGroup;
+					i++;
+				}
+			}
+		} catch (InvocationTargetException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		} catch (CompilationErrorDetectedException e) {
+			MessageDialog.openInformation(PlatformUI.getWorkbench().getActiveWorkbenchWindow().getShell(), MESSAGE_DIALOG_TITLE,
+					"Compilation errors were detected in the project. Fix the errors before using JDeodorant.");
+		}
+		return table;
+	}
 
 	private void saveResults() {
 		FileDialog fd = new FileDialog(getSite().getWorkbenchWindow().getShell(), SWT.SAVE);

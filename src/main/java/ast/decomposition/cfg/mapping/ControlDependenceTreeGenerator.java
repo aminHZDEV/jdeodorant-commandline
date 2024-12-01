@@ -4,7 +4,6 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
-import ast.util.ExpressionExtractor;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ConditionalExpression;
 import org.eclipse.jdt.core.dom.Expression;
@@ -22,6 +21,7 @@ import ast.decomposition.cfg.PDGControlDependence;
 import ast.decomposition.cfg.PDGControlPredicateNode;
 import ast.decomposition.cfg.PDGDependence;
 import ast.decomposition.cfg.PDGNode;
+import ast.util.ExpressionExtractor;
 
 public class ControlDependenceTreeGenerator {
 	private PDG pdg;

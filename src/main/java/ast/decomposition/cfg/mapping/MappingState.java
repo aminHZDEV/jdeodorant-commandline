@@ -2,11 +2,6 @@ package ast.decomposition.cfg.mapping;
 
 import ast.decomposition.AbstractMethodFragment;
 import ast.decomposition.StatementObject;
-import ast.decomposition.matching.ASTNodeDifference;
-import ast.decomposition.matching.ASTNodeMatcher;
-import ast.decomposition.matching.Difference;
-import ast.decomposition.matching.DifferenceType;
-import ast.util.math.LevenshteinDistance;
 import ast.decomposition.cfg.AbstractVariable;
 import ast.decomposition.cfg.CFGBranchIfNode;
 import ast.decomposition.cfg.GraphEdge;
@@ -15,6 +10,11 @@ import ast.decomposition.cfg.PDGControlDependence;
 import ast.decomposition.cfg.PDGDependence;
 import ast.decomposition.cfg.PDGMethodEntryNode;
 import ast.decomposition.cfg.PDGNode;
+import ast.decomposition.matching.ASTNodeDifference;
+import ast.decomposition.matching.ASTNodeMatcher;
+import ast.decomposition.matching.Difference;
+import ast.decomposition.matching.DifferenceType;
+import ast.util.math.LevenshteinDistance;
 
 import java.util.ArrayList;
 import java.util.HashSet;

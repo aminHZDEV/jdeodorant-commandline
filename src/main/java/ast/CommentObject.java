@@ -3,16 +3,13 @@ package ast;
 import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.dom.Comment;
 
-import java.util.List;
-
 public class CommentObject {
 	private ASTInformation comment;
-	private final String text;
-	private final CommentType type;
-	private final int startLine;
-	private final int endLine;
+	private String text;
+	private CommentType type;
+	private int startLine;
+	private int endLine;
 	private volatile int hashCode = 0;
-	protected List<CommentObject> commentList;
 	
 	public CommentObject(String text, CommentType type, int startLine, int endLine) {
 		this.text = text;
@@ -23,10 +20,6 @@ public class CommentObject {
 
 	public void setComment(Comment comment) {
 		this.comment = ASTInformationGenerator.generateASTInformation(comment);
-	}
-
-	public List<CommentObject> getComments() {
-		return commentList;
 	}
 
 	public Comment getComment() {
@@ -66,9 +59,10 @@ public class CommentObject {
 			return true;
 		}
 
-		if (o instanceof CommentObject comment) {
+		if (o instanceof CommentObject) {
+			CommentObject comment = (CommentObject)o;
 
-            return this.getITypeRoot().equals(comment.getITypeRoot()) && this.getStartPosition() == comment.getStartPosition() &&
+			return this.getITypeRoot().equals(comment.getITypeRoot()) && this.getStartPosition() == comment.getStartPosition() &&
 				this.getLength() == comment.getLength();
 		}
 		return false;
@@ -86,9 +80,11 @@ public class CommentObject {
     }
 
 	public String toString() {
-        return comment.getITypeRoot().getPath() + "\n" +
-                "Start line: " + startLine + "\n" +
-                "End line:" + endLine + "\n" +
-                text;
+		StringBuilder sb = new StringBuilder();
+		sb.append(comment.getITypeRoot().getPath()).append("\n");
+		sb.append("Start line: " + startLine).append("\n");
+		sb.append("End line:" + endLine).append("\n");
+		sb.append(text);
+		return sb.toString();
 	}
 }

@@ -1,6 +1,5 @@
 package ast.visualization;
 
-import jdeodorant.refactoring.views.FeatureEnviedMethodInformationControl;
 import org.eclipse.jface.action.ToolBarManager;
 import org.eclipse.jface.text.IInformationControl;
 import org.eclipse.swt.widgets.Shell;
@@ -15,7 +14,7 @@ public class FeatureEnviedMethodInformationControlCreator implements
 	}
 
 	public boolean isSupported(Object info) {
-		return info instanceof PMClassFigure;
+		return PMClassFigure.class.isInstance(info);
 	}
 
 }

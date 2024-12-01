@@ -85,7 +85,7 @@ public class ASTReader {
 						ICompilationUnit[] iCompilationUnits = iPackageFragment.getCompilationUnits();
 						for(ICompilationUnit iCompilationUnit : iCompilationUnits) {
 							if(monitor != null && monitor.isCanceled())
-								throw new OperationCanceledException();
+				    			throw new OperationCanceledException();
 							systemObject.addClasses(parseAST(iCompilationUnit));
 							if(monitor != null)
 								monitor.worked(1);
@@ -155,7 +155,7 @@ public class ASTReader {
 		ArrayList<IMarker> result = new ArrayList<IMarker>();
 		try {
 			IProject project = iJavaProject.getProject();
-			project.refreshLocal(IResource.DEPTH_INFINITE, pm);
+			project.refreshLocal(IResource.DEPTH_INFINITE, pm);	
 			project.build(IncrementalProjectBuilder.INCREMENTAL_BUILD, pm);
 			IMarker[] markers = null;
 			markers = project.findMarkers(IJavaModelMarker.JAVA_MODEL_PROBLEM_MARKER, true, IResource.DEPTH_INFINITE);
@@ -198,7 +198,16 @@ public class ASTReader {
 		for(BodyDeclaration bodyDeclaration : bodyDeclarations) {
 			if(bodyDeclaration instanceof MethodDeclaration) {
 				MethodDeclaration methodDeclaration = (MethodDeclaration)bodyDeclaration;
-				commandline.ASTReader.checkMethodDeclareBody(innerTypeDeclarations, statementExtractor, methodDeclaration);
+				if(methodDeclaration.getBody() != null) {
+					List<Statement> statements = statementExtractor.getTypeDeclarationStatements(methodDeclaration.getBody());
+					for(Statement statement : statements) {
+						TypeDeclarationStatement typeDeclarationStatement = (TypeDeclarationStatement)statement;
+						AbstractTypeDeclaration declaration = typeDeclarationStatement.getDeclaration();
+						if(declaration instanceof TypeDeclaration) {
+							innerTypeDeclarations.add((TypeDeclaration)declaration);
+						}
+					}
+				}
 			}
 			else if(bodyDeclaration instanceof TypeDeclaration) {
 				TypeDeclaration type = (TypeDeclaration)bodyDeclaration;
@@ -217,13 +226,13 @@ public class ASTReader {
 	private List<ClassObject> parseAST(ICompilationUnit iCompilationUnit) {
 		ASTInformationGenerator.setCurrentITypeRoot(iCompilationUnit);
 		IFile iFile = (IFile)iCompilationUnit.getResource();
-		ASTParser parser = ASTParser.newParser(JLS);
-		parser.setKind(ASTParser.K_COMPILATION_UNIT);
-		parser.setSource(iCompilationUnit);
-		parser.setResolveBindings(true); // we need bindings later on
-		CompilationUnit compilationUnit = (CompilationUnit)parser.createAST(null);
-
-		return parseAST(compilationUnit, iFile);
+        ASTParser parser = ASTParser.newParser(JLS);
+        parser.setKind(ASTParser.K_COMPILATION_UNIT);
+        parser.setSource(iCompilationUnit);
+        parser.setResolveBindings(true); // we need bindings later on
+        CompilationUnit compilationUnit = (CompilationUnit)parser.createAST(null);
+        
+        return parseAST(compilationUnit, iFile);
 	}
 
 	private List<ClassObject> parseAST(CompilationUnit compilationUnit, IFile iFile) {
@@ -238,35 +247,35 @@ public class ASTReader {
 		IDocument document = textFileBuffer.getDocument();
 		List<Comment> comments = compilationUnit.getCommentList();
 		List<ClassObject> classObjects = new ArrayList<ClassObject>();
-		List<AbstractTypeDeclaration> topLevelTypeDeclarations = compilationUnit.types();
-		for(AbstractTypeDeclaration abstractTypeDeclaration : topLevelTypeDeclarations) {
-			if(abstractTypeDeclaration instanceof TypeDeclaration) {
-				TypeDeclaration topLevelTypeDeclaration = (TypeDeclaration)abstractTypeDeclaration;
-				List<AbstractTypeDeclaration> typeDeclarations = new ArrayList<AbstractTypeDeclaration>();
-				typeDeclarations.add(topLevelTypeDeclaration);
-				typeDeclarations.addAll(getRecursivelyInnerTypes(topLevelTypeDeclaration));
-				for(AbstractTypeDeclaration typeDeclaration : typeDeclarations) {
-					if(typeDeclaration instanceof TypeDeclaration) {
-						final ClassObject classObject = processTypeDeclaration(iFile, document, (TypeDeclaration)typeDeclaration, comments);
-						classObjects.add(classObject);
-					}
-					else if(typeDeclaration instanceof EnumDeclaration) {
-						final ClassObject classObject = processEnumDeclaration(iFile, document, (EnumDeclaration)typeDeclaration, comments);
-						classObjects.add(classObject);
-					}
-				}
-			}
-			else if(abstractTypeDeclaration instanceof EnumDeclaration) {
-				EnumDeclaration enumDeclaration = (EnumDeclaration)abstractTypeDeclaration;
-				final ClassObject classObject = processEnumDeclaration(iFile, document, enumDeclaration, comments);
-				classObjects.add(classObject);
-			}
-		}
-		return classObjects;
+        List<AbstractTypeDeclaration> topLevelTypeDeclarations = compilationUnit.types();
+        for(AbstractTypeDeclaration abstractTypeDeclaration : topLevelTypeDeclarations) {
+        	if(abstractTypeDeclaration instanceof TypeDeclaration) {
+        		TypeDeclaration topLevelTypeDeclaration = (TypeDeclaration)abstractTypeDeclaration;
+        		List<AbstractTypeDeclaration> typeDeclarations = new ArrayList<AbstractTypeDeclaration>();
+        		typeDeclarations.add(topLevelTypeDeclaration);
+        		typeDeclarations.addAll(getRecursivelyInnerTypes(topLevelTypeDeclaration));
+        		for(AbstractTypeDeclaration typeDeclaration : typeDeclarations) {
+        			if(typeDeclaration instanceof TypeDeclaration) {
+        				final ClassObject classObject = processTypeDeclaration(iFile, document, (TypeDeclaration)typeDeclaration, comments);
+        				classObjects.add(classObject);
+        			}
+        			else if(typeDeclaration instanceof EnumDeclaration) {
+        				final ClassObject classObject = processEnumDeclaration(iFile, document, (EnumDeclaration)typeDeclaration, comments);
+        				classObjects.add(classObject);
+        			}
+        		}
+        	}
+        	else if(abstractTypeDeclaration instanceof EnumDeclaration) {
+        		EnumDeclaration enumDeclaration = (EnumDeclaration)abstractTypeDeclaration;
+        		final ClassObject classObject = processEnumDeclaration(iFile, document, enumDeclaration, comments);
+	        	classObjects.add(classObject);
+        	}
+        }
+        return classObjects;
 	}
 
 	private List<CommentObject> processComments(IFile iFile, IDocument iDocument,
-												AbstractTypeDeclaration typeDeclaration, List<Comment> comments) {
+			AbstractTypeDeclaration typeDeclaration, List<Comment> comments) {
 		List<CommentObject> commentList = new ArrayList<CommentObject>();
 		int typeDeclarationStartPosition = typeDeclaration.getStartPosition();
 		int typeDeclarationEndPosition = typeDeclarationStartPosition + typeDeclaration.getLength();
@@ -320,15 +329,15 @@ public class ASTReader {
 			classObject.setName(typeDeclarationBinding.getQualifiedName());
 		}
 		classObject.setAbstractTypeDeclaration(typeDeclaration);
-
+		
 		if(typeDeclaration.isInterface()) {
 			classObject.setInterface(true);
 		}
-
+		
 		int modifiers = typeDeclaration.getModifiers();
 		if((modifiers & Modifier.ABSTRACT) != 0)
 			classObject.setAbstract(true);
-
+		
 		if((modifiers & Modifier.PUBLIC) != 0)
 			classObject.setAccess(Access.PUBLIC);
 		else if((modifiers & Modifier.PROTECTED) != 0)
@@ -337,10 +346,10 @@ public class ASTReader {
 			classObject.setAccess(Access.PRIVATE);
 		else
 			classObject.setAccess(Access.NONE);
-
+		
 		if((modifiers & Modifier.STATIC) != 0)
 			classObject.setStatic(true);
-
+		
 		Type superclassType = typeDeclaration.getSuperclassType();
 		if(superclassType != null) {
 			ITypeBinding binding = superclassType.resolveBinding();
@@ -348,7 +357,7 @@ public class ASTReader {
 			TypeObject typeObject = TypeObject.extractTypeObject(qualifiedName);
 			classObject.setSuperclass(typeObject);
 		}
-
+		
 		List<Type> superInterfaceTypes = typeDeclaration.superInterfaceTypes();
 		for(Type interfaceType : superInterfaceTypes) {
 			ITypeBinding binding = interfaceType.resolveBinding();
@@ -356,12 +365,12 @@ public class ASTReader {
 			TypeObject typeObject = TypeObject.extractTypeObject(qualifiedName);
 			classObject.addInterface(typeObject);
 		}
-
+		
 		FieldDeclaration[] fieldDeclarations = typeDeclaration.getFields();
 		for(FieldDeclaration fieldDeclaration : fieldDeclarations) {
 			processFieldDeclaration(classObject, fieldDeclaration);
 		}
-
+		
 		MethodDeclaration[] methodDeclarations = typeDeclaration.getMethods();
 		for(MethodDeclaration methodDeclaration : methodDeclarations) {
 			processMethodDeclaration(classObject, methodDeclaration);
@@ -376,11 +385,11 @@ public class ASTReader {
 		classObject.addComments(processComments(iFile, document, enumDeclaration, comments));
 		classObject.setName(enumDeclaration.resolveBinding().getQualifiedName());
 		classObject.setAbstractTypeDeclaration(enumDeclaration);
-
+		
 		int modifiers = enumDeclaration.getModifiers();
 		if((modifiers & Modifier.ABSTRACT) != 0)
 			classObject.setAbstract(true);
-
+		
 		if((modifiers & Modifier.PUBLIC) != 0)
 			classObject.setAccess(Access.PUBLIC);
 		else if((modifiers & Modifier.PROTECTED) != 0)
@@ -389,10 +398,10 @@ public class ASTReader {
 			classObject.setAccess(Access.PRIVATE);
 		else
 			classObject.setAccess(Access.NONE);
-
+		
 		if((modifiers & Modifier.STATIC) != 0)
 			classObject.setStatic(true);
-
+		
 		List<Type> superInterfaceTypes = enumDeclaration.superInterfaceTypes();
 		for(Type interfaceType : superInterfaceTypes) {
 			ITypeBinding binding = interfaceType.resolveBinding();
@@ -400,7 +409,7 @@ public class ASTReader {
 			TypeObject typeObject = TypeObject.extractTypeObject(qualifiedName);
 			classObject.addInterface(typeObject);
 		}
-
+		
 		List<EnumConstantDeclaration> enumConstantDeclarations = enumDeclaration.enumConstants();
 		for(EnumConstantDeclaration enumConstantDeclaration : enumConstantDeclarations) {
 			EnumConstantDeclarationObject enumConstantDeclarationObject = new EnumConstantDeclarationObject(enumConstantDeclaration.getName().getIdentifier());
@@ -413,7 +422,7 @@ public class ASTReader {
 			}
 			classObject.addEnumConstantDeclaration(enumConstantDeclarationObject);
 		}
-
+		
 		List<BodyDeclaration> bodyDeclarations = enumDeclaration.bodyDeclarations();
 		for(BodyDeclaration bodyDeclaration : bodyDeclarations) {
 			if(bodyDeclaration instanceof MethodDeclaration) {
@@ -448,7 +457,7 @@ public class ASTReader {
 			fieldObject.setClassName(classObject.getName());
 			fieldObject.setVariableDeclarationFragment(fragment);
 			fieldObject.addComments(fieldDeclarationComments);
-
+			
 			int fieldModifiers = fieldDeclaration.getModifiers();
 			if((fieldModifiers & Modifier.PUBLIC) != 0)
 				fieldObject.setAccess(Access.PUBLIC);
@@ -458,10 +467,10 @@ public class ASTReader {
 				fieldObject.setAccess(Access.PRIVATE);
 			else
 				fieldObject.setAccess(Access.NONE);
-
+			
 			if((fieldModifiers & Modifier.STATIC) != 0)
 				fieldObject.setStatic(true);
-
+			
 			classObject.addField(fieldObject);
 		}
 	}
@@ -481,7 +490,7 @@ public class ASTReader {
 				constructorObject.addComment(comment);
 			}
 		}
-
+		
 		if(methodDeclaration.getJavadoc() != null) {
 			Javadoc javaDoc = methodDeclaration.getJavadoc();
 			List<TagElement> tags = javaDoc.tags();
@@ -511,7 +520,7 @@ public class ASTReader {
 			constructorObject.setAccess(Access.PRIVATE);
 		else
 			constructorObject.setAccess(Access.NONE);
-
+		
 		List<SingleVariableDeclaration> parameters = methodDeclaration.parameters();
 		for(SingleVariableDeclaration parameter : parameters) {
 			Type parameterType = parameter.getType();
@@ -526,13 +535,13 @@ public class ASTReader {
 			parameterObject.setSingleVariableDeclaration(parameter);
 			constructorObject.addParameter(parameterObject);
 		}
-
+		
 		Block methodBody = methodDeclaration.getBody();
 		if(methodBody != null) {
 			MethodBodyObject methodBodyObject = new MethodBodyObject(methodBody);
 			constructorObject.setMethodBody(methodBodyObject);
 		}
-
+		
 		for(AnonymousClassDeclarationObject anonymous : constructorObject.getAnonymousClassDeclarations()) {
 			anonymous.setClassObject(classObject);
 			AnonymousClassDeclaration anonymousClassDeclaration = anonymous.getAnonymousClassDeclaration();
@@ -546,7 +555,7 @@ public class ASTReader {
 				}
 			}
 		}
-
+		
 		if(methodDeclaration.isConstructor()) {
 			classObject.addConstructor(constructorObject);
 		}
@@ -567,7 +576,7 @@ public class ASTReader {
 			String qualifiedName = binding.getQualifiedName();
 			TypeObject typeObject = TypeObject.extractTypeObject(qualifiedName);
 			methodObject.setReturnType(typeObject);
-
+			
 			if((methodModifiers & Modifier.ABSTRACT) != 0)
 				methodObject.setAbstract(true);
 			if((methodModifiers & Modifier.STATIC) != 0)
@@ -576,7 +585,7 @@ public class ASTReader {
 				methodObject.setSynchronized(true);
 			if((methodModifiers & Modifier.NATIVE) != 0)
 				methodObject.setNative(true);
-
+			
 			classObject.addMethod(methodObject);
 			FieldInstructionObject fieldInstruction = methodObject.isGetter();
 			if(fieldInstruction != null)
@@ -593,7 +602,7 @@ public class ASTReader {
 		}
 	}
 
-	public static SystemObject getSystemObject() {
+    public static SystemObject getSystemObject() {
 		return systemObject;
 	}
 

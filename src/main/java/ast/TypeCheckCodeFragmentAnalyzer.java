@@ -1,6 +1,5 @@
 package ast;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -9,9 +8,7 @@ import java.util.Set;
 
 import javax.swing.tree.DefaultMutableTreeNode;
 
-import ast.util.ExpressionExtractor;
-import ast.util.MethodDeclarationUtility;
-import ast.util.StatementExtractor;
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.dom.Assignment;
 import org.eclipse.jdt.core.dom.EnhancedForStatement;
 import org.eclipse.jdt.core.dom.Expression;
@@ -42,6 +39,9 @@ import org.eclipse.jdt.core.dom.VariableDeclarationExpression;
 import org.eclipse.jdt.core.dom.VariableDeclarationFragment;
 import org.eclipse.jdt.core.dom.VariableDeclarationStatement;
 
+import ast.util.ExpressionExtractor;
+import ast.util.MethodDeclarationUtility;
+import ast.util.StatementExtractor;
 import jdeodorant.refactoring.manipulators.TypeCheckElimination;
 
 public class TypeCheckCodeFragmentAnalyzer {
@@ -55,7 +55,7 @@ public class TypeCheckCodeFragmentAnalyzer {
 	private Map<Expression, IfStatementExpressionAnalyzer> complexExpressionMap;
 	
 	public TypeCheckCodeFragmentAnalyzer(TypeCheckElimination typeCheckElimination,
-                                         TypeDeclaration typeDeclaration, MethodDeclaration typeCheckMethod, File iFile) {
+			TypeDeclaration typeDeclaration, MethodDeclaration typeCheckMethod, IFile iFile) {
 		this.typeCheckElimination = typeCheckElimination;
 		this.typeDeclaration = typeDeclaration;
 		this.typeCheckMethod = typeCheckMethod;
@@ -96,9 +96,6 @@ public class TypeCheckCodeFragmentAnalyzer {
 											fieldInstruction = MethodDeclarationUtility.isGetter(method);
 											if(fieldInstruction != null && fragment.getName().getIdentifier().equals(fieldInstruction.getIdentifier())) {
 												typeCheckElimination.setTypeFieldGetterMethod(method);
-											}
-											if(MethodDeclarationUtility.isConstructor(method) != null) {
-												typeCheckElimination.setTypeFieldConsturctorMethod(method);
 											}
 										}
 										break;
@@ -431,9 +428,6 @@ public class TypeCheckCodeFragmentAnalyzer {
 										if(fieldInstruction != null && fragment.getName().getIdentifier().equals(fieldInstruction.getIdentifier())) {
 											typeCheckElimination.setTypeFieldGetterMethod(method);
 										}
-										if(MethodDeclarationUtility.isConstructor(method) != null) {
-											typeCheckElimination.setTypeFieldConsturctorMethod(method);
-										}
 									}
 									break;
 								}
@@ -573,7 +567,6 @@ public class TypeCheckCodeFragmentAnalyzer {
 							for(MethodDeclaration method : methods) {
 								if(method.resolveBinding().isEqualTo(methodBinding)) {
 									typeCheckElimination.addAccessedMethod(method);
-									typeCheckElimination.addMethodToUsedMethodsMap(method, statement);
 								}
 							}
 						}
@@ -631,11 +624,8 @@ public class TypeCheckCodeFragmentAnalyzer {
 													if(leftHandSideName != null && leftHandSideName.equals(simpleName)) {
 														isAssigned = true;
 														typeCheckElimination.addAssignedField(fragment);
-														typeCheckElimination.addAssignedFieldsAndValues(fragment, assignment.getRightHandSide());
-														if(!assignment.getOperator().equals(Assignment.Operator.ASSIGN)) {
+														if(!assignment.getOperator().equals(Assignment.Operator.ASSIGN))
 															typeCheckElimination.addAccessedField(fragment);
-															typeCheckElimination.addFieldToUsedFieldsMap(fragment, statement);
-														}
 													}
 												}
 												else if(parentExpression.getParent() instanceof PostfixExpression) {
@@ -643,7 +633,6 @@ public class TypeCheckCodeFragmentAnalyzer {
 													isAssigned = true;
 													typeCheckElimination.addAssignedField(fragment);
 													typeCheckElimination.addAccessedField(fragment);
-													typeCheckElimination.addFieldToUsedFieldsMap(fragment, statement);
 												}
 												else if(parentExpression.getParent() instanceof PrefixExpression) {
 													PrefixExpression prefixExpression = (PrefixExpression)parentExpression.getParent();
@@ -652,13 +641,10 @@ public class TypeCheckCodeFragmentAnalyzer {
 														isAssigned = true;
 														typeCheckElimination.addAssignedField(fragment);
 														typeCheckElimination.addAccessedField(fragment);
-														typeCheckElimination.addFieldToUsedFieldsMap(fragment, statement);
 													}
 												}
-												if(!isAssigned) {
+												if(!isAssigned)
 													typeCheckElimination.addAccessedField(fragment);
-													typeCheckElimination.addFieldToUsedFieldsMap(fragment, statement);
-												}
 											}
 										}
 									}
@@ -914,8 +900,6 @@ public class TypeCheckCodeFragmentAnalyzer {
 														if(leftHandSideName != null && leftHandSideName.equals(simpleName)) {
 															isAssigned = true;
 															typeCheckElimination.addAssignedField(fragment);
-															typeCheckElimination.addAssignedFieldsAndValues(fragment, assignment.getRightHandSide());
-															typeCheckElimination.addFieldToUsedFieldsMap(fragment, variableInstruction);
 															if(!assignment.getOperator().equals(Assignment.Operator.ASSIGN))
 																typeCheckElimination.addAccessedField(fragment);
 														}
@@ -925,7 +909,6 @@ public class TypeCheckCodeFragmentAnalyzer {
 														isAssigned = true;
 														typeCheckElimination.addAssignedField(fragment);
 														typeCheckElimination.addAccessedField(fragment);
-														typeCheckElimination.addFieldToUsedFieldsMap(fragment, variableInstruction);
 													}
 													else if(parentExpression.getParent() instanceof PrefixExpression) {
 														PrefixExpression prefixExpression = (PrefixExpression)parentExpression.getParent();
@@ -934,13 +917,10 @@ public class TypeCheckCodeFragmentAnalyzer {
 															isAssigned = true;
 															typeCheckElimination.addAssignedField(fragment);
 															typeCheckElimination.addAccessedField(fragment);
-															typeCheckElimination.addFieldToUsedFieldsMap(fragment, variableInstruction);
 														}
 													}
-													if(!isAssigned) {
+													if(!isAssigned)
 														typeCheckElimination.addAccessedField(fragment);
-														typeCheckElimination.addFieldToUsedFieldsMap(fragment, variableInstruction);														
-													}
 												}
 											}
 										}

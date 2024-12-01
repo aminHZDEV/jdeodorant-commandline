@@ -1,10 +1,10 @@
 package ast;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.jdt.core.ITypeRoot;
 import org.eclipse.jdt.core.dom.AnonymousClassDeclaration;
 
@@ -32,7 +32,7 @@ public class AnonymousClassDeclarationObject extends ClassDeclarationObject {
 		return anonymousClassDeclaration.getITypeRoot();
 	}
 
-	public File getIFile() {
+	public IFile getIFile() {
 		if(classObject != null) {
 			return classObject.getIFile();
 		}

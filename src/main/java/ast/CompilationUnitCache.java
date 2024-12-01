@@ -178,9 +178,7 @@ public class CompilationUnitCache extends Indexer {
 				changedCompilationUnits.add(compilationUnit);
 			}
 		} catch (JavaModelException e) {
-			addedCompilationUnits.remove(compilationUnit);
-			removedCompilationUnits.add(compilationUnit);
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 
@@ -201,9 +199,7 @@ public class CompilationUnitCache extends Indexer {
 				removedCompilationUnits.add(compilationUnit);
 			}
 		} catch (JavaModelException e) {
-			addedCompilationUnits.remove(compilationUnit);
-			removedCompilationUnits.add(compilationUnit);
-			//e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 

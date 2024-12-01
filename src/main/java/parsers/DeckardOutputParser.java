@@ -6,6 +6,8 @@ import java.util.regex.Pattern;
 import org.eclipse.jdt.core.IJavaProject;
 import org.eclipse.jdt.core.JavaModelException;
 
+import parsers.ResourceInfo.ICompilationUnitNotFoundException;
+
 public class DeckardOutputParser extends CloneDetectorOutputParser {
 	private String resultsFile;
 	
@@ -76,7 +78,7 @@ public class DeckardOutputParser extends CloneDetectorOutputParser {
 					addExceptionHappenedDuringParsing(siobex);
 				} catch (JavaModelException ex) {
 					addExceptionHappenedDuringParsing(ex);
-				} catch (ResourceInfo.ICompilationUnitNotFoundException ex) {
+				} catch (ICompilationUnitNotFoundException ex) {
 					addExceptionHappenedDuringParsing(ex);
 				}
 			} else {

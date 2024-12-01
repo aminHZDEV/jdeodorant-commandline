@@ -1,11 +1,11 @@
 package ast.visualization;
 
-import ast.decomposition.cfg.PlainVariable;
 import ast.ClassObject;
 import ast.FieldInstructionObject;
 import ast.FieldObject;
 import ast.MethodInvocationObject;
 import ast.MethodObject;
+import ast.decomposition.cfg.PlainVariable;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
@@ -51,8 +51,7 @@ public class GodClassVisualizationData implements VisualizationData {
 			for(PlainVariable fieldAccess : fieldAccesses) {
 				FieldInstructionObject fieldInstruction = findFieldInstruction(fieldAccess, fieldInstructions);
 				//exclude accesses to static fields
-                assert fieldInstruction != null;
-                if(!fieldInstruction.isStatic()) {
+				if(!fieldInstruction.isStatic()) {
 					if(isAccessToExtractedField(fieldInstruction, extractedFields)) {
 						insertToMap(method, fieldInstruction, internalFieldReadMap, 1);
 					}

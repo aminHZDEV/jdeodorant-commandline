@@ -124,7 +124,7 @@ public class FeatureEnvy extends ViewPart {
 	 * existing objects in adapters or simply return
 	 * objects as-is. These objects may be sensitive
 	 * to the current input of the view, or ignore
-	 * it and always show the same content
+	 * it and always show the same content 
 	 * (like Task List, for example).
 	 */
 
@@ -296,7 +296,7 @@ public class FeatureEnvy extends ViewPart {
 		column4.setText("Rate it!");
 		column4.setResizable(true);
 		column4.pack();
-
+		
 		tableViewer.addSelectionChangedListener(new ISelectionChangedListener() {
 			public void selectionChanged(SelectionChangedEvent event) {
 				tableViewer.getTable().setMenu(null);
@@ -616,10 +616,10 @@ public class FeatureEnvy extends ViewPart {
 						e.printStackTrace();
 					}
 					MyRefactoringWizard wizard = new MyRefactoringWizard(refactoring, applyRefactoringAction);
-					RefactoringWizardOpenOperation op = new RefactoringWizardOpenOperation(wizard);
-					try {
-						String titleForFailedChecks = ""; //$NON-NLS-1$
-						op.run(getSite().getShell(), titleForFailedChecks);
+					RefactoringWizardOpenOperation op = new RefactoringWizardOpenOperation(wizard); 
+					try { 
+						String titleForFailedChecks = ""; //$NON-NLS-1$ 
+						op.run(getSite().getShell(), titleForFailedChecks); 
 					} catch(InterruptedException e) {
 						e.printStackTrace();
 					}
@@ -783,7 +783,7 @@ public class FeatureEnvy extends ViewPart {
 					"Compilation errors were detected in the project. Fix the errors before using JDeodorant.");
 		}
 
-		return table;
+		return table;	
 
 	}
 

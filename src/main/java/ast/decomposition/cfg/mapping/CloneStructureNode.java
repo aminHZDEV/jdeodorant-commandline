@@ -5,24 +5,12 @@ import ast.decomposition.cfg.CFGBranchIfNode;
 import ast.decomposition.cfg.CFGThrowNode;
 import ast.decomposition.cfg.PDGExitNode;
 import ast.decomposition.cfg.PDGNode;
-import ast.decomposition.cfg.mapping.precondition.DualExpressionPreconditionViolation;
-import ast.decomposition.cfg.mapping.precondition.DualExpressionWithCommonSuperTypePreconditionViolation;
-import ast.decomposition.cfg.mapping.precondition.ExpressionPreconditionViolation;
-import ast.decomposition.cfg.mapping.precondition.PreconditionViolation;
-import ast.decomposition.cfg.mapping.precondition.PreconditionViolationType;
-import ast.decomposition.matching.ASTNodeDifference;
-import ast.decomposition.matching.DifferenceType;
 
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 
 import org.eclipse.jdt.core.dom.IfStatement;
-import org.eclipse.jdt.core.dom.ReturnStatement;
 
 public class CloneStructureNode implements Comparable<CloneStructureNode> {
 	private CloneStructureNode parent;
@@ -37,129 +25,6 @@ public class CloneStructureNode implements Comparable<CloneStructureNode> {
 	public void setParent(CloneStructureNode parent) {
 		this.parent = parent;
 		parent.children.add(this);
-	}
-
-	public List<PDGExpressionGap> getExpressionGaps() {
-		Map<ASTNodeDifference, PDGExpressionGap> expressionGapMap = new LinkedHashMap<ASTNodeDifference, PDGExpressionGap>();
-		boolean isVoidMethodCallDifferenceCoveringEntireStatement = false;
-		if(mapping instanceof PDGNodeMapping) {
-			isVoidMethodCallDifferenceCoveringEntireStatement = ((PDGNodeMapping)mapping).isVoidMethodCallDifferenceCoveringEntireStatement();
-		}
-		for(PreconditionViolation violation : mapping.getPreconditionViolations()) {
-			if(violation instanceof ExpressionPreconditionViolation && !violation.getType().equals(PreconditionViolationType.EXPRESSION_DIFFERENCE_IS_FIELD_UPDATE)) {
-				ExpressionPreconditionViolation expressionViolation = (ExpressionPreconditionViolation)violation;
-				ASTNodeDifference difference = findDifferenceCorrespondingToPreconditionViolation(expressionViolation);
-				if(difference != null && !difference.containsDifferenceType(DifferenceType.VARIABLE_TYPE_MISMATCH) &&
-						!isVoidMethodCallDifferenceCoveringEntireStatement && !difference.isLeftHandSideOfAssignment()) {
-					PDGExpressionGap expressionGap = new PDGExpressionGap(difference);
-					if(!expressionGapMap.containsKey(difference)) {
-						expressionGapMap.put(difference, expressionGap);
-					}
-				}
-			}
-			else if(violation instanceof DualExpressionWithCommonSuperTypePreconditionViolation) {
-				DualExpressionWithCommonSuperTypePreconditionViolation expressionViolation = (DualExpressionWithCommonSuperTypePreconditionViolation)violation;
-				ASTNodeDifference difference = findDifferenceCorrespondingToPreconditionViolation(expressionViolation);
-				if(difference != null && !difference.containsDifferenceType(DifferenceType.VARIABLE_TYPE_MISMATCH) &&
-						!isVoidMethodCallDifferenceCoveringEntireStatement && !difference.isLeftHandSideOfAssignment()) {
-					PDGExpressionGap expressionGap = new PDGExpressionGap(difference);
-					if(!expressionGapMap.containsKey(difference)) {
-						expressionGapMap.put(difference, expressionGap);
-					}
-				}
-			}
-		}
-		return new ArrayList<PDGExpressionGap>(expressionGapMap.values());
-	}
-
-	private ASTNodeDifference findDifferenceCorrespondingToPreconditionViolation(ExpressionPreconditionViolation expressionViolation) {
-		for(ASTNodeDifference difference : mapping.getNodeDifferences()) {
-			if(expressionViolation.getExpression().equals(difference.getExpression1()) ||
-					expressionViolation.getExpression().equals(difference.getExpression2())) {
-				return difference;
-			}
-		}
-		return null;
-	}
-
-	private ASTNodeDifference findDifferenceCorrespondingToPreconditionViolation(DualExpressionPreconditionViolation expressionViolation) {
-		for(ASTNodeDifference difference : mapping.getNodeDifferences()) {
-			if(expressionViolation.getExpression1().equals(difference.getExpression1()) &&
-					expressionViolation.getExpression2().equals(difference.getExpression2())) {
-				return difference;
-			}
-		}
-		return null;
-	}
-
-	public List<PDGNodeBlockGap> getSequentialBlockGaps() {
-		List<PDGNodeBlockGap> blockGaps = new ArrayList<PDGNodeBlockGap>();
-		PDGNodeBlockGap blockGap = new PDGNodeBlockGap(this);
-		for(CloneStructureNode child : children) {
-			if(child.getMapping() instanceof PDGNodeGap) {
-				PDGNodeGap gap = (PDGNodeGap)child.getMapping();
-				boolean containsUnacceptablePreconditionViolation = false;
-				for(PreconditionViolation violation : child.getMapping().getPreconditionViolations()) {
-					if(violation.getType().equals(PreconditionViolationType.UNMATCHED_BREAK_STATEMENT) ||
-							violation.getType().equals(PreconditionViolationType.UNMATCHED_CONTINUE_STATEMENT)) {
-						containsUnacceptablePreconditionViolation = true;
-						break;
-					}
-					else if(violation.getType().equals(PreconditionViolationType.UNMATCHED_RETURN_STATEMENT)) {
-						if(gap.getNodeG1() != null && gap.getNodeG2() == null) {
-							ReturnStatement returnStatement = (ReturnStatement) gap.getNodeG1().getASTStatement();
-							if(returnStatement.getExpression() == null) {
-								containsUnacceptablePreconditionViolation = true;
-								break;
-							}
-						}
-						else if(gap.getNodeG1() == null && gap.getNodeG2() != null) {
-							ReturnStatement returnStatement = (ReturnStatement) gap.getNodeG2().getASTStatement();
-							if(returnStatement.getExpression() == null) {
-								containsUnacceptablePreconditionViolation = true;
-								break;
-							}
-						}
-					}
-				}
-				if(!containsUnacceptablePreconditionViolation) {
-					blockGap.add(gap);
-					Set<CloneStructureNode> descendants = child.getDescendants();
-					int numberOfGapDescendants = 0;
-					for(CloneStructureNode descendant : descendants) {
-						if(descendant.getMapping() instanceof PDGNodeGap || descendant.getMapping() instanceof PDGElseGap) {
-							numberOfGapDescendants++;
-						}
-					}
-					if(descendants.size() == numberOfGapDescendants) {
-						for(CloneStructureNode descendant : descendants) {
-							if(descendant.getMapping() instanceof PDGNodeGap) {
-								PDGNodeGap descendantGap = (PDGNodeGap)descendant.getMapping();
-								blockGap.add(descendantGap);
-							}
-						}
-					}
-				}
-			}
-			else if(child.getMapping() instanceof PDGNodeMapping) {
-				PDGNodeMapping nodeMapping = (PDGNodeMapping)child.getMapping();
-				boolean isVoidMethodCallDifferenceCoveringEntireStatement = nodeMapping.isVoidMethodCallDifferenceCoveringEntireStatement();
-				if(isVoidMethodCallDifferenceCoveringEntireStatement) {
-					blockGap.add(nodeMapping);
-				}
-				else {
-					if(!blockGap.isEmpty()) {
-						blockGaps.add(blockGap);
-					}
-					//reset the blockGap
-					blockGap = new PDGNodeBlockGap(this);
-				}
-			}
-		}
-		if(!blockGap.isEmpty()) {
-			blockGaps.add(blockGap);
-		}
-		return blockGaps;
 	}
 
 	public boolean isElseIf() {

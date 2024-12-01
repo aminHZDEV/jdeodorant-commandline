@@ -15,6 +15,8 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import parsers.ResourceInfo.ICompilationUnitNotFoundException;
+
 
 public class NiCadOutputParser extends CloneDetectorOutputParser {
 
@@ -82,7 +84,7 @@ public class NiCadOutputParser extends CloneDetectorOutputParser {
 				addExceptionHappenedDuringParsing(nfex);
 			} catch (JavaModelException jme) {
 				addExceptionHappenedDuringParsing(jme);
-			} catch (ResourceInfo.ICompilationUnitNotFoundException infe) {
+			} catch (ICompilationUnitNotFoundException infe) {
 				addExceptionHappenedDuringParsing(infe);
 			}
 			progress(cloneClassIndex);
